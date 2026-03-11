@@ -8,12 +8,12 @@ import java.time.LocalDate;
 @Table(name = "anamnese")
 public class Anamnese {
     @Id
-    @Column(name = "idanamnese", nullable = false)
+    @Column(name = "idAnamnese", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idatendimento")
-    private Atendimento idatendimento;
+    @JoinColumn(name = "idAtendimento")
+    private Atendimento idAtendimento;
 
     @Column(name = "data")
     private LocalDate data;
@@ -21,8 +21,8 @@ public class Anamnese {
     @Column(name = "motivo", length = Integer.MAX_VALUE)
     private String motivo;
 
-    @Column(name = "queixaprincipal", length = Integer.MAX_VALUE)
-    private String queixaprincipal;
+    @Column(name = "queixaPrincipal", length = Integer.MAX_VALUE)
+    private String queixaPrincipal;
 
     @Column(name = "diabetes")
     private Boolean diabetes;
@@ -36,17 +36,17 @@ public class Anamnese {
     @Column(name = "hepatite")
     private Boolean hepatite;
 
-    @Column(name = "outrasdoencas", length = Integer.MAX_VALUE)
-    private String outrasdoencas;
+    @Column(name = "outrasDoencas", length = Integer.MAX_VALUE)
+    private String outrasDoencas;
 
-    @Column(name = "usamedicamento")
-    private Boolean usamedicamento;
+    @Column(name = "usaMedicamento")
+    private Boolean usaMedicamento;
 
-    @Column(name = "temalergia")
-    private Boolean temalergia;
+    @Column(name = "temAlergia")
+    private Boolean temAlergia;
 
-    @Column(name = "efumante")
-    private Boolean efumante;
+    @Column(name = "eFumante")
+    private Boolean eFumante;
 
     @Column(name = "observacoes", length = Integer.MAX_VALUE)
     private String observacoes;
@@ -59,12 +59,12 @@ public class Anamnese {
         this.id = id;
     }
 
-    public Atendimento getIdatendimento() {
-        return idatendimento;
+    public Atendimento getIdAtendimento() {
+        return idAtendimento;
     }
 
-    public void setIdatendimento(Atendimento idatendimento) {
-        this.idatendimento = idatendimento;
+    public void setIdAtendimento(Atendimento idAtendimento) {
+        this.idAtendimento = idAtendimento;
     }
 
     public LocalDate getData() {
@@ -83,12 +83,12 @@ public class Anamnese {
         this.motivo = motivo;
     }
 
-    public String getQueixaprincipal() {
-        return queixaprincipal;
+    public String getQueixaPrincipal() {
+        return queixaPrincipal;
     }
 
-    public void setQueixaprincipal(String queixaprincipal) {
-        this.queixaprincipal = queixaprincipal;
+    public void setQueixaPrincipal(String queixaPrincipal) {
+        this.queixaPrincipal = queixaPrincipal;
     }
 
     public Boolean getDiabetes() {
@@ -123,36 +123,36 @@ public class Anamnese {
         this.hepatite = hepatite;
     }
 
-    public String getOutrasdoencas() {
-        return outrasdoencas;
+    public String getOutrasDoencas() {
+        return outrasDoencas;
     }
 
-    public void setOutrasdoencas(String outrasdoencas) {
-        this.outrasdoencas = outrasdoencas;
+    public void setOutrasDoencas(String outrasDoencas) {
+        this.outrasDoencas = outrasDoencas;
     }
 
-    public Boolean getUsamedicamento() {
-        return usamedicamento;
+    public Boolean getUsaMedicamento() {
+        return usaMedicamento;
     }
 
-    public void setUsamedicamento(Boolean usamedicamento) {
-        this.usamedicamento = usamedicamento;
+    public void setUsaMedicamento(Boolean usaMedicamento) {
+        this.usaMedicamento = usaMedicamento;
     }
 
-    public Boolean getTemalergia() {
-        return temalergia;
+    public Boolean getTemAlergia() {
+        return temAlergia;
     }
 
-    public void setTemalergia(Boolean temalergia) {
-        this.temalergia = temalergia;
+    public void setTemAlergia(Boolean temAlergia) {
+        this.temAlergia = temAlergia;
     }
 
-    public Boolean getEfumante() {
-        return efumante;
+    public Boolean geteFumante() {
+        return eFumante;
     }
 
-    public void setEfumante(Boolean efumante) {
-        this.efumante = efumante;
+    public void seteFumante(Boolean eFumante) {
+        this.eFumante = eFumante;
     }
 
     public String getObservacoes() {
@@ -162,5 +162,4 @@ public class Anamnese {
     public void setObservacoes(String observacoes) {
         this.observacoes = observacoes;
     }
-
 }

@@ -1,6 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
+import model.enums.MetodoPagamento;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,25 +10,25 @@ import java.time.LocalDate;
 @Table(name = "pagamento")
 public class Pagamento {
     @Id
-    @Column(name = "idpagamento", nullable = false)
+    @Column(name = "idPagamento", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idfatura")
-    private Fatura idfatura;
+    @JoinColumn(name = "idFatura")
+    private Fatura idFatura;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idutilizador")
-    private Utilizador idutilizador;
+    @JoinColumn(name = "idUtilizador")
+    private Utilizador idUtilizador;
 
-    @Column(name = "datapagamento")
-    private LocalDate datapagamento;
+    @Column(name = "dataPagamento")
+    private LocalDate dataPagamento;
 
-    @Column(name = "valorpago", precision = 10, scale = 2)
-    private BigDecimal valorpago;
+    @Column(name = "valorPago", precision = 10, scale = 2)
+    private BigDecimal valorPago;
 
-    @Column(name = "metodo", length = 50)
-    private String metodo;
+    @Enumerated(EnumType.STRING)
+    private MetodoPagamento metodo;
 
     public Integer getId() {
         return id;
@@ -37,44 +38,43 @@ public class Pagamento {
         this.id = id;
     }
 
-    public Fatura getIdfatura() {
-        return idfatura;
+    public Fatura getIdFatura() {
+        return idFatura;
     }
 
-    public void setIdfatura(Fatura idfatura) {
-        this.idfatura = idfatura;
+    public void setIdFatura(Fatura idFatura) {
+        this.idFatura = idFatura;
     }
 
-    public Utilizador getIdutilizador() {
-        return idutilizador;
+    public Utilizador getIdUtilizador() {
+        return idUtilizador;
     }
 
-    public void setIdutilizador(Utilizador idutilizador) {
-        this.idutilizador = idutilizador;
+    public void setIdUtilizador(Utilizador idUtilizador) {
+        this.idUtilizador = idUtilizador;
     }
 
-    public LocalDate getDatapagamento() {
-        return datapagamento;
+    public LocalDate getDataPagamento() {
+        return dataPagamento;
     }
 
-    public void setDatapagamento(LocalDate datapagamento) {
-        this.datapagamento = datapagamento;
+    public void setDataPagamento(LocalDate dataPagamento) {
+        this.dataPagamento = dataPagamento;
     }
 
-    public BigDecimal getValorpago() {
-        return valorpago;
+    public BigDecimal getValorPago() {
+        return valorPago;
     }
 
-    public void setValorpago(BigDecimal valorpago) {
-        this.valorpago = valorpago;
+    public void setValorPago(BigDecimal valorPago) {
+        this.valorPago = valorPago;
     }
 
-    public String getMetodo() {
+    public MetodoPagamento getMetodo() {
         return metodo;
     }
 
-    public void setMetodo(String metodo) {
+    public void setMetodo(MetodoPagamento metodo) {
         this.metodo = metodo;
     }
-
 }

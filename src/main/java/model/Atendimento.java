@@ -6,12 +6,12 @@ import jakarta.persistence.*;
 @Table(name = "atendimento")
 public class Atendimento {
     @Id
-    @Column(name = "idatendimento", nullable = false)
+    @Column(name = "idAtendimento", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idconsulta")
-    private Consulta idconsulta;
+    @JoinColumn(name = "idConsulta")
+    private Consulta idConsulta;
 
     @Column(name = "diagnostico", length = Integer.MAX_VALUE)
     private String diagnostico;
@@ -19,8 +19,8 @@ public class Atendimento {
     @Column(name = "retorno")
     private Boolean retorno;
 
-    @Column(name = "periodoretorno")
-    private Integer periodoretorno;
+    @Column(name = "periodoRetorno")
+    private Integer periodoRetorno;
 
     @Column(name = "observacoes", length = Integer.MAX_VALUE)
     private String observacoes;
@@ -33,12 +33,12 @@ public class Atendimento {
         this.id = id;
     }
 
-    public Consulta getIdconsulta() {
-        return idconsulta;
+    public Consulta getIdConsulta() {
+        return idConsulta;
     }
 
-    public void setIdconsulta(Consulta idconsulta) {
-        this.idconsulta = idconsulta;
+    public void setIdConsulta(Consulta idConsulta) {
+        this.idConsulta = idConsulta;
     }
 
     public String getDiagnostico() {
@@ -57,12 +57,12 @@ public class Atendimento {
         this.retorno = retorno;
     }
 
-    public Integer getPeriodoretorno() {
-        return periodoretorno;
+    public Integer getPeriodoRetorno() {
+        return periodoRetorno;
     }
 
-    public void setPeriodoretorno(Integer periodoretorno) {
-        this.periodoretorno = periodoretorno;
+    public void setPeriodoRetorno(Integer periodoRetorno) {
+        this.periodoRetorno = periodoRetorno;
     }
 
     public String getObservacoes() {

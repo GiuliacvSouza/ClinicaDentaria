@@ -8,12 +8,12 @@ import java.math.BigDecimal;
 @Table(name = "material")
 public class Material {
     @Id
-    @Column(name = "idmaterial", nullable = false)
+    @Column(name = "idMaterial", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idfornecedor")
-    private Fornecedor idfornecedor;
+    @JoinColumn(name = "idFornecedor")
+    private Fornecedor idFornecedor;
 
     @Column(name = "nome", length = 100)
     private String nome;
@@ -21,17 +21,17 @@ public class Material {
     @Column(name = "descricao", length = Integer.MAX_VALUE)
     private String descricao;
 
-    @Column(name = "unidademedida", length = 20)
-    private String unidademedida;
+    @Column(name = "unidadeMedida", length = 20)
+    private String unidadeMedida;
 
-    @Column(name = "quantidadeatual")
-    private Integer quantidadeatual;
+    @Column(name = "quantidadeAtual")
+    private Integer quantidadeAtual;
 
-    @Column(name = "quantidademinima")
-    private Integer quantidademinima;
+    @Column(name = "quantidadeMinima")
+    private Integer quantidadeMinima;
 
-    @Column(name = "valorunitario", precision = 10, scale = 2)
-    private BigDecimal valorunitario;
+    @Column(name = "valorUnitario", precision = 10, scale = 2)
+    private BigDecimal valorUnitario;
 
     @Column(name = "ativo")
     private Boolean ativo;
@@ -44,12 +44,12 @@ public class Material {
         this.id = id;
     }
 
-    public Fornecedor getIdfornecedor() {
-        return idfornecedor;
+    public Fornecedor getIdFornecedor() {
+        return idFornecedor;
     }
 
-    public void setIdfornecedor(Fornecedor idfornecedor) {
-        this.idfornecedor = idfornecedor;
+    public void setIdFornecedor(Fornecedor idFornecedor) {
+        this.idFornecedor = idFornecedor;
     }
 
     public String getNome() {
@@ -68,36 +68,36 @@ public class Material {
         this.descricao = descricao;
     }
 
-    public String getUnidademedida() {
-        return unidademedida;
+    public String getUnidadeMedida() {
+        return unidadeMedida;
     }
 
-    public void setUnidademedida(String unidademedida) {
-        this.unidademedida = unidademedida;
+    public void setUnidadeMedida(String unidadeMedida) {
+        this.unidadeMedida = unidadeMedida;
     }
 
-    public Integer getQuantidadeatual() {
-        return quantidadeatual;
+    public Integer getQuantidadeAtual() {
+        return quantidadeAtual;
     }
 
-    public void setQuantidadeatual(Integer quantidadeatual) {
-        this.quantidadeatual = quantidadeatual;
+    public void setQuantidadeAtual(Integer quantidadeAtual) {
+        this.quantidadeAtual = quantidadeAtual;
     }
 
-    public Integer getQuantidademinima() {
-        return quantidademinima;
+    public Integer getQuantidadeMinima() {
+        return quantidadeMinima;
     }
 
-    public void setQuantidademinima(Integer quantidademinima) {
-        this.quantidademinima = quantidademinima;
+    public void setQuantidadeMinima(Integer quantidadeMinima) {
+        this.quantidadeMinima = quantidadeMinima;
     }
 
-    public BigDecimal getValorunitario() {
-        return valorunitario;
+    public BigDecimal getValorUnitario() {
+        return valorUnitario;
     }
 
-    public void setValorunitario(BigDecimal valorunitario) {
-        this.valorunitario = valorunitario;
+    public void setValorUnitario(BigDecimal valorUnitario) {
+        this.valorUnitario = valorUnitario;
     }
 
     public Boolean getAtivo() {
@@ -107,5 +107,4 @@ public class Material {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
-
 }

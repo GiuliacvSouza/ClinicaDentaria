@@ -9,25 +9,25 @@ import java.time.LocalTime;
 @Table(name = "dentista")
 public class Dentista {
     @Id
-    @Column(name = "idutilizador", nullable = false)
+    @Column(name = "idUtilizador", nullable = false)
     private Integer id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idutilizador", nullable = false)
+    @JoinColumn(name = "idUtilizador", nullable = false)
     private Utilizador utilizador;
 
-    @Column(name = "numeroomd", length = 50)
-    private String numeroomd;
+    @Column(name = "numeroOmd", length = 50)
+    private String numeroOmd;
 
-    @Column(name = "dataadmissao")
-    private LocalDate dataadmissao;
+    @Column(name = "dataAdmissao")
+    private LocalDate dataAdmissao;
 
-    @Column(name = "horarioentrada")
-    private LocalTime horarioentrada;
+    @Column(name = "horarioEntrada")
+    private LocalTime horarioEntrada;
 
-    @Column(name = "horariosaida")
-    private LocalTime horariosaida;
+    @Column(name = "horarioSaida")
+    private LocalTime horarioSaida;
 
     @Column(name = "ativo")
     private Boolean ativo;
@@ -48,36 +48,36 @@ public class Dentista {
         this.utilizador = utilizador;
     }
 
-    public String getNumeroomd() {
-        return numeroomd;
+    public String getNumeroOmd() {
+        return numeroOmd;
     }
 
-    public void setNumeroomd(String numeroomd) {
-        this.numeroomd = numeroomd;
+    public void setNumeroOmd(String numeroOmd) {
+        this.numeroOmd = numeroOmd;
     }
 
-    public LocalDate getDataadmissao() {
-        return dataadmissao;
+    public LocalDate getDataAdmissao() {
+        return dataAdmissao;
     }
 
-    public void setDataadmissao(LocalDate dataadmissao) {
-        this.dataadmissao = dataadmissao;
+    public void setDataAdmissao(LocalDate dataAdmissao) {
+        this.dataAdmissao = dataAdmissao;
     }
 
-    public LocalTime getHorarioentrada() {
-        return horarioentrada;
+    public LocalTime getHorarioEntrada() {
+        return horarioEntrada;
     }
 
-    public void setHorarioentrada(LocalTime horarioentrada) {
-        this.horarioentrada = horarioentrada;
+    public void setHorarioEntrada(LocalTime horarioEntrada) {
+        this.horarioEntrada = horarioEntrada;
     }
 
-    public LocalTime getHorariosaida() {
-        return horariosaida;
+    public LocalTime getHorarioSaida() {
+        return horarioSaida;
     }
 
-    public void setHorariosaida(LocalTime horariosaida) {
-        this.horariosaida = horariosaida;
+    public void setHorarioSaida(LocalTime horarioSaida) {
+        this.horarioSaida = horarioSaida;
     }
 
     public Boolean getAtivo() {

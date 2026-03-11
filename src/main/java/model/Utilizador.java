@@ -9,17 +9,17 @@ import java.time.LocalDate;
 @Table(name = "utilizador")
 public class Utilizador {
     @Id
-    @Column(name = "idutilizador", nullable = false)
+    @Column(name = "idUtilizador", nullable = false)
     private Integer id;
 
-    @Column(name = "primeironome", length = 100)
-    private String primeironome;
+    @Column(name = "primeiroNome", length = 100)
+    private String primeiroNome;
 
-    @Column(name = "ultimonome", length = 100)
-    private String ultimonome;
+    @Column(name = "ultimoNome", length = 100)
+    private String ultimoNome;
 
-    @Column(name = "tipoutilizador", length = 50)
-    private String tipoutilizador;
+    @Column(name = "tipoUtilizador", length = 50)
+    private String tipoUtilizador;
 
     @Column(name = "email", length = 150)
     private String email;
@@ -33,11 +33,11 @@ public class Utilizador {
     @Column(name = "telemovel", length = 20)
     private String telemovel;
 
-    @Column(name = "datanascimento")
-    private LocalDate datanascimento;
+    @Column(name = "dataNascimento")
+    private LocalDate dataNascimento;
 
-    @Column(name = "ultimoacesso")
-    private Instant ultimoacesso;
+    @Column(name = "ultimoAcesso")
+    private Instant ultimoAcesso;
 
     @Column(name = "status", length = 30)
     private String status;
@@ -45,12 +45,12 @@ public class Utilizador {
     @Column(name = "rua", length = 150)
     private String rua;
 
-    @Column(name = "numeroporta", length = 10)
-    private String numeroporta;
+    @Column(name = "numeroPorta", length = 10)
+    private String numeroPorta;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "codigopostal")
-    private Codigopostal codigopostal;
+    @JoinColumn(name = "codigoPostal")
+    private CodigoPostal codigoPostal;
 
     public Integer getId() {
         return id;
@@ -60,28 +60,28 @@ public class Utilizador {
         this.id = id;
     }
 
-    public String getPrimeironome() {
-        return primeironome;
+    public String getPrimeiroNome() {
+        return primeiroNome;
     }
 
-    public void setPrimeironome(String primeironome) {
-        this.primeironome = primeironome;
+    public void setPrimeiroNome(String primeiroNome) {
+        this.primeiroNome = primeiroNome;
     }
 
-    public String getUltimonome() {
-        return ultimonome;
+    public String getUltimoNome() {
+        return ultimoNome;
     }
 
-    public void setUltimonome(String ultimonome) {
-        this.ultimonome = ultimonome;
+    public void setUltimoNome(String ultimoNome) {
+        this.ultimoNome = ultimoNome;
     }
 
-    public String getTipoutilizador() {
-        return tipoutilizador;
+    public String getTipoUtilizador() {
+        return tipoUtilizador;
     }
 
-    public void setTipoutilizador(String tipoutilizador) {
-        this.tipoutilizador = tipoutilizador;
+    public void setTipoUtilizador(String tipoUtilizador) {
+        this.tipoUtilizador = tipoUtilizador;
     }
 
     public String getEmail() {
@@ -116,20 +116,20 @@ public class Utilizador {
         this.telemovel = telemovel;
     }
 
-    public LocalDate getDatanascimento() {
-        return datanascimento;
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setDatanascimento(LocalDate datanascimento) {
-        this.datanascimento = datanascimento;
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
-    public Instant getUltimoacesso() {
-        return ultimoacesso;
+    public Instant getUltimoAcesso() {
+        return ultimoAcesso;
     }
 
-    public void setUltimoacesso(Instant ultimoacesso) {
-        this.ultimoacesso = ultimoacesso;
+    public void setUltimoAcesso(Instant ultimoAcesso) {
+        this.ultimoAcesso = ultimoAcesso;
     }
 
     public String getStatus() {
@@ -148,20 +148,19 @@ public class Utilizador {
         this.rua = rua;
     }
 
-    public String getNumeroporta() {
-        return numeroporta;
+    public String getNumeroPorta() {
+        return numeroPorta;
     }
 
-    public void setNumeroporta(String numeroporta) {
-        this.numeroporta = numeroporta;
+    public void setNumeroPorta(String numeroPorta) {
+        this.numeroPorta = numeroPorta;
     }
 
-    public Codigopostal getCodigopostal() {
-        return codigopostal;
+    public CodigoPostal getCodigoPostal() {
+        return codigoPostal;
     }
 
-    public void setCodigopostal(Codigopostal codigopostal) {
-        this.codigopostal = codigopostal;
+    public void setCodigoPostal(CodigoPostal codigoPostal) {
+        this.codigoPostal = codigoPostal;
     }
-
 }

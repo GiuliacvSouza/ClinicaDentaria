@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 @Table(name = "medicamento")
 public class Medicamento {
     @Id
-    @Column(name = "idmedicamento", nullable = false)
+    @Column(name = "idMedicamento", nullable = false)
     private Integer id;
 
     @Column(name = "nome", length = 100)
@@ -18,8 +18,8 @@ public class Medicamento {
     @Column(name = "fabricante", length = 100)
     private String fabricante;
 
-    @Column(name = "tempouso", length = 100)
-    private String tempouso;
+    @Column(name = "tempoUso", length = 100)
+    private String tempoUso;
 
     public Integer getId() {
         return id;
@@ -45,12 +45,12 @@ public class Medicamento {
         this.fabricante = fabricante;
     }
 
-    public String getTempouso() {
-        return tempouso;
+    public String getTempoUso() {
+        return tempoUso;
     }
 
-    public void setTempouso(String tempouso) {
-        this.tempouso = tempouso;
+    public void setTempoUso(String tempoUso) {
+        this.tempoUso = tempoUso;
     }
 
 }

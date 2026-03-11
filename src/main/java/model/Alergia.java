@@ -1,17 +1,20 @@
 package model;
 
 import jakarta.persistence.*;
+import model.enums.TipoAlergia;
 
 @Entity
 @Table(name = "alergia")
 public class Alergia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idalergia", nullable = false)
+    @Column(name = "idAlergia", nullable = false)
     private Integer id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "tipo", length = 100)
-    private String tipo;
+    private TipoAlergia tipo;
+    //EX: Medicamento, Alimento, etc..
 
     @Column(name = "substancia", length = 150)
     private String substancia;
@@ -24,13 +27,9 @@ public class Alergia {
         this.id = id;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
+    public TipoAlergia getTipo() { return tipo; }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+    public void setTipo(TipoAlergia tipo) { this.tipo = tipo; }
 
     public String getSubstancia() {
         return substancia;

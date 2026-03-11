@@ -8,22 +8,22 @@ import java.time.LocalDate;
 @Table(name = "prontuario")
 public class Prontuario {
     @Id
-    @Column(name = "idutilizador", nullable = false)
+    @Column(name = "idUtilizador", nullable = false)
     private Integer id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idutilizador", nullable = false)
+    @JoinColumn(name = "idUtilizador", nullable = false)
     private Paciente paciente;
 
-    @Column(name = "datacriacao")
-    private LocalDate datacriacao;
+    @Column(name = "dataCriacao")
+    private LocalDate dataCriacao;
 
-    @Column(name = "ultimaatualizacao")
-    private LocalDate ultimaatualizacao;
+    @Column(name = "ultimaAtualizacao")
+    private LocalDate ultimaAtualizacao;
 
-    @Column(name = "gruposanguineo", length = 5)
-    private String gruposanguineo;
+    @Column(name = "grupoSanguineo", length = 5)
+    private String grupoSanguineo;
 
     @Column(name = "observacoes", length = Integer.MAX_VALUE)
     private String observacoes;
@@ -45,27 +45,27 @@ public class Prontuario {
     }
 
     public LocalDate getDatacriacao() {
-        return datacriacao;
+        return dataCriacao;
     }
 
-    public void setDatacriacao(LocalDate datacriacao) {
-        this.datacriacao = datacriacao;
+    public void setDatacriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 
-    public LocalDate getUltimaatualizacao() {
-        return ultimaatualizacao;
+    public LocalDate getUltimaAtualizacao() {
+        return ultimaAtualizacao;
     }
 
-    public void setUltimaatualizacao(LocalDate ultimaatualizacao) {
-        this.ultimaatualizacao = ultimaatualizacao;
+    public void setUltimaAtualizacao(LocalDate ultimaAtualizacao) {
+        this.ultimaAtualizacao = ultimaAtualizacao;
     }
 
-    public String getGruposanguineo() {
-        return gruposanguineo;
+    public String getGrupoSanguineo() {
+        return grupoSanguineo;
     }
 
-    public void setGruposanguineo(String gruposanguineo) {
-        this.gruposanguineo = gruposanguineo;
+    public void setGrupoSanguineo(String grupoSanguineo) {
+        this.grupoSanguineo = grupoSanguineo;
     }
 
     public String getObservacoes() {

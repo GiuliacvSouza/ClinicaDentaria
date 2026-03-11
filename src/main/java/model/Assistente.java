@@ -1,6 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
+import model.enums.NivelFormacao;
 
 import java.time.LocalDate;
 
@@ -8,19 +9,19 @@ import java.time.LocalDate;
 @Table(name = "assistente")
 public class Assistente {
     @Id
-    @Column(name = "idutilizador", nullable = false)
+    @Column(name = "idUtilizador", nullable = false)
     private Integer id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idutilizador", nullable = false)
+    @JoinColumn(name = "idUtilizador", nullable = false)
     private Utilizador utilizador;
 
-    @Column(name = "nivelformacao", length = 100)
-    private String nivelformacao;
+    @Enumerated(EnumType.STRING)
+    private NivelFormacao nivelFormacao;
 
-    @Column(name = "dataadmissao")
-    private LocalDate dataadmissao;
+    @Column(name = "dataAdmissao")
+    private LocalDate dataAdmissao;
 
     @Column(name = "ativo")
     private Boolean ativo;
@@ -41,20 +42,20 @@ public class Assistente {
         this.utilizador = utilizador;
     }
 
-    public String getNivelformacao() {
-        return nivelformacao;
+    public NivelFormacao getNivelformacao() {
+        return nivelFormacao;
     }
 
-    public void setNivelformacao(String nivelformacao) {
-        this.nivelformacao = nivelformacao;
+    public void setNivelFormacao(NivelFormacao nivelFormacao) {
+        this.nivelFormacao = nivelFormacao;
     }
 
-    public LocalDate getDataadmissao() {
-        return dataadmissao;
+    public LocalDate getDataAdmissao() {
+        return dataAdmissao;
     }
 
-    public void setDataadmissao(LocalDate dataadmissao) {
-        this.dataadmissao = dataadmissao;
+    public void setDataAdmissao(LocalDate dataAdmissao) {
+        this.dataAdmissao = dataAdmissao;
     }
 
     public Boolean getAtivo() {

@@ -9,14 +9,14 @@ import jakarta.persistence.Table;
 @Table(name = "fornecedor")
 public class Fornecedor {
     @Id
-    @Column(name = "idfornecedor", nullable = false)
+    @Column(name = "idFornecedor", nullable = false)
     private Integer id;
 
     @Column(name = "nome", length = 100)
     private String nome;
 
-    @Column(name = "ultimonome", length = 100)
-    private String ultimonome;
+    @Column(name = "ultimoNome", length = 100)
+    private String ultimoNome;
 
     @Column(name = "email", length = 150)
     private String email;
@@ -40,12 +40,12 @@ public class Fornecedor {
         this.nome = nome;
     }
 
-    public String getUltimonome() {
-        return ultimonome;
+    public String getUltimoNome() {
+        return ultimoNome;
     }
 
-    public void setUltimonome(String ultimonome) {
-        this.ultimonome = ultimonome;
+    public void setUltimoNome(String ultimoNome) {
+        this.ultimoNome = ultimoNome;
     }
 
     public String getEmail() {

@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Table(name = "procedimento")
 public class Procedimento {
     @Id
-    @Column(name = "idprocedimento", nullable = false)
+    @Column(name = "idProcedimento", nullable = false)
     private Integer id;
 
     @Column(name = "nome", length = 100)
@@ -23,8 +23,8 @@ public class Procedimento {
     @Column(name = "valor", precision = 10, scale = 2)
     private BigDecimal valor;
 
-    @Column(name = "duracaoestimada")
-    private Integer duracaoestimada;
+    @Column(name = "duracaoEstimada")
+    private Integer duracaoEstimada;
 
     @Column(name = "status", length = 30)
     private String status;
@@ -61,12 +61,12 @@ public class Procedimento {
         this.valor = valor;
     }
 
-    public Integer getDuracaoestimada() {
-        return duracaoestimada;
+    public Integer getDuracaoEstimada() {
+        return duracaoEstimada;
     }
 
-    public void setDuracaoestimada(Integer duracaoestimada) {
-        this.duracaoestimada = duracaoestimada;
+    public void setDuracaoEstimada(Integer duracaoEstimada) {
+        this.duracaoEstimada = duracaoEstimada;
     }
 
     public String getStatus() {

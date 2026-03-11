@@ -1,6 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
+import model.enums.EstadoConsulta;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -9,19 +10,19 @@ import java.time.LocalDate;
 @Table(name = "consulta")
 public class Consulta {
     @Id
-    @Column(name = "idconsulta", nullable = false)
+    @Column(name = "idConsulta", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpaciente")
-    private Paciente idpaciente;
+    @JoinColumn(name = "idPaciente")
+    private Paciente idPaciente;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iddentista")
-    private Dentista iddentista;
+    @JoinColumn(name = "idDentista")
+    private Dentista idDentista;
 
-    @Column(name = "datahorainicio")
-    private Instant datahorainicio;
+    @Column(name = "dataHoraInicio")
+    private Instant dataHoraInicio;
 
     @Column(name = "duracao")
     private Integer duracao;
@@ -29,20 +30,20 @@ public class Consulta {
     @Column(name = "tipo", length = 50)
     private String tipo;
 
-    @Column(name = "status", length = 50)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private EstadoConsulta status;
 
     @Column(name = "observacoes", length = Integer.MAX_VALUE)
     private String observacoes;
 
-    @Column(name = "datamarcacao")
-    private LocalDate datamarcacao;
+    @Column(name = "dataMarcacao")
+    private LocalDate dataMarcacao;
 
-    @Column(name = "motivocancelamento", length = Integer.MAX_VALUE)
-    private String motivocancelamento;
+    @Column(name = "motivoCancelamento", length = Integer.MAX_VALUE)
+    private String motivoCancelamento;
 
-    @Column(name = "datacancelamento")
-    private LocalDate datacancelamento;
+    @Column(name = "dataCancelamento")
+    private LocalDate dataCancelamento;
 
     public Integer getId() {
         return id;
@@ -52,28 +53,28 @@ public class Consulta {
         this.id = id;
     }
 
-    public Paciente getIdpaciente() {
-        return idpaciente;
+    public Paciente getIdPaciente() {
+        return idPaciente;
     }
 
-    public void setIdpaciente(Paciente idpaciente) {
-        this.idpaciente = idpaciente;
+    public void setIdPaciente(Paciente idPaciente) {
+        this.idPaciente = idPaciente;
     }
 
-    public Dentista getIddentista() {
-        return iddentista;
+    public Dentista getIdDentista() {
+        return idDentista;
     }
 
-    public void setIddentista(Dentista iddentista) {
-        this.iddentista = iddentista;
+    public void setIdDentista(Dentista idDentista) {
+        this.idDentista = idDentista;
     }
 
-    public Instant getDatahorainicio() {
-        return datahorainicio;
+    public Instant getDataHoraInicio() {
+        return dataHoraInicio;
     }
 
-    public void setDatahorainicio(Instant datahorainicio) {
-        this.datahorainicio = datahorainicio;
+    public void setDataHoraInicio(Instant dataHoraInicio) {
+        this.dataHoraInicio = dataHoraInicio;
     }
 
     public Integer getDuracao() {
@@ -92,11 +93,11 @@ public class Consulta {
         this.tipo = tipo;
     }
 
-    public String getStatus() {
+    public EstadoConsulta getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(EstadoConsulta status) {
         this.status = status;
     }
 
@@ -108,28 +109,27 @@ public class Consulta {
         this.observacoes = observacoes;
     }
 
-    public LocalDate getDatamarcacao() {
-        return datamarcacao;
+    public LocalDate getDataMarcacao() {
+        return dataMarcacao;
     }
 
-    public void setDatamarcacao(LocalDate datamarcacao) {
-        this.datamarcacao = datamarcacao;
+    public void setDataMarcacao(LocalDate dataMarcacao) {
+        this.dataMarcacao = dataMarcacao;
     }
 
-    public String getMotivocancelamento() {
-        return motivocancelamento;
+    public String getMotivoCancelamento() {
+        return motivoCancelamento;
     }
 
-    public void setMotivocancelamento(String motivocancelamento) {
-        this.motivocancelamento = motivocancelamento;
+    public void setMotivoCancelamento(String motivoCancelamento) {
+        this.motivoCancelamento = motivoCancelamento;
     }
 
-    public LocalDate getDatacancelamento() {
-        return datacancelamento;
+    public LocalDate getDataCancelamento() {
+        return dataCancelamento;
     }
 
-    public void setDatacancelamento(LocalDate datacancelamento) {
-        this.datacancelamento = datacancelamento;
+    public void setDataCancelamento(LocalDate dataCancelamento) {
+        this.dataCancelamento = dataCancelamento;
     }
-
 }

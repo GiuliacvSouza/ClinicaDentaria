@@ -8,18 +8,18 @@ import java.time.LocalDate;
 @Table(name = "paciente")
 public class Paciente {
     @Id
-    @Column(name = "idutilizador", nullable = false)
+    @Column(name = "idUtilizador", nullable = false)
     private Integer id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idutilizador", nullable = false)
+    @JoinColumn(name = "idUtilizador", nullable = false)
     private Utilizador utilizador;
 
     @Column(name = "status", length = 30)
     private String status;
 
-    @Column(name = "data_registo")
+    @Column(name = "dataRegisto")
     private LocalDate dataRegisto;
 
     public Integer getId() {
@@ -53,5 +53,4 @@ public class Paciente {
     public void setDataRegisto(LocalDate dataRegisto) {
         this.dataRegisto = dataRegisto;
     }
-
 }

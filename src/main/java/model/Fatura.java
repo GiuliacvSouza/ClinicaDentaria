@@ -1,6 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
+import model.enums.EstadoFatura;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,21 +10,21 @@ import java.time.LocalDate;
 @Table(name = "fatura")
 public class Fatura {
     @Id
-    @Column(name = "idfatura", nullable = false)
+    @Column(name = "idFatura", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idatendimento")
-    private Atendimento idatendimento;
+    @JoinColumn(name = "idAtendimento")
+    private Atendimento idAtendimento;
 
-    @Column(name = "dataemissao")
-    private LocalDate dataemissao;
+    @Column(name = "dataEmissao")
+    private LocalDate dataEmissao;
 
-    @Column(name = "valorfinal", precision = 10, scale = 2)
-    private BigDecimal valorfinal;
+    @Column(name = "valorFinal", precision = 10, scale = 2)
+    private BigDecimal valorFinal;
 
-    @Column(name = "estado", length = 30)
-    private String estado;
+    @Enumerated(EnumType.STRING)
+    private EstadoFatura estado;
 
     public Integer getId() {
         return id;
@@ -33,36 +34,35 @@ public class Fatura {
         this.id = id;
     }
 
-    public Atendimento getIdatendimento() {
-        return idatendimento;
+    public Atendimento getIdAtendimento() {
+        return idAtendimento;
     }
 
-    public void setIdatendimento(Atendimento idatendimento) {
-        this.idatendimento = idatendimento;
+    public void setIdAtendimento(Atendimento idAtendimento) {
+        this.idAtendimento = idAtendimento;
     }
 
-    public LocalDate getDataemissao() {
-        return dataemissao;
+    public LocalDate getDataEmissao() {
+        return dataEmissao;
     }
 
-    public void setDataemissao(LocalDate dataemissao) {
-        this.dataemissao = dataemissao;
+    public void setDataEmissao(LocalDate dataEmissao) {
+        this.dataEmissao = dataEmissao;
     }
 
-    public BigDecimal getValorfinal() {
-        return valorfinal;
+    public BigDecimal getValorFinal() {
+        return valorFinal;
     }
 
-    public void setValorfinal(BigDecimal valorfinal) {
-        this.valorfinal = valorfinal;
+    public void setValorFinal(BigDecimal valorFinal) {
+        this.valorFinal = valorFinal;
     }
 
-    public String getEstado() {
+    public EstadoFatura getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadoFatura estado) {
         this.estado = estado;
     }
-
 }

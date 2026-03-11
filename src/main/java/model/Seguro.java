@@ -11,23 +11,23 @@ import java.time.LocalDate;
 @Table(name = "seguro")
 public class Seguro {
     @Id
-    @Column(name = "idseguro", nullable = false)
+    @Column(name = "idSeguro", nullable = false)
     private Integer id;
 
-    @Column(name = "nomeseguro", length = 100)
-    private String nomeseguro;
+    @Column(name = "nomeSeguro", length = 100)
+    private String nomeSeguro;
 
-    @Column(name = "tipoplano", length = 100)
-    private String tipoplano;
+    @Column(name = "tipoPlano", length = 100)
+    private String tipoPlano;
 
-    @Column(name = "codigoplano", length = 100)
-    private String codigoplano;
+    @Column(name = "codigoPlano", length = 100)
+    private String codigoPlano;
 
-    @Column(name = "contactoseguradora", length = 150)
-    private String contactoseguradora;
+    @Column(name = "contactoSeguradora", length = 150)
+    private String contactoSeguradora;
 
-    @Column(name = "validoate")
-    private LocalDate validoate;
+    @Column(name = "validoAte")
+    private LocalDate validoAte;
 
     public Integer getId() {
         return id;
@@ -37,44 +37,43 @@ public class Seguro {
         this.id = id;
     }
 
-    public String getNomeseguro() {
-        return nomeseguro;
+    public String getNomeSeguro() {
+        return nomeSeguro;
     }
 
-    public void setNomeseguro(String nomeseguro) {
-        this.nomeseguro = nomeseguro;
+    public void setNomeSeguro(String nomeSeguro) {
+        this.nomeSeguro = nomeSeguro;
     }
 
-    public String getTipoplano() {
-        return tipoplano;
+    public String getTipoPlano() {
+        return tipoPlano;
     }
 
-    public void setTipoplano(String tipoplano) {
-        this.tipoplano = tipoplano;
+    public void setTipoPlano(String tipoPlano) {
+        this.tipoPlano = tipoPlano;
     }
 
-    public String getCodigoplano() {
-        return codigoplano;
+    public String getCodigoPlano() {
+        return codigoPlano;
     }
 
-    public void setCodigoplano(String codigoplano) {
-        this.codigoplano = codigoplano;
+    public void setCodigoPlano(String codigoPlano) {
+        this.codigoPlano = codigoPlano;
     }
 
-    public String getContactoseguradora() {
-        return contactoseguradora;
+    public String getContactoSeguradora() {
+        return contactoSeguradora;
     }
 
-    public void setContactoseguradora(String contactoseguradora) {
-        this.contactoseguradora = contactoseguradora;
+    public void setContactoSeguradora(String contactoSeguradora) {
+        this.contactoSeguradora = contactoSeguradora;
     }
 
-    public LocalDate getValidoate() {
-        return validoate;
+    public LocalDate getValidoAte() {
+        return validoAte;
     }
 
-    public void setValidoate(LocalDate validoate) {
-        this.validoate = validoate;
+    public void setValidoAte(LocalDate validoAte) {
+        this.validoAte = validoAte;
     }
-
 }

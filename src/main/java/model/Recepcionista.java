@@ -1,6 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
+import model.enums.Turno;
 
 import java.time.LocalDate;
 
@@ -8,19 +9,20 @@ import java.time.LocalDate;
 @Table(name = "recepcionista")
 public class Recepcionista {
     @Id
-    @Column(name = "idutilizador", nullable = false)
+    @Column(name = "idUtilizador", nullable = false)
     private Integer id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idutilizador", nullable = false)
+    @JoinColumn(name = "idUtilizador", nullable = false)
     private Utilizador utilizador;
 
-    @Column(name = "dataadmissao")
-    private LocalDate dataadmissao;
+    @Column(name = "dataAdmissao")
+    private LocalDate dataAdmissao;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "turno", length = 50)
-    private String turno;
+    private Turno turno;
 
     public Integer getId() {
         return id;
@@ -38,20 +40,15 @@ public class Recepcionista {
         this.utilizador = utilizador;
     }
 
-    public LocalDate getDataadmissao() {
-        return dataadmissao;
+    public LocalDate getDataAdmissao() {
+        return dataAdmissao;
     }
 
-    public void setDataadmissao(LocalDate dataadmissao) {
-        this.dataadmissao = dataadmissao;
+    public void setDataAdmissao(LocalDate dataadmissao) {
+        this.dataAdmissao = dataadmissao;
     }
 
-    public String getTurno() {
-        return turno;
-    }
+    public Turno getTurno() { return turno; }
 
-    public void setTurno(String turno) {
-        this.turno = turno;
-    }
-
+    public void setTurno(Turno turno) {this.turno = turno;}
 }

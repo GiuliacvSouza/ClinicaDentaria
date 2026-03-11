@@ -8,7 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 public class Doenca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "iddoenca", nullable = false)
+    @Column(name = "idDoenca", nullable = false)
     private Integer id;
 
     @Column(name = "nome", nullable = false, length = 150)
@@ -17,8 +17,8 @@ public class Doenca {
     @Column(name = "categoria", length = 100)
     private String categoria;
 
-    @Column(name = "observacaoclinica", length = Integer.MAX_VALUE)
-    private String observacaoclinica;
+    @Column(name = "observacaoClinica", length = Integer.MAX_VALUE)
+    private String observacaoClinica;
 
     @ColumnDefault("true")
     @Column(name = "ativa")
@@ -48,12 +48,12 @@ public class Doenca {
         this.categoria = categoria;
     }
 
-    public String getObservacaoclinica() {
-        return observacaoclinica;
+    public String getObservacaoClinica() {
+        return observacaoClinica;
     }
 
-    public void setObservacaoclinica(String observacaoclinica) {
-        this.observacaoclinica = observacaoclinica;
+    public void setObservacaoClinica(String observacaoClinica) {
+        this.observacaoClinica = observacaoClinica;
     }
 
     public Boolean getAtiva() {
