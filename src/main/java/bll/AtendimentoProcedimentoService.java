@@ -19,15 +19,22 @@ public class AtendimentoProcedimentoService {
     public AtendimentoProcedimento salvar(AtendimentoProcedimento ap) {
 
         if (ap.getIdAtendimento() == null) {
-            throw new RuntimeException("Atendimento é obrigatório.");
+            throw new RuntimeException("Atendimento é obrigatório");
         }
 
         if (ap.getIdProcedimento() == null) {
-            throw new RuntimeException("Procedimento é obrigatório.");
+            throw new RuntimeException("Procedimento é obrigatório");
+        }
+
+        if (ap.getId() == null) {
+            AtendimentoProcedimentoId id = new AtendimentoProcedimentoId();
+            id.setIdAtendimento(ap.getIdAtendimento().getId());
+            id.setIdProcedimento(ap.getIdProcedimento().getId());
+            ap.setId(id);
         }
 
         if (repository.existsById(ap.getId())) {
-            throw new RuntimeException("Procedimento já registrado neste atendimento.");
+            throw new RuntimeException("Procedimento já registado neste atendimento.");
         }
 
         return repository.save(ap);

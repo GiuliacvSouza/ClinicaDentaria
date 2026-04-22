@@ -28,7 +28,7 @@ public class MainFX extends Application {
         };
         for (String w : weights) {
             Font.loadFont(
-                    getClass().getResourceAsStream("/fonts.Poppins/Poppins-" + w + ".ttf"),
+                    getClass().getResourceAsStream("/fonts/Poppins/Poppins-" + w + ".ttf"),
                     14
             );
         }

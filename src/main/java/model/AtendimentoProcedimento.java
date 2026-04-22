@@ -1,23 +1,30 @@
 package model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "atendimentoProcedimento")
+@Table(name = "atendimento_procedimento")
 public class AtendimentoProcedimento {
+
     @EmbeddedId
     private AtendimentoProcedimentoId id;
 
-    @MapsId("idProcedimento")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idProcedimento", nullable = false)
+    @JoinColumn(name = "id_procedimento", nullable = false)
     private Procedimento idProcedimento;
 
-    @MapsId("idAtendimento")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idAtendimento", nullable = false)
+    @JoinColumn(name = "id_atendimento", nullable = false)
     private Atendimento idAtendimento;
 
     @Column(name = "quantidade")
@@ -26,12 +33,33 @@ public class AtendimentoProcedimento {
     @Column(name = "desconto", precision = 10, scale = 2)
     private BigDecimal desconto;
 
+    private void garantirId() {
+        if (id == null) {
+            id = new AtendimentoProcedimentoId();
+        }
+
+        if (idAtendimento != null && idAtendimento.getId() != null) {
+            id.setIdAtendimento(idAtendimento.getId());
+        }
+
+        if (idProcedimento != null && idProcedimento.getId() != null) {
+            id.setIdProcedimento(idProcedimento.getId());
+        }
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void sincronizarChaves() {
+        garantirId();
+    }
+
     public AtendimentoProcedimentoId getId() {
         return id;
     }
 
     public void setId(AtendimentoProcedimentoId id) {
         this.id = id;
+        garantirId();
     }
 
     public Procedimento getIdProcedimento() {
@@ -40,6 +68,7 @@ public class AtendimentoProcedimento {
 
     public void setIdProcedimento(Procedimento idProcedimento) {
         this.idProcedimento = idProcedimento;
+        garantirId();
     }
 
     public Atendimento getIdAtendimento() {
@@ -48,6 +77,7 @@ public class AtendimentoProcedimento {
 
     public void setIdAtendimento(Atendimento idAtendimento) {
         this.idAtendimento = idAtendimento;
+        garantirId();
     }
 
     public Integer getQuantidade() {
@@ -66,4 +96,12 @@ public class AtendimentoProcedimento {
         this.desconto = desconto;
     }
 
+    public Procedimento getProcedimento() {
+        return idProcedimento;
+    }
+
+    public void setProcedimento(Procedimento procedimento) {
+        this.idProcedimento = procedimento;
+        garantirId();
+    }
 }

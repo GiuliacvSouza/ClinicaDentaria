@@ -31,6 +31,15 @@ public class Procedimento {
     @Column(name = "status", length = 30)
     private String status;
 
+    @Column(name = "tipo", length = 30)
+    private String tipo;
+
+    @Column(name = "taxa_iva", precision = 5, scale = 2)
+    private BigDecimal taxaIva;
+
+    public BigDecimal getTaxaIva() { return taxaIva; }
+    public void setTaxaIva(BigDecimal taxaIva) { this.taxaIva = taxaIva; }
+
     public Integer getId() {
         return id;
     }
@@ -79,4 +88,11 @@ public class Procedimento {
         this.status = status;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
 }

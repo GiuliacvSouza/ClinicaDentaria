@@ -3,6 +3,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "atendimento")
 public class Atendimento {
@@ -75,4 +78,15 @@ public class Atendimento {
         this.observacoes = observacoes;
     }
 
+    @OneToMany(mappedBy = "idAtendimento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    private List<AtendimentoProcedimento> procedimentos = new ArrayList<>();
+
+    public List<AtendimentoProcedimento> getProcedimentos() {
+        return procedimentos;
+    }
+
+    public void setProcedimentos(List<AtendimentoProcedimento> procedimentos) {
+        this.procedimentos = procedimentos;
+    }
 }

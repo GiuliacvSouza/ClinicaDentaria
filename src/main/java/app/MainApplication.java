@@ -1,6 +1,7 @@
 package app;
 
 import bll.*;
+import dal.*;
 import model.*;
 import model.enums.*;
 
@@ -13,55 +14,160 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.math.BigDecimal;
 import java.time.*;
+import java.util.List;
 
 @EntityScan(basePackages = "model")
 @SpringBootApplication
-@ComponentScan(basePackages = {"app", "bll", "dal", "model"})
+@ComponentScan(basePackages = {"app", "bll", "dal", "model", "controller"})
 @EnableJpaRepositories(basePackages = "dal")
+
 public class MainApplication implements CommandLineRunner {
 
-    private final UtilizadorService        utilizadorService;
-    private final PacienteService          pacienteService;
-    private final DentistaService          dentistaService;
-    private final AssistenteService        assistenteService;
-    private final RecepcionistaService     recepcionistaService;
-    private final SeguroService            seguroService;
-    private final PacientexSeguroService   pacientexSeguroService;
+    // Services
+    private final UtilizadorService utilizadorService;
+    private final PacienteService pacienteService;
+    private final DentistaService dentistaService;
+    private final AssistenteService assistenteService;
+    private final RecepcionistaService recepcionistaService;
+    private final SeguroService seguroService;
+    private final PacientexSeguroService pacientexSeguroService;
     private final ContatoEmergenciaService contatoEmergenciaService;
-    private final ProntuarioService        prontuarioService;
-    private final ConsultaService          consultaService;
-    private final AtendimentoService       atendimentoService;
-    private final FaturaService            faturaService;
-    private final PagamentoService         pagamentoService;
+    private final ProntuarioService prontuarioService;
+    private final ConsultaService consultaService;
+    private final AtendimentoService atendimentoService;
+    private final FaturaService faturaService;
+    private final PagamentoService pagamentoService;
 
+    // Repositories
+    private final AtendimentoRepository atendimentoRepository;
+    private final AssistenteRepository assistenteRepository;
+    private final AtendimentoProcedimentoRepository atendimentoProcedimentoRepository;
+    private final CodigoPostalRepository codigoPostalRepository;
+    private final ConsultaRepository consultaRepository;
+    private final ContatoEmergenciaRepository contatoEmergenciaRepository;
+    private final DentistaRepository dentistaRepository;
+    private final DoencaRepository doencaRepository;
+    private final EspecialidadeDentistaRepository especialidadeDentistaRepository;
+    private final EspecialidadeRepository especialidadeRepository;
+    private final EspecialidadexAssistenteRepository especialidadexAssistenteRepository;
+    private final EspecialidadexDentistaRepository especialidadexDentistaRepository;
+    private final FornecedorRepository fornecedorRepository;
+    private final ItemPedidoRepository itemPedidoRepository;
+    private final MaterialRepository materialRepository;
+    private final MedicamentoRepository medicamentoRepository;
+    private final MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
+    private final PacienteRepository pacienteRepository;
+    private final PacientexSeguroRepository pacientexSeguroRepository;
+    private final PagamentoRepository pagamentoRepository;
+    private final PedidoCompraRepository pedidoCompraRepository;
+    private final ProcedimentoRepository procedimentoRepository;
+    private final ProntuarioRepository prontuarioRepository;
+    private final RecepcionistaRepository recepcionistaRepository;
+    private final SeguroRepository seguroRepository;
+    private final UtilizadorRepository utilizadorRepository;
+    private final AlergiaRepository alergiaRepository;
+    private final AnamneseAlergiaRepository anamneseAlergiaRepository;
+    private final AnamneseDoencaRepository anamneseDoencaRepository;
+    private final AnamneseMedicamentoRepository anamneseMedicamentoRepository;
+    private final AnamneseRepository anamneseRepository;
+    private final FaturaRepository faturaRepository;
+
+    // Construtor com todas as dependências
     public MainApplication(
-            UtilizadorService        utilizadorService,
-            PacienteService          pacienteService,
-            DentistaService          dentistaService,
-            AssistenteService        assistenteService,
-            RecepcionistaService     recepcionistaService,
-            SeguroService            seguroService,
-            PacientexSeguroService   pacientexSeguroService,
+            UtilizadorService utilizadorService,
+            PacienteService pacienteService,
+            DentistaService dentistaService,
+            AssistenteService assistenteService,
+            RecepcionistaService recepcionistaService,
+            SeguroService seguroService,
+            PacientexSeguroService pacientexSeguroService,
             ContatoEmergenciaService contatoEmergenciaService,
-            ProntuarioService        prontuarioService,
-            ConsultaService          consultaService,
-            AtendimentoService       atendimentoService,
-            FaturaService            faturaService,
-            PagamentoService         pagamentoService) {
-
-        this.utilizadorService        = utilizadorService;
-        this.pacienteService          = pacienteService;
-        this.dentistaService          = dentistaService;
-        this.assistenteService        = assistenteService;
-        this.recepcionistaService     = recepcionistaService;
-        this.seguroService            = seguroService;
-        this.pacientexSeguroService   = pacientexSeguroService;
+            ProntuarioService prontuarioService,
+            ConsultaService consultaService,
+            AtendimentoService atendimentoService,
+            FaturaService faturaService,
+            PagamentoService pagamentoService,
+            AtendimentoRepository atendimentoRepository,
+            AssistenteRepository assistenteRepository,
+            AtendimentoProcedimentoRepository atendimentoProcedimentoRepository,
+            CodigoPostalRepository codigoPostalRepository,
+            ConsultaRepository consultaRepository,
+            ContatoEmergenciaRepository contatoEmergenciaRepository,
+            DentistaRepository dentistaRepository,
+            DoencaRepository doencaRepository,
+            EspecialidadeDentistaRepository especialidadeDentistaRepository,
+            EspecialidadeRepository especialidadeRepository,
+            EspecialidadexAssistenteRepository especialidadexAssistenteRepository,
+            EspecialidadexDentistaRepository especialidadexDentistaRepository,
+            FornecedorRepository fornecedorRepository,
+            ItemPedidoRepository itemPedidoRepository,
+            MaterialRepository materialRepository,
+            MedicamentoRepository medicamentoRepository,
+            MovimentacaoEstoqueRepository movimentacaoEstoqueRepository,
+            PacienteRepository pacienteRepository,
+            PacientexSeguroRepository pacientexSeguroRepository,
+            PagamentoRepository pagamentoRepository,
+            PedidoCompraRepository pedidoCompraRepository,
+            ProcedimentoRepository procedimentoRepository,
+            ProntuarioRepository prontuarioRepository,
+            RecepcionistaRepository recepcionistaRepository,
+            SeguroRepository seguroRepository,
+            UtilizadorRepository utilizadorRepository,
+            AlergiaRepository alergiaRepository,
+            AnamneseAlergiaRepository anamneseAlergiaRepository,
+            AnamneseDoencaRepository anamneseDoencaRepository,
+            AnamneseMedicamentoRepository anamneseMedicamentoRepository,
+            AnamneseRepository anamneseRepository,
+            FaturaRepository faturaRepository
+    ) {
+        // Services
+        this.utilizadorService = utilizadorService;
+        this.pacienteService = pacienteService;
+        this.dentistaService = dentistaService;
+        this.assistenteService = assistenteService;
+        this.recepcionistaService = recepcionistaService;
+        this.seguroService = seguroService;
+        this.pacientexSeguroService = pacientexSeguroService;
         this.contatoEmergenciaService = contatoEmergenciaService;
-        this.prontuarioService        = prontuarioService;
-        this.consultaService          = consultaService;
-        this.atendimentoService       = atendimentoService;
-        this.faturaService            = faturaService;
-        this.pagamentoService         = pagamentoService;
+        this.prontuarioService = prontuarioService;
+        this.consultaService = consultaService;
+        this.atendimentoService = atendimentoService;
+        this.faturaService = faturaService;
+        this.pagamentoService = pagamentoService;
+
+        // Repositories
+        this.atendimentoRepository = atendimentoRepository;
+        this.assistenteRepository = assistenteRepository;
+        this.atendimentoProcedimentoRepository = atendimentoProcedimentoRepository;
+        this.codigoPostalRepository = codigoPostalRepository;
+        this.consultaRepository = consultaRepository;
+        this.contatoEmergenciaRepository = contatoEmergenciaRepository;
+        this.dentistaRepository = dentistaRepository;
+        this.doencaRepository = doencaRepository;
+        this.especialidadeDentistaRepository = especialidadeDentistaRepository;
+        this.especialidadeRepository = especialidadeRepository;
+        this.especialidadexAssistenteRepository = especialidadexAssistenteRepository;
+        this.especialidadexDentistaRepository = especialidadexDentistaRepository;
+        this.fornecedorRepository = fornecedorRepository;
+        this.itemPedidoRepository = itemPedidoRepository;
+        this.materialRepository = materialRepository;
+        this.medicamentoRepository = medicamentoRepository;
+        this.movimentacaoEstoqueRepository = movimentacaoEstoqueRepository;
+        this.pacienteRepository = pacienteRepository;
+        this.pacientexSeguroRepository = pacientexSeguroRepository;
+        this.pagamentoRepository = pagamentoRepository;
+        this.pedidoCompraRepository = pedidoCompraRepository;
+        this.procedimentoRepository = procedimentoRepository;
+        this.prontuarioRepository = prontuarioRepository;
+        this.recepcionistaRepository = recepcionistaRepository;
+        this.seguroRepository = seguroRepository;
+        this.utilizadorRepository = utilizadorRepository;
+        this.alergiaRepository = alergiaRepository;
+        this.anamneseAlergiaRepository = anamneseAlergiaRepository;
+        this.anamneseDoencaRepository = anamneseDoencaRepository;
+        this.anamneseMedicamentoRepository = anamneseMedicamentoRepository;
+        this.anamneseRepository = anamneseRepository;
+        this.faturaRepository = faturaRepository;
     }
 
     public static void main(String[] args) {
@@ -72,12 +178,17 @@ public class MainApplication implements CommandLineRunner {
 
     private static void secao(String titulo) {
         System.out.println("\n╔══════════════════════════════════════╗");
-        System.out.printf ("║  %-36s║%n", titulo);
+        System.out.printf("║  %-36s║%n", titulo);
         System.out.println("╚══════════════════════════════════════╝");
     }
 
-    private static void ok(String msg)   { System.out.println("  ✔ " + msg); }
-    private static void erro(String msg) { System.out.println(" ERRO: " + msg); }
+    private static void ok(String msg) {
+        System.out.println("  ✔ " + msg);
+    }
+
+    private static void erro(String msg) {
+        System.out.println(" ERRO: " + msg);
+    }
 
     private Utilizador criarUtilizador(String nome, String apelido, String tipo) {
         Utilizador u = new Utilizador();
@@ -86,8 +197,29 @@ public class MainApplication implements CommandLineRunner {
         u.setEmail(nome.toLowerCase() + "." + apelido.toLowerCase()
                 + "." + System.nanoTime() + "@clinica.pt");
         u.setTipoUtilizador(tipo);
-        u.setSenha("Clinica2025!");  //   senha padrao para testes
+        u.setSenha("Clinica2025!");
+        u.setStatus("ATIVO");
         return utilizadorService.salvar(u);
+    }
+
+    private AtendimentoProcedimento criarAtendimentoProcedimento(
+            Atendimento atendimento,
+            Procedimento procedimento,
+            int quantidade,
+            BigDecimal desconto
+    ) {
+        AtendimentoProcedimento atendimentoProcedimento = new AtendimentoProcedimento();
+        AtendimentoProcedimentoId id = new AtendimentoProcedimentoId();
+        id.setIdAtendimento(atendimento.getId());
+        id.setIdProcedimento(procedimento.getId());
+
+        atendimentoProcedimento.setId(id);
+        atendimentoProcedimento.setIdAtendimento(atendimento);
+        atendimentoProcedimento.setIdProcedimento(procedimento);
+        atendimentoProcedimento.setQuantidade(quantidade);
+        atendimentoProcedimento.setDesconto(desconto != null ? desconto : BigDecimal.ZERO);
+
+        return atendimentoProcedimento;
     }
 
     // ── Runner ────────────────────────────────────────────────────────────────
@@ -95,16 +227,16 @@ public class MainApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        Utilizador  uPaciente      = null;
-        Utilizador  uDentista      = null;
-        Utilizador  uAssistente    = null;
-        Utilizador  uRecepcionista = null;
-        Paciente    paciente       = null;
-        Dentista    dentista       = null;
-        Seguro      seguro         = null;
-        Consulta    consulta       = null;
-        Atendimento atendimento    = null;
-        Fatura      fatura         = null;
+        Utilizador uPaciente = null;
+        Utilizador uDentista = null;
+        Utilizador uAssistente = null;
+        Utilizador uRecepcionista = null;
+        Paciente paciente = null;
+        Dentista dentista = null;
+        Seguro seguro = null;
+        Consulta consulta = null;
+        Atendimento atendimento = null;
+        Fatura fatura = null;
 
         // ══════════════════════════════════════════════════════════════════════
         // BLOCO 1 - UTILIZADORES
@@ -112,16 +244,18 @@ public class MainApplication implements CommandLineRunner {
         secao("1. UTILIZADORES");
 
         try {
-            uPaciente      = criarUtilizador("Ana",    "Costa",    "PACIENTE");
-            uDentista      = criarUtilizador("Carlos", "Ferreira", "DENTISTA");
-            uAssistente    = criarUtilizador("Sofia",  "Lopes",    "ASSISTENTE");
-            uRecepcionista = criarUtilizador("Rui",    "Santos",   "RECEPCIONISTA");
+            uPaciente = criarUtilizador("Ana", "Costa", "PACIENTE");
+            uDentista = criarUtilizador("Carlos", "Ferreira", "DENTISTA");
+            uAssistente = criarUtilizador("Sofia", "Lopes", "ASSISTENTE");
+            uRecepcionista = criarUtilizador("Rui", "Santos", "RECEPCIONISTA");
             ok("4 utilizadores criados (IDs: "
-                    + uPaciente.getId()      + ", "
-                    + uDentista.getId()      + ", "
-                    + uAssistente.getId()    + ", "
+                    + uPaciente.getId() + ", "
+                    + uDentista.getId() + ", "
+                    + uAssistente.getId() + ", "
                     + uRecepcionista.getId() + ")");
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         // Email duplicado deve ser rejeitado
         try {
@@ -131,6 +265,7 @@ public class MainApplication implements CommandLineRunner {
             dup.setEmail(uPaciente != null ? uPaciente.getEmail() : "dup@clinica.pt");
             dup.setTipoUtilizador("PACIENTE");
             dup.setSenha("Clinica2025!");
+            dup.setStatus("ATIVO");
             utilizadorService.salvar(dup);
             erro("Deveria ter rejeitado email duplicado!");
         } catch (Exception e) {
@@ -142,6 +277,7 @@ public class MainApplication implements CommandLineRunner {
             Utilizador sem = new Utilizador();
             sem.setEmail("semNome@clinica.pt");
             sem.setSenha("Clinica2025!");
+            sem.setStatus("ATIVO");
             utilizadorService.salvar(sem);
             erro("Deveria ter rejeitado utilizador sem nome!");
         } catch (Exception e) {
@@ -155,7 +291,7 @@ public class MainApplication implements CommandLineRunner {
             semSenha.setUltimoNome("Senha");
             semSenha.setEmail("semsenha." + System.nanoTime() + "@clinica.pt");
             semSenha.setTipoUtilizador("PACIENTE");
-            // sem setSenha() -- deve ser rejeitado
+            semSenha.setStatus("ATIVO");
             utilizadorService.salvar(semSenha);
             erro("Deveria ter rejeitado utilizador sem senha!");
         } catch (Exception e) {
@@ -164,7 +300,9 @@ public class MainApplication implements CommandLineRunner {
 
         try {
             ok("Total de utilizadores na BD: " + utilizadorService.listarTodos().size());
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         // ══════════════════════════════════════════════════════════════════════
         // BLOCO 2 - PACIENTE
@@ -180,7 +318,9 @@ public class MainApplication implements CommandLineRunner {
             p.setDataRegisto(LocalDate.now());
             paciente = pacienteService.salvar(p);
             ok("Paciente criado com ID: " + paciente.getId());
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         try {
             if (uPaciente == null) throw new Exception("Utilizador paciente nao disponivel");
@@ -223,7 +363,9 @@ public class MainApplication implements CommandLineRunner {
             d.setAtivo(true);
             dentista = dentistaService.salvar(d);
             ok("Dentista criado com ID: " + dentista.getId());
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         try {
             if (uDentista == null) throw new Exception("Utilizador dentista nao disponivel");
@@ -265,7 +407,9 @@ public class MainApplication implements CommandLineRunner {
             a.setAtivo(true);
             assistenteService.salvar(a);
             ok("Assistente criado");
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         try {
             if (uRecepcionista == null) throw new Exception("Utilizador recepcionista nao disponivel");
@@ -276,7 +420,9 @@ public class MainApplication implements CommandLineRunner {
             r.setTurno(Turno.MANHA);
             recepcionistaService.salvar(r);
             ok("Recepcionista criado");
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         // ══════════════════════════════════════════════════════════════════════
         // BLOCO 5 - SEGURO & PACIENTE x SEGURO
@@ -291,7 +437,9 @@ public class MainApplication implements CommandLineRunner {
             s.setValidoAte(LocalDate.now().plusYears(1));
             seguro = seguroService.salvar(s);
             ok("Seguro criado com ID: " + seguro.getId());
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         try {
             if (paciente == null || seguro == null)
@@ -308,7 +456,9 @@ public class MainApplication implements CommandLineRunner {
             ps.setDataFimCobertura(LocalDate.now().plusYears(1));
             pacientexSeguroService.salvar(ps);
             ok("Paciente associado ao seguro");
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         try {
             if (paciente == null || seguro == null)
@@ -341,7 +491,9 @@ public class MainApplication implements CommandLineRunner {
             ce.setUltimoNome("Costa");
             contatoEmergenciaService.salvar(ce);
             ok("Contato de emergencia criado");
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         try {
             if (paciente == null) throw new Exception("Paciente nao disponivel");
@@ -366,7 +518,9 @@ public class MainApplication implements CommandLineRunner {
             pr.setObservacoes("Paciente sem alergias conhecidas.");
             prontuarioService.criarProntuario(pr);
             ok("Prontuario criado");
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         try {
             if (paciente == null) throw new Exception("Paciente nao disponivel");
@@ -397,7 +551,9 @@ public class MainApplication implements CommandLineRunner {
             c.setDataMarcacao(LocalDate.now());
             consulta = consultaService.agendarConsulta(c);
             ok("Consulta agendada com ID: " + consulta.getId());
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         try {
             if (paciente == null || dentista == null)
@@ -438,7 +594,9 @@ public class MainApplication implements CommandLineRunner {
             at.setObservacoes("Aplicar selante apos tratamento.");
             atendimento = atendimentoService.salvar(at);
             ok("Atendimento criado com ID: " + atendimento.getId());
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         try {
             if (consulta == null) throw new Exception("Consulta nao disponivel");
@@ -451,58 +609,130 @@ public class MainApplication implements CommandLineRunner {
             ok("Retorno sem periodo rejeitado: " + e.getMessage());
         }
 
+        int idAtendimentoCriado = atendimento.getId();
+
         // ══════════════════════════════════════════════════════════════════════
-        // BLOCO 10 - FATURA & PAGAMENTO
+        // BLOCO 10 - FATURA & PAGAMENTO (COM PROCEDIMENTOS)
         // ══════════════════════════════════════════════════════════════════════
         secao("10. FATURA & PAGAMENTO");
 
         try {
-            if (atendimento == null) throw new Exception("Atendimento nao disponivel");
-            Fatura f = new Fatura();
-            f.setIdAtendimento(atendimentoService.buscarPorId(atendimento.getId()));
-            f.setValorFinal(new BigDecimal("150.00"));
-            f.setEstado(EstadoFatura.PENDENTE);
-            fatura = faturaService.emitirFatura(f);
-            ok("Fatura emitida com ID: " + fatura.getId()
-                    + " | Valor: " + fatura.getValorFinal() + "E"
-                    + " | Data: " + fatura.getDataEmissao());
-        } catch (Exception e) { erro(e.getMessage()); }
+            // -------------------------------------------------------------
+            // 1. Garantir que existem procedimentos de exemplo na base de dados
+            // -------------------------------------------------------------
+            Procedimento procConsulta = null;
+            Procedimento procProtese = null;
+            Procedimento procEstetica = null;
 
-        try {
-            if (atendimento == null) throw new Exception("Atendimento nao disponivel");
-            Fatura fInv = new Fatura();
-            fInv.setIdAtendimento(atendimentoService.buscarPorId(atendimento.getId()));
-            fInv.setValorFinal(BigDecimal.ZERO);
-            faturaService.emitirFatura(fInv);
-            erro("Deveria ter rejeitado fatura com valor zero!");
+            // Tenta buscar procedimentos pelos nomes (ou cria se não existirem)
+            List<Procedimento> todosProcedimentos = procedimentoRepository.findAll();
+            for (Procedimento p : todosProcedimentos) {
+                if ("Consulta Geral".equals(p.getNome())) procConsulta = p;
+                if ("Implante Dentário".equals(p.getNome())) procProtese = p;
+                if ("Branqueamento".equals(p.getNome())) procEstetica = p;
+            }
+
+            if (procConsulta == null) {
+                procConsulta = new Procedimento();
+                procConsulta.setNome("Consulta Geral");
+                procConsulta.setValor(new BigDecimal("150.00"));
+                procConsulta.setTaxaIva(BigDecimal.ZERO);   // 0%
+                procConsulta.setStatus("ATIVO");
+                procConsulta.setTipo("terapeutico");
+                procConsulta = procedimentoRepository.save(procConsulta);
+                ok("Procedimento 'Consulta Geral' criado (IVA 0%)");
+            }
+
+            if (procProtese == null) {
+                procProtese = new Procedimento();
+                procProtese.setNome("Implante Dentário");
+                procProtese.setValor(new BigDecimal("800.00"));
+                procProtese.setTaxaIva(new BigDecimal("6")); // 6%
+                procProtese.setStatus("ATIVO");
+                procProtese.setTipo("protese");
+                procProtese = procedimentoRepository.save(procProtese);
+                ok("Procedimento 'Implante Dentário' criado (IVA 6%)");
+            }
+
+            if (procEstetica == null) {
+                procEstetica = new Procedimento();
+                procEstetica.setNome("Branqueamento");
+                procEstetica.setValor(new BigDecimal("200.00"));
+                procEstetica.setTaxaIva(new BigDecimal("23")); // 23%
+                procEstetica.setStatus("ATIVO");
+                procEstetica.setTipo("estetico");
+                procEstetica = procedimentoRepository.save(procEstetica);
+                ok("Procedimento 'Branqueamento' criado (IVA 23%)");
+            }
+
+            // -------------------------------------------------------------
+            // 2. Criar três atendimentos diferentes, cada um com um procedimento
+            // -------------------------------------------------------------
+            // Atendimento 1 – apenas consulta (IVA 0%)
+            Consulta consulta1 = consultaService.buscarPorId(consulta.getId()); // reutiliza a consulta criada no bloco 8
+            Atendimento at1 = new Atendimento();
+            at1.setIdConsulta(consulta1);
+            at1.setDiagnostico("Consulta de rotina");
+            at1.setRetorno(false);
+            at1 = atendimentoService.salvar(at1);
+            // Associar procedimento de consulta
+            AtendimentoProcedimento ap1 = criarAtendimentoProcedimento(at1, procConsulta, 1, BigDecimal.ZERO);
+            atendimentoProcedimentoRepository.save(ap1);
+            ok("Atendimento 1 (consulta) criado com ID " + at1.getId());
+
+            // Atendimento 2 – apenas prótese (IVA 6%)
+            Consulta consulta2 = new Consulta();
+            consulta2.setIdPaciente(pacienteService.buscarPorId(paciente.getId()));
+            consulta2.setIdDentista(dentistaService.buscarPorId(dentista.getId()));
+            consulta2.setDataHoraInicio(Instant.now().plusSeconds(172800)); // +2 dias
+            consulta2.setDuracao(45);
+            consulta2.setTipo("PROTESE");
+            consulta2.setStatus(EstadoConsulta.AGENDADA);
+            consulta2.setDataMarcacao(LocalDate.now());
+            consulta2 = consultaService.agendarConsulta(consulta2);
+            Atendimento at2 = new Atendimento();
+            at2.setIdConsulta(consulta2);
+            at2.setDiagnostico("Colocação de implante");
+            at2.setRetorno(true);
+            at2.setPeriodoRetorno(30);
+            at2 = atendimentoService.salvar(at2);
+            AtendimentoProcedimento ap2 = criarAtendimentoProcedimento(at2, procProtese, 1, BigDecimal.ZERO);
+            atendimentoProcedimentoRepository.save(ap2);
+            ok("Atendimento 2 (prótese) criado com ID " + at2.getId());
+
+            // Atendimento 3 – apenas estética (IVA 23%)
+            Consulta consulta3 = new Consulta();
+            consulta3.setIdPaciente(pacienteService.buscarPorId(paciente.getId()));
+            consulta3.setIdDentista(dentistaService.buscarPorId(dentista.getId()));
+            consulta3.setDataHoraInicio(Instant.now().plusSeconds(259200)); // +3 dias
+            consulta3.setDuracao(30);
+            consulta3.setTipo("ESTETICA");
+            consulta3.setStatus(EstadoConsulta.AGENDADA);
+            consulta3.setDataMarcacao(LocalDate.now());
+            consulta3 = consultaService.agendarConsulta(consulta3);
+            Atendimento at3 = new Atendimento();
+            at3.setIdConsulta(consulta3);
+            at3.setDiagnostico("Branqueamento");
+            at3.setRetorno(false);
+            at3 = atendimentoService.salvar(at3);
+            AtendimentoProcedimento ap3 = criarAtendimentoProcedimento(at3, procEstetica, 1, BigDecimal.ZERO);
+            atendimentoProcedimentoRepository.save(ap3);
+            ok("Atendimento 3 (estética) criado com ID " + at3.getId());
+
+            // -------------------------------------------------------------
+            // 3. Emitir as faturas (uma para cada atendimento)
+            // -------------------------------------------------------------
+            Fatura fatura1 = faturaService.emitirFaturaPorAtendimento(at1);
+            ok("Fatura 1 (consulta, IVA 0%) emitida com ID: " + fatura1.getId() + " | Valor Final: " + fatura1.getValorFinal() + "€");
+
+            Fatura fatura2 = faturaService.emitirFaturaPorAtendimento(at2);
+            ok("Fatura 2 (prótese, IVA 6%) emitida com ID: " + fatura2.getId() + " | Valor Final: " + fatura2.getValorFinal() + "€");
+
+            Fatura fatura3 = faturaService.emitirFaturaPorAtendimento(at3);
+            ok("Fatura 3 (estética, IVA 23%) emitida com ID: " + fatura3.getId() + " | Valor Final: " + fatura3.getValorFinal() + "€");
+
         } catch (Exception e) {
-            ok("Valor zero rejeitado: " + e.getMessage());
-        }
-
-        try {
-            if (fatura == null || uPaciente == null)
-                throw new Exception("Fatura ou utilizador nao disponivel");
-            Pagamento pg = new Pagamento();
-            pg.setIdFatura(faturaService.buscarPorId(fatura.getId()));
-            pg.setIdUtilizador(utilizadorService.buscarPorId(uPaciente.getId()));
-            pg.setValorPago(new BigDecimal("150.00"));
-            pg.setMetodo(MetodoPagamento.MBWAY);
-            pg.setDataPagamento(LocalDate.now());
-            Pagamento pgSalvo = pagamentoService.registrarPagamento(pg);
-            ok("Pagamento registado com ID: " + pgSalvo.getId()
-                    + " | Metodo: " + pgSalvo.getMetodo());
-        } catch (Exception e) { erro(e.getMessage()); }
-
-        try {
-            if (fatura == null) throw new Exception("Fatura nao disponivel");
-            Pagamento pgFut = new Pagamento();
-            pgFut.setIdFatura(faturaService.buscarPorId(fatura.getId()));
-            pgFut.setValorPago(new BigDecimal("50.00"));
-            pgFut.setDataPagamento(LocalDate.now().plusDays(5));
-            pagamentoService.registrarPagamento(pgFut);
-            erro("Deveria ter rejeitado data de pagamento futura!");
-        } catch (Exception e) {
-            ok("Data de pagamento futura rejeitada: " + e.getMessage());
+            erro(e.getMessage());
         }
 
         // ══════════════════════════════════════════════════════════════════════
@@ -514,9 +744,11 @@ public class MainApplication implements CommandLineRunner {
             System.out.println("  Utilizadores (" + utilizadorService.listarTodos().size() + "):");
             utilizadorService.listarTodos().forEach(u ->
                     System.out.println("    * [" + u.getTipoUtilizador() + "] "
-                            + u.getPrimeiroNome() + " " + u.getUltimoNome()
+                            + u.getPrimeiroNome() + " " + (u.getUltimoNome() != null ? u.getUltimoNome() : "")
                             + " -- " + u.getEmail()));
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         try {
             System.out.println("  Pacientes    : " + pacienteService.listarTodos().size());
@@ -525,7 +757,9 @@ public class MainApplication implements CommandLineRunner {
             System.out.println("  Atendimentos : " + atendimentoService.listarTodos().size());
             System.out.println("  Faturas      : " + faturaService.listarTodos().size());
             System.out.println("  Pagamentos   : " + pagamentoService.listarTodos().size());
-        } catch (Exception e) { erro(e.getMessage()); }
+        } catch (Exception e) {
+            erro(e.getMessage());
+        }
 
         System.out.println("\n╔══════════════════════════════════════╗");
         System.out.println("║      TODOS OS TESTES CONCLUÍDOS      ║");
