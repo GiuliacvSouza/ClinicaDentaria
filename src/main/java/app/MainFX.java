@@ -15,6 +15,10 @@ public class MainFX extends Application {
 
     private static ConfigurableApplicationContext springContext;
 
+    public static ConfigurableApplicationContext getSpringContext() {
+        return springContext;
+    }
+
     @Override
     public void init() {
 

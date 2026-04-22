@@ -1,5 +1,6 @@
 package controller;
 
+import app.SessionContext;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -124,7 +125,7 @@ public class LoginController {
                         // Atualiza último acesso (ultimoAcesso) com a data/hora atual
                         user.setUltimoAcesso(Instant.now());
                         utilizadorService.salvar(user);
-
+                        SessionContext.iniciarSessao(utilizadorLogado, recepcionistaLogado);
                         showSuccessAndNavigate();
                     } else {
                         showError("Email, palavra-passe inválidos ou conta inativa");

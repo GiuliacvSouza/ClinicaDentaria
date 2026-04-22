@@ -2,6 +2,7 @@ package bll;
 
 import dal.ConsultaRepository;
 import model.Consulta;
+import model.enums.EstadoConsulta;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -35,6 +36,10 @@ public class ConsultaService {
 
     public List<Consulta> listarTodas() {
         return repository.findAll();
+    }
+
+    public List<Consulta> listarPorStatus(EstadoConsulta status) {
+        return repository.findByStatus(status);
     }
 
     public Consulta buscarPorId(Integer id) {

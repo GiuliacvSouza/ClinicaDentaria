@@ -2,6 +2,7 @@ package bll;
 
 import dal.AtendimentoRepository;
 import model.Atendimento;
+import model.Consulta;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,6 +39,15 @@ public class AtendimentoService {
 
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Atendimento não encontrado"));
+    }
+
+    public Atendimento buscarPorConsulta(Consulta consulta) {
+        if (consulta == null || consulta.getId() == null) {
+            return null;
+        }
+
+        return repository.findByIdConsulta_Id(consulta.getId())
+                .orElse(null);
     }
 
     public void excluir(Integer id) {

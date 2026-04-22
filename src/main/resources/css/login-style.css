@@ -2,13 +2,13 @@
 .titulo-login {
     -fx-font-size: 50px;
     -fx-font-weight: normal;
-    -fx-text-fill: rgba(0, 0, 0, 0.8);       /* era #000000CC */
+    -fx-text-fill: rgba(0, 0, 0, 0.8);       /* #000000CC */
     -fx-font-family: 'Poppins';
 }
 
 .subtitulo-login {
     -fx-font-size: 20px;
-    -fx-text-fill: rgba(0, 0, 0, 0.8);       /* era #000000CC */
+    -fx-text-fill: rgba(0, 0, 0, 0.8);       /* #000000CC */
     -fx-font-family: 'Poppins';
     -fx-font-weight: normal;
     -fx-padding: 0 0 40 0;
@@ -53,8 +53,8 @@
     -fx-pref-width: 496px;
     -fx-pref-height: 63px;
     -fx-background-radius: 8px;
-    -fx-background-color: rgba(76, 148, 140, 0.07);   /* era #4C948C12 */
-    -fx-border-color: rgba(76, 148, 140, 0.13);        /* era #4C948C21 */
+    -fx-background-color: rgba(76, 148, 140, 0.07);   /* #4C948C12 */
+    -fx-border-color: rgba(76, 148, 140, 0.13);        /* #4C948C21 */
     -fx-border-radius: 8px;
     -fx-border-width: 1px;
     -fx-padding: 0 15px;
@@ -91,7 +91,7 @@
 /* ==================== CARD DO FORMULÁRIO ==================== */
 .form-login {
     -fx-padding: 30;
-    -fx-background-color: rgba(76, 148, 140, 0.07);   /* era #4C948C12 */
+    -fx-background-color: rgba(76, 148, 140, 0.07);   /* #4C948C12 */
     -fx-background-radius: 10;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 20, 0, 0, 5);
 }

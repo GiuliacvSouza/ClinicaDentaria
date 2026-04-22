@@ -121,6 +121,25 @@ public class FaturaService {
                 .orElseThrow(() -> new RuntimeException("Fatura não encontrada."));
     }
 
+    public Fatura buscarPorAtendimento(Integer atendimentoId) {
+        if (atendimentoId == null) {
+            return null;
+        }
+
+        return repository.findByIdAtendimento_Id(atendimentoId)
+                .orElse(null);
+    }
+
+    @Transactional
+    public Fatura buscarOuEmitirPorAtendimento(Atendimento atendimento) {
+        if (atendimento == null || atendimento.getId() == null) {
+            throw new RuntimeException("Atendimento nÃ£o informado.");
+        }
+
+        Fatura existente = buscarPorAtendimento(atendimento.getId());
+        return existente != null ? existente : emitirFaturaPorAtendimento(atendimento);
+    }
+
     public void excluir(Integer id) {
         repository.deleteById(id);
     }
