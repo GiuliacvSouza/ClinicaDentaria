@@ -18,6 +18,8 @@ public class FaturaSchemaInitializer {
     public void ajustarSchemaFatura() {
         jdbcTemplate.execute("ALTER TABLE fatura ADD COLUMN IF NOT EXISTS valor_base numeric(10,2)");
         jdbcTemplate.execute("ALTER TABLE fatura ADD COLUMN IF NOT EXISTS taxa_iva numeric(5,2)");
+        jdbcTemplate.execute("ALTER TABLE fatura ADD COLUMN IF NOT EXISTS valor_iva numeric(10,2)");
+        jdbcTemplate.execute("ALTER TABLE fatura ADD COLUMN IF NOT EXISTS valor_final numeric(10,2)");
 
         jdbcTemplate.execute(
                 "UPDATE fatura " +
@@ -31,11 +33,19 @@ public class FaturaSchemaInitializer {
 
         jdbcTemplate.execute(
                 "UPDATE fatura " +
-                "SET valor_final = ROUND((COALESCE(valor_base, 0) * (1 + COALESCE(taxa_iva, 0) / 100.0))::numeric, 2) " +
+                "SET valor_iva = ROUND((COALESCE(valor_base, 0) * (COALESCE(taxa_iva, 0) / 100.0))::numeric, 2) " +
+                "WHERE valor_iva IS NULL"
+        );
+
+        jdbcTemplate.execute(
+                "UPDATE fatura " +
+                "SET valor_final = ROUND((COALESCE(valor_base, 0) + COALESCE(valor_iva, 0))::numeric, 2) " +
                 "WHERE valor_final IS NULL"
         );
 
         jdbcTemplate.execute("ALTER TABLE fatura ALTER COLUMN valor_base SET NOT NULL");
         jdbcTemplate.execute("ALTER TABLE fatura ALTER COLUMN taxa_iva SET NOT NULL");
+        jdbcTemplate.execute("ALTER TABLE fatura ALTER COLUMN valor_iva SET NOT NULL");
+        jdbcTemplate.execute("ALTER TABLE fatura ALTER COLUMN valor_final SET NOT NULL");
     }
 }

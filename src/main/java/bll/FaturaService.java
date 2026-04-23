@@ -85,6 +85,7 @@ public class FaturaService {
         fatura.setEstado(EstadoFatura.PENDENTE);
         fatura.setValorBase(resumo.valorBase());
         fatura.setTaxaIva(resumo.taxaIva());
+        preencherValoresCalculados(fatura);
 
         return repository.save(fatura);
     }
@@ -168,7 +169,23 @@ public class FaturaService {
             fatura.setEstado(EstadoFatura.PENDENTE);
         }
 
+        preencherValoresCalculados(fatura);
+
         return repository.save(fatura);
+    }
+
+    private void preencherValoresCalculados(Fatura fatura) {
+        BigDecimal valorBase = fatura.getValorBase() != null ? fatura.getValorBase() : BigDecimal.ZERO;
+        BigDecimal taxaIva = fatura.getTaxaIva() != null ? fatura.getTaxaIva() : BigDecimal.ZERO;
+
+        BigDecimal valorIva = valorBase.multiply(
+                taxaIva.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)
+        ).setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal valorFinal = valorBase.add(valorIva).setScale(2, RoundingMode.HALF_UP);
+
+        fatura.setValorIva(valorIva);
+        fatura.setValorFinal(valorFinal);
     }
 
 }

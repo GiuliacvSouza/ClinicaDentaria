@@ -10,7 +10,6 @@ import org.hibernate.annotations.GenerationTime;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "fatura")
@@ -27,8 +26,12 @@ public class Fatura {
     @Column(name = "dataEmissao")
     private LocalDate dataEmissao;
 
+    @Column(name = "valor_iva", precision = 10, scale = 2)
+    @Generated(GenerationTime.ALWAYS)
+    private BigDecimal valorIva;
+
     @Column(name = "valor_final", precision = 10, scale = 2)
-    @Generated(GenerationTime.INSERT)
+    @Generated(GenerationTime.ALWAYS)
     private BigDecimal valorFinal;
 
     @Column(name = "valor_base")
@@ -88,11 +91,22 @@ public class Fatura {
         this.dataEmissao = dataEmissao;
     }
 
+    public BigDecimal getValorIva() {
+        if (valorIva == null && valorBase != null && taxaIva != null) {
+            return valorBase.multiply(
+                    taxaIva.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)
+            ).setScale(2, RoundingMode.HALF_UP);
+        }
+        return valorIva;
+    }
+
+    public void setValorIva(BigDecimal valorIva) {
+        this.valorIva = valorIva;
+    }
+
     public BigDecimal getValorFinal() {
         if (valorFinal == null && valorBase != null && taxaIva != null) {
-            return valorBase.multiply(
-                    BigDecimal.ONE.add(taxaIva.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP))
-            ).setScale(2, RoundingMode.HALF_UP);
+            return valorBase.add(getValorIva()).setScale(2, RoundingMode.HALF_UP);
         }
         return valorFinal;
     }
