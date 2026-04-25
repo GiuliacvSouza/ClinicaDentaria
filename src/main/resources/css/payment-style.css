@@ -398,6 +398,43 @@
     -fx-text-fill: #2e7f77;
 }
 
+/* Scrollbar global: visual minimalista e clean */
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 10;
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 10;
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(0,0,0,0.12);
+    -fx-background-radius: 6;
+    -fx-padding: 2;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.06), 2, 0.0, 0, 1 );
+}
+
+.scroll-bar:hover .thumb {
+    -fx-background-color: rgba(0,0,0,0.22);
+}
+
+.scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-opacity: 0;
+    -fx-max-height: 0;
+    -fx-max-width: 0;
+    -fx-padding: 0;
+}
+
 .payment-btn {
     -fx-background-color: #f8fbfa;
     -fx-border-color: #d9e6e2;

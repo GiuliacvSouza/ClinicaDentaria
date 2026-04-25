@@ -69,3 +69,109 @@
 .button-entrar:hover {
     -fx-background-color: #6b8e85;
 }
+
+/* Scrollbar global: visual minimalista e clean */
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 10;
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 10;
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(0,0,0,0.12);
+    -fx-background-radius: 6;
+    -fx-padding: 2;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.06), 2, 0.0, 0, 1 );
+}
+
+.scroll-bar:hover .thumb {
+    -fx-background-color: rgba(0,0,0,0.22);
+}
+
+.scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-opacity: 0;
+    -fx-max-height: 0;
+    -fx-max-width: 0;
+    -fx-padding: 0;
+}
+
+/* SplitPane divider: remover linha grossa e deixar área de arrasto discreta */
+.split-pane > .divider {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.split-pane:vertical > .divider {
+    -fx-pref-width: 8; /* área clicável/arrastável reduzida */
+}
+
+.split-pane:horizontal > .divider {
+    -fx-pref-height: 8;
+}
+
+/* Linha visual muito fina no centro do divider (opcional) */
+.split-pane:vertical > .divider .line,
+.split-pane:vertical > .divider .center {
+    -fx-background-color: rgba(0,0,0,0.06);
+    -fx-background-radius: 2;
+    -fx-pref-width: 1;
+    -fx-max-width: 1;
+}
+
+.split-pane:horizontal > .divider .line,
+.split-pane:horizontal > .divider .center {
+    -fx-background-color: rgba(0,0,0,0.06);
+    -fx-background-radius: 2;
+    -fx-pref-height: 1;
+    -fx-max-height: 1;
+}
+
+/* Regras mais específicas para eliminar qualquer indicação visual do divider
+   mas mantendo a área clicável/arrastável (pref width/height). */
+.split-pane .divider,
+.split-pane > .divider,
+.split-pane .splitter {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+    -fx-effect: none !important;
+    -fx-padding: 0 !important;
+}
+
+.split-pane .divider .center,
+.split-pane .divider .line,
+.split-pane .splitter .center,
+.split-pane .splitter .line {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+    -fx-effect: none !important;
+}
+
+/* Mantém uma área de arrasto discreta sem visual forte */
+.split-pane:vertical > .divider,
+.split-pane .divider:vertical {
+    -fx-pref-width: 10;
+    -fx-min-width: 6;
+}
+
+.split-pane:horizontal > .divider,
+.split-pane .divider:horizontal {
+    -fx-pref-height: 10;
+    -fx-min-height: 6;
+}
+
+/* Se ainda houver uma borda herdada, zera a opacidade visual da linha interna */
+.split-pane .divider .line {
+    -fx-opacity: 0 !important;
+}
