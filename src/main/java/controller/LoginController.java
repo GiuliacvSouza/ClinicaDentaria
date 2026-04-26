@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
@@ -27,9 +26,14 @@ import java.time.Instant;
 public class LoginController {
 
     @FXML private TextField txtEmail;
-    @FXML private PasswordField txtPassword;
+    @FXML private TextField txtPassword;
     @FXML private Button btnEntrar;
+    @FXML private Button btnTogglePassword;
     @FXML private Label lblErro;
+
+    private boolean senhaVisivel = false;
+    private String senhaReal = "";
+    private boolean atualizandoSenha = false;
 
     @Autowired
     private UtilizadorService utilizadorService;
@@ -44,6 +48,11 @@ public class LoginController {
     public void initialize() {
         setupEventHandlers();
         setupPlaceholders();
+        setupPasswordToggle();
+    }
+
+    private void setupPasswordToggle() {
+        // Setup já feito no FXML com SVGPath
     }
 
     private void setupEventHandlers() {
@@ -69,18 +78,45 @@ public class LoginController {
         txtPassword.textProperty().addListener((obs, old, newVal) -> {
             lblErro.setVisible(false);
             txtPassword.setStyle("");
+            if (!atualizandoSenha) {
+                if (!senhaVisivel) {
+                    senhaReal = newVal;
+                    atualizandoSenha = true;
+                    int posCursor = txtPassword.getCaretPosition();
+                    txtPassword.setText(new String(new char[newVal.length()]).replace('\0', '•'));
+                    txtPassword.positionCaret(Math.min(posCursor, txtPassword.getText().length()));
+                    atualizandoSenha = false;
+                } else {
+                    senhaReal = newVal;
+                }
+            }
         });
     }
 
     private void setupPlaceholders() {
         txtEmail.setPromptText("seu@email.com");
-        txtPassword.setPromptText("********");
+        txtPassword.setPromptText("••••••••");
+    }
+
+    @FXML
+    private void togglePasswordVisibility() {
+        senhaVisivel = !senhaVisivel;
+        atualizandoSenha = true;
+        if (senhaVisivel) {
+            txtPassword.setText(senhaReal);
+        } else {
+            senhaReal = txtPassword.getText();
+            if (!senhaReal.isEmpty()) {
+                txtPassword.setText(new String(new char[senhaReal.length()]).replace('\0', '•'));
+            }
+        }
+        atualizandoSenha = false;
     }
 
     @FXML
     private void handleLogin() {
         String email = txtEmail.getText().trim();
-        String senha = txtPassword.getText();
+        String senha = senhaVisivel ? txtPassword.getText() : senhaReal;
 
         if (email.isEmpty()) {
             showError("Por favor, insira o email");
