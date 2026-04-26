@@ -492,8 +492,8 @@ public class PaymentController {
 
         int total = filteredConsultas.size();
         consultasResumoLabel.setText(total == 1
-                ? "1 consulta concluida pronta para faturacao"
-                : total + " consultas concluidas prontas para faturacao");
+                ? "1 consulta concluida pronta para pagamento"
+                : total + " consultas concluidas prontas para pagamento");
     }
 
     private void configurarSkeleton() {

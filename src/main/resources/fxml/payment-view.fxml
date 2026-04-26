@@ -39,7 +39,7 @@
         <HBox alignment="CENTER_LEFT" spacing="14.0" HBox.hgrow="ALWAYS">
             <Button mnemonicParsing="false" onAction="#abrirAgenda" styleClass="nav-button" text="Agenda" />
             <Button mnemonicParsing="false" onAction="#abrirPacientes" styleClass="nav-button" text="Pacientes" />
-            <Button mnemonicParsing="false" styleClass="nav-button-active" text="Faturacao" />
+            <Button mnemonicParsing="false" styleClass="nav-button-active" text="Pagamentos" />
         </HBox>
 
         <HBox alignment="CENTER_RIGHT" spacing="12.0">
@@ -73,7 +73,7 @@
             </padding>
 
             <VBox spacing="4.0">
-                <Label styleClass="page-title" text="Faturacao" />
+                <Label styleClass="page-title" text="Pendente de pagamento" />
                 <Label styleClass="page-subtitle" text="Emita a fatura-recibo das consultas concluidas e feche o ciclo financeiro do atendimento." />
             </VBox>
 
@@ -85,7 +85,7 @@
                 <HBox alignment="CENTER_LEFT">
                     <Label styleClass="section-title" text="Consultas Concluidas" />
                     <Region HBox.hgrow="ALWAYS" />
-                    <Label fx:id="consultasResumoLabel" styleClass="section-caption" text="0 consultas concluidas prontas para faturacao" />
+                    <Label fx:id="consultasResumoLabel" styleClass="section-caption" text="0 consultas concluidas prontas para pagamento" />
                 </HBox>
 
                 <ListView fx:id="consultasListView" styleClass="consultas-list" VBox.vgrow="ALWAYS" />

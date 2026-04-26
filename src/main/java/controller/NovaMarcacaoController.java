@@ -463,7 +463,7 @@ public class NovaMarcacaoController {
             throw new RuntimeException("Nome do paciente é obrigatório.");
         }
         if (txtUltimoNome.getText() == null || txtUltimoNome.getText().isBlank()) {
-            throw new RuntimeException("Último nome do paciente é obrigatório.");
+            throw new RuntimeException("Apelido do paciente é obrigatório.");
         }
         if (txtNif.getText() == null || !txtNif.getText().matches("\\d{9}")) {
             throw new RuntimeException("NIF deve conter exatamente 9 dígitos.");

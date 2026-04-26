@@ -166,8 +166,8 @@
                                 </VBox>
 
                                 <VBox spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                    <Label styleClass="profile-field-label" text="Ultimo nome" />
-                                    <TextField fx:id="txtUltimoNome" styleClass="profile-input" />
+                                    <Label styleClass="profile-field-label" text="Apelido" />
+                                    <TextField fx:id="txtApelido" styleClass="profile-input" />
                                 </VBox>
 
                                 <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="1">

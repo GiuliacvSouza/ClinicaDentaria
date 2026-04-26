@@ -39,7 +39,7 @@
         <HBox alignment="CENTER_LEFT" spacing="14.0" HBox.hgrow="ALWAYS">
             <Button mnemonicParsing="false" onAction="#abrirAgenda" styleClass="nav-button-active" text="Agenda" />
             <Button mnemonicParsing="false" onAction="#abrirPacientes" styleClass="nav-button" text="Pacientes" />
-            <Button mnemonicParsing="false" onAction="#abrirFaturacao" styleClass="nav-button" text="Faturacao" />
+            <Button mnemonicParsing="false" onAction="#abrirFaturacao" styleClass="nav-button" text="Pagamentos" />
         </HBox>
 
         <HBox alignment="CENTER_RIGHT" spacing="12.0">

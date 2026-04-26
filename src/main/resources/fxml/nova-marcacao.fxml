@@ -53,8 +53,8 @@
             <TextField fx:id="txtNome" promptText="Introduza o nome" styleClass="nova-marcacao-campo" />
         </VBox>
         <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-            <Label text="Ultimo Nome *" styleClass="nova-marcacao-label" />
-            <TextField fx:id="txtUltimoNome" promptText="Introduza o ultimo nome" styleClass="nova-marcacao-campo" />
+            <Label text="Apelido *" styleClass="nova-marcacao-label" />
+            <TextField fx:id="txtUltimoNome" promptText="Introduza o apelido" styleClass="nova-marcacao-campo" />
         </VBox>
 
         <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
