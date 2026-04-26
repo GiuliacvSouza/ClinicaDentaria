@@ -24,7 +24,8 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
            "CONCAT(d.utilizador.primeiroNome, ' ', d.utilizador.ultimoNome), " +
            "c.tipo, " +
            "c.dataHoraInicio, " +
-           "c.status) " +
+           "c.status, " +
+           "p.utilizador.nif) " +
            "FROM Consulta c " +
            "LEFT JOIN c.idPaciente p " +
            "LEFT JOIN c.idDentista d " +
@@ -37,7 +38,8 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
            "CONCAT(d.utilizador.primeiroNome, ' ', d.utilizador.ultimoNome), " +
            "c.tipo, " +
            "c.dataHoraInicio, " +
-           "c.status) " +
+           "c.status, " +
+           "p.utilizador.nif) " +
            "FROM Consulta c " +
            "LEFT JOIN c.idPaciente p " +
            "LEFT JOIN c.idDentista d " +

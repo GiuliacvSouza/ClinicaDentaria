@@ -77,7 +77,7 @@
         </VBox>
 
         <HBox spacing="14.0">
-            <TextField promptText="Pesquisar por paciente, NIF ou dentista" styleClass="search-field" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="txtPesquisa" promptText="Pesquisar por paciente, NIF ou dentista" styleClass="search-field" HBox.hgrow="ALWAYS" />
             <Button fx:id="btnHoje" mnemonicParsing="false" onAction="#escolherDia" styleClass="secondary-button" text="Hoje" />
             <Button mnemonicParsing="false" onAction="#abrirNovaMarcacao" styleClass="primary-button" text="+ Nova Marcacao" />
         </HBox>

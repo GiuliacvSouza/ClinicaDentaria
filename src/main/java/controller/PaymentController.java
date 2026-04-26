@@ -404,19 +404,11 @@ public class PaymentController {
             return;
         }
 
-        if (consultaSelecionada.getStatus() == EstadoConsulta.FATURADA
-                || (faturaAtual != null && faturaAtual.getEstado() == EstadoFatura.PAGA)) {
-            mostrarAlerta("Esta consulta ja foi faturada.", Alert.AlertType.INFORMATION);
-            atualizarEstadoAcao();
-            return;
-        }
-
-        MetodoPagamento metodoSelecionado;
+        MetodoPagamento metodoSelecionado = null;
         try {
             metodoSelecionado = getMetodoSelecionado();
-        } catch (RuntimeException e) {
-            mostrarAlerta(e.getMessage());
-            return;
+        } catch (RuntimeException ignored) {
+            // Não obrigar seleção de método: permitimos marcar sempre como paga
         }
 
         Utilizador utilizadorLogado = SessionContext.getUtilizadorLogado();
@@ -425,22 +417,30 @@ public class PaymentController {
             return;
         }
 
+        if (faturaAtual == null) {
+            faturaAtual = faturaService.emitirFaturaPorAtendimento(atendimentoSelecionado);
+        }
+
         Pagamento pagamento = new Pagamento();
         pagamento.setIdUtilizador(utilizadorLogado);
         pagamento.setDataPagamento(LocalDate.now());
         pagamento.setValorPago(obterValorAPagar());
         pagamento.setMetodo(metodoSelecionado);
-
-        if (faturaAtual == null) {
-            faturaAtual = faturaService.emitirFaturaPorAtendimento(atendimentoSelecionado);
-        }
-
         pagamento.setIdFatura(faturaAtual);
+
+        // Registrar pagamento (validações no service garantem integridade)
         pagamentoService.registrarPagamento(pagamento);
 
+        // Sempre marcar a fatura como PAGA e persistir
         faturaAtual.setEstado(EstadoFatura.PAGA);
         faturaAtual = faturaService.salvar(faturaAtual);
-        consultaService.faturarConsulta(consultaSelecionada.getId());
+
+        // Atualizar o estado da consulta para Faturada (idempotente via serviço)
+        try {
+            consultaService.faturarConsulta(consultaSelecionada.getId());
+        } catch (RuntimeException ignored) {
+            // Se a transição for inválida, ainda garantimos que a fatura está marcada como paga
+        }
 
         filteredConsultas.getSource().remove(consultaSelecionada);
         consultasListView.getSelectionModel().clearSelection();

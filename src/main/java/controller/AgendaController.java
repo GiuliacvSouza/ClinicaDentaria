@@ -7,6 +7,7 @@ import bll.ConsultaService;
 import bll.AtendimentoService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -62,6 +63,7 @@ public class AgendaController {
     @FXML private Button btnEmConsulta;
     @FXML private Button btnConcluidas;
     @FXML private Button btnHoje;
+    @FXML private javafx.scene.control.TextField txtPesquisa;
 
     @Autowired
     private ConsultaService consultaService;
@@ -70,6 +72,7 @@ public class AgendaController {
 
     private EstadoConsulta filtroAtual = null;
     private ObservableList<ConsultaAgendadaDTO> consultasCarregadas;
+    private FilteredList<ConsultaAgendadaDTO> consultasFiltradas;
     private java.time.LocalDate dataFiltro;
 
     @FXML
@@ -81,6 +84,11 @@ public class AgendaController {
 
         configurarTabela();
         atualizarEstilosFiltro(btnTodas);
+
+        // configurar pesquisa
+        if (txtPesquisa != null) {
+            txtPesquisa.textProperty().addListener((obs, oldV, newV) -> aplicarFiltroPesquisa(newV));
+        }
 
         // inicializa o filtro de data para hoje e atualiza o rótulo do botão
         dataFiltro = java.time.LocalDate.now();
@@ -254,6 +262,25 @@ public class AgendaController {
         });
     }
 
+    private void aplicarFiltroPesquisa(String termo) {
+        if (consultasFiltradas == null) return;
+        String t = termo == null ? "" : termo.trim().toLowerCase();
+        if (t.isBlank()) {
+            consultasFiltradas.setPredicate(c -> true);
+            return;
+        }
+
+        consultasFiltradas.setPredicate(c -> {
+            if (c == null) return false;
+            String nomePac = c.getNomePaciente() != null ? c.getNomePaciente().toLowerCase() : "";
+            String nomeDen = c.getNomeDentista() != null ? c.getNomeDentista().toLowerCase() : "";
+            String nif = c.getNifPaciente() != null ? c.getNifPaciente().toLowerCase() : "";
+            String proc = c.getProcedimento() != null ? c.getProcedimento().toLowerCase() : "";
+
+            return nomePac.contains(t) || nomeDen.contains(t) || nif.contains(t) || proc.contains(t);
+        });
+    }
+
     private void carregarConsultas() {
         try {
             List<ConsultaAgendadaDTO> consultas = buscarConsultasParaAgenda();
@@ -265,7 +292,8 @@ public class AgendaController {
 
             if (consultasCarregadas == null) {
                 consultasCarregadas = FXCollections.observableArrayList();
-                tblConsultas.setItems(consultasCarregadas);
+                consultasFiltradas = new FilteredList<>(consultasCarregadas, p -> true);
+                tblConsultas.setItems(consultasFiltradas);
             }
 
             consultasCarregadas.setAll(consultas);
@@ -505,21 +533,52 @@ public class AgendaController {
     private void abrirFichaPaciente(ConsultaAgendadaDTO consultaDto) {
         try {
             Consulta consulta = consultaService.buscarPorId(consultaDto.getIdConsulta());
-            Paciente paciente = consulta.getIdPaciente();
-            Utilizador utilizador = paciente != null ? paciente.getUtilizador() : null;
-
-            if (utilizador == null) {
+            if (consulta == null || consulta.getIdPaciente() == null || consulta.getIdPaciente().getId() == null) {
                 mostrarErro("Paciente sem dados associados.");
                 return;
             }
 
-            String detalhes = montarFichaPaciente(consulta, paciente, utilizador);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Ficha do paciente");
-            alert.setHeaderText(utilizador.getPrimeiroNome() + " " + utilizador.getUltimoNome());
-            alert.setContentText(detalhes);
-            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-            alert.showAndWait();
+            Integer pacienteId = consulta.getIdPaciente().getId();
+
+            var resource = getClass().getResource("/fxml/PacienteView.fxml");
+            if (resource == null) {
+                mostrarErro("A pagina de perfil do paciente nao esta disponivel.");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
+            if (MainFX.getSpringContext() != null) {
+                loader.setControllerFactory(MainFX.getSpringContext()::getBean);
+            }
+
+            Stage stage = (Stage) nomeUtilizador.getScene().getWindow();
+            boolean estavaMaximizada = stage.isMaximized();
+            boolean estavaTelaCheia = stage.isFullScreen();
+            double larguraCenaAtual = stage.getScene() != null && stage.getScene().getWidth() > 0
+                    ? stage.getScene().getWidth()
+                    : Math.max(stage.getWidth(), 1);
+            double alturaCenaAtual = stage.getScene() != null && stage.getScene().getHeight() > 0
+                    ? stage.getScene().getHeight()
+                    : Math.max(stage.getHeight(), 1);
+            double larguraJanelaAtual = stage.getWidth() > 0 ? stage.getWidth() : larguraCenaAtual;
+            double alturaJanelaAtual = stage.getHeight() > 0 ? stage.getHeight() : alturaCenaAtual;
+
+            Parent root = loader.load();
+            PacientePerfilController controller = loader.getController();
+            controller.setPacienteId(pacienteId);
+
+            Scene scene = new Scene(root, larguraCenaAtual, alturaCenaAtual);
+            aplicarStylesheet(scene, "/fxml/PacienteView.fxml");
+            stage.setScene(scene);
+            if (estavaTelaCheia) {
+                stage.setFullScreen(true);
+            } else if (estavaMaximizada) {
+                stage.setMaximized(true);
+            } else {
+                stage.setWidth(larguraJanelaAtual);
+                stage.setHeight(alturaJanelaAtual);
+            }
+            stage.show();
         } catch (Exception ex) {
             mostrarErro(ex.getMessage());
         }
@@ -733,7 +792,7 @@ public class AgendaController {
             return new ConsultaAgendadaDTO();
         }
 
-        return new ConsultaAgendadaDTO(
+        ConsultaAgendadaDTO dto = new ConsultaAgendadaDTO(
                 consulta.getId(),
                 formatarNome(consulta.getIdPaciente() != null ? consulta.getIdPaciente().getUtilizador() : null),
                 formatarNome(consulta.getIdDentista() != null ? consulta.getIdDentista().getUtilizador() : null),
@@ -741,6 +800,14 @@ public class AgendaController {
                 consulta.getDataHoraInicio(),
                 consulta.getStatus()
         );
+
+        try {
+            if (consulta.getIdPaciente() != null && consulta.getIdPaciente().getUtilizador() != null) {
+                dto.setNifPaciente(consulta.getIdPaciente().getUtilizador().getNif());
+            }
+        } catch (Exception ignored) {}
+
+        return dto;
     }
 
     private LocalDateTime converterParaDataHora(Instant instante) {
