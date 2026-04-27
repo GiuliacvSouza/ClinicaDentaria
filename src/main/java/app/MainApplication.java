@@ -227,6 +227,13 @@ public class MainApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
+        // Se a propriedade de sistema 'app.skipSeed' estiver ativa, pular a
+        // execução do runner que insere dados na base.
+        if (Boolean.getBoolean("app.skipSeed")) {
+            System.out.println("[MAIN] Seed de dados pulado (app.skipSeed=true)");
+            return;
+        }
+
         // Garantir um utilizador de teste previsível para login durante desenvolvimento
         try {
             Utilizador adminExist = null;

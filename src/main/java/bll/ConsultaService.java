@@ -3,6 +3,9 @@ package bll;
 import dal.ConsultaRepository;
 import dal.DentistaRepository;
 import dal.PacienteRepository;
+import dal.ProcedimentoRepository;
+import dal.AtendimentoProcedimentoRepository;
+import bll.AtendimentoService;
 import jakarta.transaction.Transactional;
 import model.Consulta;
 import model.Dentista;
@@ -26,15 +29,24 @@ public class ConsultaService {
     private final ConsultaRepository repository;
     private final PacienteRepository pacienteRepository;
     private final DentistaRepository dentistaRepository;
+    private final AtendimentoService atendimentoService;
+    private final ProcedimentoRepository procedimentoRepository;
+    private final AtendimentoProcedimentoRepository atendimentoProcedimentoRepository;
 
     public ConsultaService(
             ConsultaRepository repository,
             PacienteRepository pacienteRepository,
-            DentistaRepository dentistaRepository
+            DentistaRepository dentistaRepository,
+            AtendimentoService atendimentoService,
+            ProcedimentoRepository procedimentoRepository,
+            AtendimentoProcedimentoRepository atendimentoProcedimentoRepository
     ) {
         this.repository = repository;
         this.pacienteRepository = pacienteRepository;
         this.dentistaRepository = dentistaRepository;
+        this.atendimentoService = atendimentoService;
+        this.procedimentoRepository = procedimentoRepository;
+        this.atendimentoProcedimentoRepository = atendimentoProcedimentoRepository;
     }
 
     @Transactional
@@ -181,7 +193,41 @@ public class ConsultaService {
 
     @Transactional
     public Consulta finalizarConsulta(Integer id) {
-        return atualizarStatus(id, EstadoConsulta.CONCLUIDA);
+        Consulta consulta = atualizarStatus(id, EstadoConsulta.CONCLUIDA);
+
+        // Se ainda não existir atendimento associado, criar um atendimento básico
+        try {
+            if (atendimentoService.buscarPorConsulta(consulta) == null) {
+                model.Atendimento at = new model.Atendimento();
+                at.setIdConsulta(consulta);
+                at.setRetorno(false);
+                at.setDiagnostico("Atendimento criado automaticamente ao concluir a consulta.");
+                model.Atendimento salvo = atendimentoService.salvar(at);
+
+                // Tentar associar um procedimento automaticamente baseado no tipo/observacoes da consulta
+                try {
+                    String nomeProc = resolverProcedimento(consulta);
+                    if (nomeProc != null && !nomeProc.isBlank()) {
+                        var procs = procedimentoRepository.findByNomeContainingIgnoreCase(nomeProc);
+                        if (procs != null && !procs.isEmpty()) {
+                            model.Procedimento proc = procs.get(0);
+                            model.AtendimentoProcedimento ap = new model.AtendimentoProcedimento();
+                            ap.setIdAtendimento(salvo);
+                            ap.setIdProcedimento(proc);
+                            ap.setQuantidade(1);
+                            ap.setDesconto(java.math.BigDecimal.ZERO);
+                            atendimentoProcedimentoRepository.save(ap);
+                        }
+                    }
+                } catch (RuntimeException ignoredInner) {
+                    // Não bloquear fluxo principal se não for possível mapear procedimento
+                }
+            }
+        } catch (RuntimeException ignored) {
+            // Não impedir a finalização da consulta se a criação do atendimento falhar
+        }
+
+        return consulta;
     }
 
     @Transactional

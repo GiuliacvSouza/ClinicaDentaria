@@ -81,6 +81,8 @@ public class PaymentController {
     @Autowired private FaturaService faturaService;
     @Autowired private PacientexSeguroService pacientexSeguroService;
     @Autowired private PagamentoService pagamentoService;
+    @Autowired private dal.ProcedimentoRepository procedimentoRepository;
+    @Autowired private dal.AtendimentoProcedimentoRepository atendimentoProcedimentoRepository;
 
     @FXML private TextField pesquisarField;
     @FXML private ListView<Consulta> consultasListView;
@@ -124,6 +126,8 @@ public class PaymentController {
         numerarioBtn.setToggleGroup(pagamentoGroup);
         multibancoBtn.setToggleGroup(pagamentoGroup);
         mbwayBtn.setToggleGroup(pagamentoGroup);
+        // Atualizar estado da ação sempre que o método de pagamento mudar
+        pagamentoGroup.selectedToggleProperty().addListener((obs, oldT, newT) -> atualizarEstadoAcao());
     }
 
     private void configurarUtilizador() {
@@ -216,8 +220,8 @@ public class PaymentController {
 
     private void carregarConsultasConcluidas() {
         List<Consulta> consultas = consultaService.listarPorStatus(EstadoConsulta.CONCLUIDA).stream()
-            .filter(this::consultaVisivelParaPagamentoSeguro)
-            .collect(Collectors.toList());
+                .filter(this::consultaDisponivelParaPagamentoSeguro)
+                .collect(Collectors.toList());
 
         filteredConsultas = new FilteredList<>(FXCollections.observableArrayList(consultas), consulta -> true);
         consultasListView.setItems(filteredConsultas);
@@ -255,28 +259,6 @@ public class PaymentController {
         }
     }
 
-    /**
-     * Determina se uma consulta concluida deve ser apresentada na vista de pagamentos.
-     * Agora inclui consultas que nao tenham um Atendimento associado (serao mostradas,
-     * mas a emissao de fatura so e possivel apos criar um Atendimento).
-     */
-    private boolean consultaVisivelParaPagamentoSeguro(Consulta consulta) {
-        try {
-            if (consulta == null) return false;
-
-            Atendimento atendimento = atendimentoService.buscarPorConsulta(consulta);
-            if (atendimento == null) {
-                // Mostrar consultas concluídas mesmo sem atendimento
-                return true;
-            }
-
-            Fatura fatura = faturaService.buscarPorAtendimento(atendimento.getId());
-            return fatura == null || fatura.getEstado() != EstadoFatura.PAGA;
-        } catch (RuntimeException ignored) {
-            return false;
-        }
-    }
-
     private boolean consultaDisponivelParaPagamento(Consulta consulta) {
         if (consulta == null || consulta.getStatus() != EstadoConsulta.CONCLUIDA) {
             return false;
@@ -301,18 +283,45 @@ public class PaymentController {
 
         try {
             atendimentoSelecionado = atendimentoService.buscarPorConsulta(consulta);
-
             if (atendimentoSelecionado == null) {
-                // Consulta sem atendimento: mostramos informações básicas e permitimos
-                // que o utilizador saiba que e necessario criar um atendimento para faturar.
-                faturaAtual = null;
-                preencherResumoFatura();
-                carregarSegurosPaciente(consulta.getIdPaciente());
-                procedimentosContainer.getChildren().clear();
-                valorPagarLabel.setText(formatarMoeda(BigDecimal.ZERO));
-                atualizarEstadoAcao();
-                mostrarSkeleton(false);
-                return;
+                // Criar atendimento mínimo automaticamente para permitir faturação
+                model.Atendimento novo = new model.Atendimento();
+                novo.setIdConsulta(consulta);
+                novo.setRetorno(false);
+                novo.setDiagnostico("Atendimento criado automaticamente ao abrir faturacao.");
+                atendimentoSelecionado = atendimentoService.salvar(novo);
+
+                // Tentar associar um procedimento com base nas observações/tipo da consulta
+                try {
+                    String procedimentoNome = null;
+                    String obs = consulta.getObservacoes();
+                    if (obs != null && !obs.isBlank()) {
+                        for (String linha : obs.split("\\R")) {
+                            if (linha != null && linha.startsWith("Procedimento:")) {
+                                procedimentoNome = linha.substring("Procedimento:".length()).trim();
+                                break;
+                            }
+                        }
+                    }
+                    if (procedimentoNome == null || procedimentoNome.isBlank()) {
+                        procedimentoNome = consulta.getTipo();
+                    }
+
+                    if (procedimentoNome != null && !procedimentoNome.isBlank()) {
+                        var procs = procedimentoRepository.findByNomeContainingIgnoreCase(procedimentoNome);
+                        if (procs != null && !procs.isEmpty()) {
+                            model.Procedimento proc = procs.get(0);
+                            model.AtendimentoProcedimento ap = new model.AtendimentoProcedimento();
+                            ap.setIdAtendimento(atendimentoSelecionado);
+                            ap.setIdProcedimento(proc);
+                            ap.setQuantidade(1);
+                            ap.setDesconto(java.math.BigDecimal.ZERO);
+                            atendimentoProcedimentoRepository.save(ap);
+                        }
+                    }
+                } catch (RuntimeException ignored) {
+                    // não bloquear se não for possível associar procedimento
+                }
             }
 
             faturaAtual = faturaService.buscarPorAtendimento(atendimentoSelecionado.getId());
@@ -436,11 +445,12 @@ public class PaymentController {
             return;
         }
 
-        MetodoPagamento metodoSelecionado = null;
+        MetodoPagamento metodoSelecionado;
         try {
             metodoSelecionado = getMetodoSelecionado();
-        } catch (RuntimeException ignored) {
-            // Não obrigar seleção de método: permitimos marcar sempre como paga
+        } catch (RuntimeException e) {
+            mostrarAlerta("Selecione um método de pagamento antes de emitir a fatura/recibo.");
+            return;
         }
 
         Utilizador utilizadorLogado = SessionContext.getUtilizadorLogado();
@@ -449,38 +459,39 @@ public class PaymentController {
             return;
         }
 
-        if (faturaAtual == null) {
-            faturaAtual = faturaService.emitirFaturaPorAtendimento(atendimentoSelecionado);
-        }
-
-        Pagamento pagamento = new Pagamento();
-        pagamento.setIdUtilizador(utilizadorLogado);
-        pagamento.setDataPagamento(LocalDate.now());
-        pagamento.setValorPago(obterValorAPagar());
-        pagamento.setMetodo(metodoSelecionado);
-        pagamento.setIdFatura(faturaAtual);
-
-        // Registrar pagamento (validações no service garantem integridade)
-        pagamentoService.registrarPagamento(pagamento);
-
-        // Sempre marcar a fatura como PAGA e persistir
-        faturaAtual.setEstado(EstadoFatura.PAGA);
-        faturaAtual = faturaService.salvar(faturaAtual);
-
-        // Atualizar o estado da consulta para Faturada (idempotente via serviço)
         try {
+            if (faturaAtual == null) {
+                faturaAtual = faturaService.emitirFaturaPorAtendimento(atendimentoSelecionado);
+            }
+
+            Pagamento pagamento = new Pagamento();
+            pagamento.setIdUtilizador(utilizadorLogado);
+            pagamento.setDataPagamento(LocalDate.now());
+            pagamento.setValorPago(obterValorAPagar());
+            pagamento.setMetodo(metodoSelecionado);
+            pagamento.setIdFatura(faturaAtual);
+
+            // Registrar pagamento (validações no service garantem integridade)
+            pagamentoService.registrarPagamento(pagamento);
+
+            // Marcar a fatura como PAGA e persistir
+            faturaAtual.setEstado(EstadoFatura.PAGA);
+            faturaAtual = faturaService.salvar(faturaAtual);
+
+            // Atualizar o estado da consulta para FATURADA (visível fora da lista de concluidas)
             consultaService.faturarConsulta(consultaSelecionada.getId());
-        } catch (RuntimeException ignored) {
-            // Se a transição for inválida, ainda garantimos que a fatura está marcada como paga
+
+            // Recarregar lista para remover a consulta paga
+            carregarConsultasConcluidas();
+            consultasListView.getSelectionModel().clearSelection();
+            limparResumo();
+            atualizarResumoLista();
+
+            mostrarAlerta("Fatura-recibo emitida com sucesso. A consulta passou para o estado Faturada.",
+                    Alert.AlertType.INFORMATION);
+        } catch (RuntimeException e) {
+            mostrarAlerta("Erro ao emitir fatura/recibo: " + e.getMessage());
         }
-
-        filteredConsultas.getSource().remove(consultaSelecionada);
-        consultasListView.getSelectionModel().clearSelection();
-        atualizarResumoLista();
-        limparResumo();
-
-        mostrarAlerta("Fatura-recibo emitida com sucesso. A consulta passou para o estado Faturada.",
-                Alert.AlertType.INFORMATION);
     }
 
     private MetodoPagamento getMetodoSelecionado() {
@@ -513,7 +524,9 @@ public class PaymentController {
         boolean semSelecao = atendimentoSelecionado == null;
         boolean jaFaturada = faturaAtual != null && faturaAtual.getEstado() == EstadoFatura.PAGA;
 
-        emitirReciboBtn.setDisable(semSelecao || jaFaturada);
+        boolean semMetodo = pagamentoGroup == null || pagamentoGroup.getSelectedToggle() == null;
+
+        emitirReciboBtn.setDisable(semSelecao || jaFaturada || semMetodo);
         emitirReciboBtn.setText(jaFaturada ? "FATURA JA EMITIDA" : "EMITIR FATURA / RECIBO");
     }
 
