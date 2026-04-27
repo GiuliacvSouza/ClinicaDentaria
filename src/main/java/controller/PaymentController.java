@@ -216,8 +216,8 @@ public class PaymentController {
 
     private void carregarConsultasConcluidas() {
         List<Consulta> consultas = consultaService.listarPorStatus(EstadoConsulta.CONCLUIDA).stream()
-                .filter(this::consultaDisponivelParaPagamentoSeguro)
-                .collect(Collectors.toList());
+            .filter(this::consultaVisivelParaPagamentoSeguro)
+            .collect(Collectors.toList());
 
         filteredConsultas = new FilteredList<>(FXCollections.observableArrayList(consultas), consulta -> true);
         consultasListView.setItems(filteredConsultas);
@@ -255,6 +255,28 @@ public class PaymentController {
         }
     }
 
+    /**
+     * Determina se uma consulta concluida deve ser apresentada na vista de pagamentos.
+     * Agora inclui consultas que nao tenham um Atendimento associado (serao mostradas,
+     * mas a emissao de fatura so e possivel apos criar um Atendimento).
+     */
+    private boolean consultaVisivelParaPagamentoSeguro(Consulta consulta) {
+        try {
+            if (consulta == null) return false;
+
+            Atendimento atendimento = atendimentoService.buscarPorConsulta(consulta);
+            if (atendimento == null) {
+                // Mostrar consultas concluídas mesmo sem atendimento
+                return true;
+            }
+
+            Fatura fatura = faturaService.buscarPorAtendimento(atendimento.getId());
+            return fatura == null || fatura.getEstado() != EstadoFatura.PAGA;
+        } catch (RuntimeException ignored) {
+            return false;
+        }
+    }
+
     private boolean consultaDisponivelParaPagamento(Consulta consulta) {
         if (consulta == null || consulta.getStatus() != EstadoConsulta.CONCLUIDA) {
             return false;
@@ -279,8 +301,18 @@ public class PaymentController {
 
         try {
             atendimentoSelecionado = atendimentoService.buscarPorConsulta(consulta);
+
             if (atendimentoSelecionado == null) {
-                throw new RuntimeException("A consulta ainda nao tem atendimento associado.");
+                // Consulta sem atendimento: mostramos informações básicas e permitimos
+                // que o utilizador saiba que e necessario criar um atendimento para faturar.
+                faturaAtual = null;
+                preencherResumoFatura();
+                carregarSegurosPaciente(consulta.getIdPaciente());
+                procedimentosContainer.getChildren().clear();
+                valorPagarLabel.setText(formatarMoeda(BigDecimal.ZERO));
+                atualizarEstadoAcao();
+                mostrarSkeleton(false);
+                return;
             }
 
             faturaAtual = faturaService.buscarPorAtendimento(atendimentoSelecionado.getId());
