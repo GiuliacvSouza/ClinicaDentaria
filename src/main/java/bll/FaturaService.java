@@ -157,16 +157,14 @@ public class FaturaService {
         if (fatura.getValorBase() == null || fatura.getValorBase().compareTo(BigDecimal.ZERO) <= 0) {
             throw new RuntimeException("Valor base da fatura é obrigatório e deve ser positivo");
         }
-
         BigDecimal taxa = fatura.getTaxaIva();
-        if (taxa != null && !taxa.equals(BigDecimal.ZERO)
-                && !taxa.equals(new BigDecimal("6"))
-                && !taxa.equals(new BigDecimal("23"))) {
-            throw new RuntimeException("Taxa de IVA inválida. Use 0, 6 ou 23");
-        }
-
+        // Permitir qualquer taxa de IVA válida entre 0 e 100 (percentagem). Substitui validação rígida anterior.
         if (taxa == null) {
             fatura.setTaxaIva(BigDecimal.ZERO);
+        } else {
+            if (taxa.compareTo(BigDecimal.ZERO) < 0 || taxa.compareTo(new BigDecimal("100")) > 0) {
+                throw new RuntimeException("Taxa de IVA inválida. Use um valor entre 0 e 100.");
+            }
         }
 
         if (fatura.getDataEmissao() == null) {
