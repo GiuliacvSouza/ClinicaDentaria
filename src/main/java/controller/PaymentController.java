@@ -481,6 +481,15 @@ public class PaymentController {
             // Atualizar o estado da consulta para FATURADA (visível fora da lista de concluidas)
             consultaService.faturarConsulta(consultaSelecionada.getId());
 
+            // Gerar PDF da fatura com segurança (já com a sessão Hibernate)
+            try {
+                faturaService.gerarPdfFaturaPorId(faturaAtual.getId());
+            } catch (RuntimeException e) {
+                // Erro ao gerar PDF não deve bloquear o fluxo de pagamento
+                // Os dados já foram salvos com sucesso
+                mostrarAlerta("O pagamento foi registado, mas não foi possível gerar o PDF da fatura.");
+            }
+
             // Recarregar lista para remover a consulta paga
             carregarConsultasConcluidas();
             consultasListView.getSelectionModel().clearSelection();

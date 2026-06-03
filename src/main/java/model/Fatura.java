@@ -18,6 +18,7 @@ import org.hibernate.generator.EventType;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "fatura")
@@ -49,6 +50,12 @@ public class Fatura {
 
     @Enumerated(EnumType.STRING)
     private EstadoFatura estado;
+
+    @Column(name = "caminho_pdf")
+    private String caminhoPdf;
+
+    @Column(name = "data_geracao_pdf")
+    private LocalDateTime dataGeracaoPdf;
 
     public Integer getId() {
         return id;
@@ -121,5 +128,21 @@ public class Fatura {
 
     public void setValorFinal(BigDecimal valorFinal) {
         this.valorFinal = valorFinal;
+    }
+
+    public String getCaminhoPdf() {
+        return caminhoPdf;
+    }
+
+    public void setCaminhoPdf(String caminhoPdf) {
+        this.caminhoPdf = caminhoPdf;
+    }
+
+    public LocalDateTime getDataGeracaoPdf() {
+        return dataGeracaoPdf;
+    }
+
+    public void setDataGeracaoPdf(LocalDateTime dataGeracaoPdf) {
+        this.dataGeracaoPdf = dataGeracaoPdf;
     }
 }

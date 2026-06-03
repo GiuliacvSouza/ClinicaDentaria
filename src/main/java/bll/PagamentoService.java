@@ -46,4 +46,8 @@ public class PagamentoService {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pagamento não encontrado."));
     }
+
+    public List<Pagamento> listarPorFatura(Integer faturaId) {
+        return repository.findByIdFatura_Id(faturaId);
+    }
 }

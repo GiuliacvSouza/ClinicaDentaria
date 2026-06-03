@@ -31,6 +31,8 @@ dependencies {
 
     runtimeOnly 'org.postgresql:postgresql'
 
+    implementation 'com.github.librepdf:openpdf:2.0.3'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

@@ -20,10 +20,12 @@ public class FaturaService {
 
     private final FaturaRepository repository;
     private final AtendimentoRepository atendimentoRepository;
+    private final FaturaPdfService faturaPdfService;
 
-    public FaturaService(FaturaRepository repository, AtendimentoRepository atendimentoRepository) {
+    public FaturaService(FaturaRepository repository, AtendimentoRepository atendimentoRepository, FaturaPdfService faturaPdfService) {
         this.repository = repository;
         this.atendimentoRepository = atendimentoRepository;
+        this.faturaPdfService = faturaPdfService;
     }
 
     private record ResumoFatura(BigDecimal valorBase, BigDecimal taxaIva) {
@@ -151,6 +153,24 @@ public class FaturaService {
 
     public void excluir(Integer id) {
         repository.deleteById(id);
+    }
+
+    @Transactional
+    public String gerarPdfFaturaPorId(Integer faturaId) {
+        Fatura fatura = repository.buscarFaturaCompletaParaPdf(faturaId)
+                .orElseThrow(() -> new RuntimeException("Fatura não encontrada: " + faturaId));
+
+        if (fatura.getEstado() != EstadoFatura.PAGA) {
+            throw new RuntimeException("Fatura deve estar em estado PAGA para gerar PDF");
+        }
+
+        String caminhoFatura = faturaPdfService.gerarPdfFatura(fatura);
+        
+        fatura.setCaminhoPdf(caminhoFatura);
+        fatura.setDataGeracaoPdf(java.time.LocalDateTime.now());
+        repository.save(fatura);
+        
+        return caminhoFatura;
     }
 
     public Fatura salvar(Fatura fatura) {
