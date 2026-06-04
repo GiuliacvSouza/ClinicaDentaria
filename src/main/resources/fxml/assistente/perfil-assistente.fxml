@@ -69,7 +69,7 @@
                 <padding><Insets top="24.0" right="28.0" bottom="28.0" left="28.0" /></padding>
 
                 <VBox spacing="4.0">
-                    <Label styleClass="page-title" text="O meu Perfil" />
+                    <Label styleClass="page-title" text="Meu Perfil" />
                     <Label styleClass="page-subtitle" text="Consulte e atualize os seus dados pessoais." />
                 </VBox>
 

@@ -1,25 +1,30 @@
 package model;
 
 import jakarta.persistence.*;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import model.enums.TipoMovimentacao;
+
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "movimentacaoEstoque")
+@Table(name = "movimentacao_estoque")
 public class MovimentacaoEstoque {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idMovimentacao", nullable = false)
+    @Column(name = "id_movimentacao", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idMaterial")
+    @JoinColumn(name = "id_material")
     private Material idMaterial;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idUtilizador")
+    @JoinColumn(name = "id_utilizador")
     private Assistente idUtilizador;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_movimentacao", nullable = false, length = 20)
+    private TipoMovimentacao tipoMovimentacao;
 
     @Column(name = "quantidade")
     private Integer quantidade;
@@ -33,59 +38,29 @@ public class MovimentacaoEstoque {
     @Column(name = "observacao", length = Integer.MAX_VALUE)
     private String observacao;
 
-    public Integer getId() {
-        return id;
-    }
+    // ─── Getters / Setters ────────────────────────────────────────────────────
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public Integer getId()                              { return id; }
+    public void setId(Integer id)                       { this.id = id; }
 
-    public Material getIdMaterial() {
-        return idMaterial;
-    }
+    public Material getIdMaterial()                     { return idMaterial; }
+    public void setIdMaterial(Material m)               { this.idMaterial = m; }
 
-    public void setIdMaterial(Material idMaterial) {
-        this.idMaterial = idMaterial;
-    }
+    public Assistente getIdUtilizador()                 { return idUtilizador; }
+    public void setIdUtilizador(Assistente a)           { this.idUtilizador = a; }
 
-    public Assistente getIdUtilizador() {
-        return idUtilizador;
-    }
+    public TipoMovimentacao getTipoMovimentacao()       { return tipoMovimentacao; }
+    public void setTipoMovimentacao(TipoMovimentacao t) { this.tipoMovimentacao = t; }
 
-    public void setIdUtilizador(Assistente idUtilizador) {
-        this.idUtilizador = idUtilizador;
-    }
+    public Integer getQuantidade()                      { return quantidade; }
+    public void setQuantidade(Integer q)                { this.quantidade = q; }
 
-    public Integer getQuantidade() {
-        return quantidade;
-    }
+    public LocalDate getData()                          { return data; }
+    public void setData(LocalDate d)                    { this.data = d; }
 
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
+    public String getMotivo()                           { return motivo; }
+    public void setMotivo(String m)                     { this.motivo = m; }
 
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
-    public String getMotivo() {
-        return motivo;
-    }
-
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
-    }
-
-    public String getObservacao() {
-        return observacao;
-    }
-
-    public void setObservacao(String observacao) {
-        this.observacao = observacao;
-    }
+    public String getObservacao()                       { return observacao; }
+    public void setObservacao(String o)                 { this.observacao = o; }
 }

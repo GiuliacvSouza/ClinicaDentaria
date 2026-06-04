@@ -71,7 +71,7 @@
                 <Label styleClass="page-subtitle" text="Consulte e gira o catálogo de materiais e stock do consultório." />
             </VBox>
             <Button onAction="#onAdicionarMaterial" styleClass="primary-button"
-                    text="Adicionar Material" mnemonicParsing="false" />
+                    text="+ Adicionar Material" mnemonicParsing="false" />
         </HBox>
 
         <HBox spacing="12.0">

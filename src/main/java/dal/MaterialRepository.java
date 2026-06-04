@@ -9,6 +9,8 @@ import java.util.List;
 public interface MaterialRepository extends JpaRepository<Material, Integer> {
     List<Material> findByNomeContainingIgnoreCase(String nome);
     List<Material> findByAtivo(Boolean ativo);
+    List<Material> findByAtivoTrueOrderByNomeAsc();
+    List<Material> findByNomeContainingIgnoreCaseAndAtivoTrueOrderByNomeAsc(String nome);
     List<Material> findByIdFornecedor_Id(Integer idFornecedor);
     boolean existsByCodigoInternoIgnoreCase(String codigoInterno);
     boolean existsByCodigoInternoIgnoreCaseAndIdNot(String codigoInterno, Integer id);

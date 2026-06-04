@@ -1,16 +1,14 @@
 package bll;
 
 import dal.ItemPedidoRepository;
-import dal.MaterialRepository;
-import dal.MovimentacaoEstoqueRepository;
 import dal.PedidoCompraRepository;
 import model.Assistente;
 import model.ItemPedido;
 import model.ItemPedidoId;
 import model.Material;
-import model.MovimentacaoEstoque;
 import model.PedidoCompra;
 import model.enums.EstadoPedidoCompra;
+import model.enums.TipoMovimentacao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,19 +19,16 @@ import java.util.List;
 @Service
 public class PedidoCompraService {
 
-    private final PedidoCompraRepository pedidoRepo;
-    private final ItemPedidoRepository   itemRepo;
-    private final MaterialRepository     materialRepo;
-    private final MovimentacaoEstoqueRepository movRepo;
+    private final PedidoCompraRepository       pedidoRepo;
+    private final ItemPedidoRepository         itemRepo;
+    private final MovimentacaoEstoqueService   movimentacaoService;
 
     public PedidoCompraService(PedidoCompraRepository pedidoRepo,
                                ItemPedidoRepository itemRepo,
-                               MaterialRepository materialRepo,
-                               MovimentacaoEstoqueRepository movRepo) {
-        this.pedidoRepo   = pedidoRepo;
-        this.itemRepo     = itemRepo;
-        this.materialRepo = materialRepo;
-        this.movRepo      = movRepo;
+                               MovimentacaoEstoqueService movimentacaoService) {
+        this.pedidoRepo         = pedidoRepo;
+        this.itemRepo           = itemRepo;
+        this.movimentacaoService = movimentacaoService;
     }
 
     // ─── Listagem ─────────────────────────────────────────────────────────────
@@ -74,8 +69,7 @@ public class PedidoCompraService {
         PedidoCompra salvo = pedidoRepo.save(pedido);
 
         for (ItemPedido item : itens) {
-            ItemPedidoId itemId = new ItemPedidoId(
-                    item.getIdMaterial().getId(), salvo.getId());
+            ItemPedidoId itemId = new ItemPedidoId(item.getIdMaterial().getId(), salvo.getId());
             item.setId(itemId);
             item.setIdPedido(salvo);
             itemRepo.save(item);
@@ -94,10 +88,7 @@ public class PedidoCompraService {
             if (item.getValor() == null || item.getValor().compareTo(BigDecimal.ZERO) < 0)
                 throw new RuntimeException("Item " + (i + 1) + ": valor não pode ser negativo.");
         }
-
-        long distinct = itens.stream()
-                .map(i -> i.getIdMaterial().getId())
-                .distinct().count();
+        long distinct = itens.stream().map(i -> i.getIdMaterial().getId()).distinct().count();
         if (distinct < itens.size())
             throw new RuntimeException("Não é permitido repetir o mesmo material no mesmo pedido.");
     }
@@ -128,32 +119,28 @@ public class PedidoCompraService {
         pedido.setEstado(EstadoPedidoCompra.RECEBIDO);
         pedidoRepo.save(pedido);
 
-        // Atualizar stock e registar movimentação por cada item
-        List<ItemPedido> itens = itemRepo.findByIdPedido_Id(id);
-        Assistente assistente  = pedido.getIdAssistente();
+        List<ItemPedido> itens  = itemRepo.findByIdPedido_Id(id);
+        Assistente assistente   = pedido.getIdAssistente();
+        Integer assistenteId    = assistente != null ? assistente.getId() : null;
 
         for (ItemPedido item : itens) {
             Material material = item.getIdMaterial();
-            if (material == null) continue;
+            if (material == null || item.getQuantidade() == null) continue;
 
-            int atual = material.getQuantidadeAtual() != null ? material.getQuantidadeAtual() : 0;
-            material.setQuantidadeAtual(atual + item.getQuantidade());
-            materialRepo.save(material);
-
-            MovimentacaoEstoque mov = new MovimentacaoEstoque();
-            mov.setIdMaterial(material);
-            mov.setIdUtilizador(assistente);
-            mov.setQuantidade(item.getQuantidade());
-            mov.setData(LocalDate.now());
-            mov.setMotivo("Receção do pedido de compra nº " + id);
-            mov.setObservacao("Entrada de stock por pedido de compra");
-            movRepo.save(mov);
+            movimentacaoService.registarMovimentacao(
+                    material.getId(),
+                    assistenteId,
+                    TipoMovimentacao.ENTRADA,
+                    item.getQuantidade(),
+                    "Receção de pedido de compra",
+                    "Entrada automática gerada pelo pedido de compra nº " + id
+            );
         }
 
         return pedido;
     }
 
-    // ─── Cálculo de total ─────────────────────────────────────────────────────
+    // ─── Total ────────────────────────────────────────────────────────────────
 
     public BigDecimal calcularTotal(List<ItemPedido> itens) {
         if (itens == null) return BigDecimal.ZERO;

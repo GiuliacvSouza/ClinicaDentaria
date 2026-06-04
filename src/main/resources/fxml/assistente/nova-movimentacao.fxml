@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.assistente.NovaMovimentacaoController"
+      stylesheets="@../../css/assistente-style.css"
+      styleClass="modal-root"
+      prefWidth="580.0">
+
+    <VBox spacing="18.0" styleClass="modal-card">
+        <padding><Insets top="24.0" right="24.0" bottom="24.0" left="24.0"/></padding>
+
+        <!-- Cabeçalho -->
+        <VBox spacing="4.0">
+            <Label text="Nova Movimentação de Stock" styleClass="modal-title"/>
+            <Label text="Registe uma entrada ou saída de material." styleClass="modal-subtitle"/>
+        </VBox>
+
+        <!-- Linha 1: Material + Tipo -->
+        <GridPane hgap="14.0" vgap="0.0">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="60.0"/>
+                <ColumnConstraints percentWidth="40.0"/>
+            </columnConstraints>
+
+            <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label text="Material *" styleClass="form-label"/>
+                <ComboBox fx:id="cbMaterial" maxWidth="Infinity"
+                          promptText="Selecionar material"
+                          styleClass="form-combo"/>
+            </VBox>
+
+            <VBox spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label text="Tipo *" styleClass="form-label"/>
+                <ComboBox fx:id="cbTipo" maxWidth="Infinity"
+                          promptText="Entrada / Saída"
+                          styleClass="form-combo"/>
+            </VBox>
+        </GridPane>
+
+        <!-- Info do stock do material selecionado -->
+        <VBox fx:id="paneInfoMaterial" styleClass="stock-info-box" spacing="8.0"
+              visible="false" managed="false">
+            <HBox spacing="24.0">
+                <VBox spacing="2.0">
+                    <Label text="Stock atual" styleClass="stock-info-label"/>
+                    <Label fx:id="lblStockAtual" text="-" styleClass="stock-info-value"/>
+                </VBox>
+                <VBox spacing="2.0">
+                    <Label text="Stock mínimo" styleClass="stock-info-label"/>
+                    <Label fx:id="lblStockMinimo" text="-" styleClass="stock-info-value"/>
+                </VBox>
+                <VBox spacing="2.0">
+                    <Label text="Unidade" styleClass="stock-info-label"/>
+                    <Label fx:id="lblUnidade" text="-" styleClass="stock-info-value"/>
+                </VBox>
+                <VBox spacing="2.0">
+                    <Label text="Estado do stock" styleClass="stock-info-label"/>
+                    <Label fx:id="lblEstadoStock" text="-" styleClass="stock-info-normal"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Linha 2: Quantidade + Motivo -->
+        <GridPane hgap="14.0" vgap="0.0">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="35.0"/>
+                <ColumnConstraints percentWidth="65.0"/>
+            </columnConstraints>
+
+            <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label text="Quantidade *" styleClass="form-label"/>
+                <TextField fx:id="txtQuantidade" promptText="0" styleClass="form-field"/>
+            </VBox>
+
+            <VBox spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label text="Motivo *" styleClass="form-label"/>
+                <ComboBox fx:id="cbMotivo" maxWidth="Infinity"
+                          promptText="Selecionar motivo"
+                          styleClass="form-combo"/>
+            </VBox>
+        </GridPane>
+
+        <!-- Campo "Outro motivo" — aparece só quando motivo = Outro -->
+        <VBox fx:id="paneOutroMotivo" spacing="6.0" visible="false" managed="false">
+            <Label text="Indique o motivo *" styleClass="form-label"/>
+            <TextField fx:id="txtOutroMotivo" promptText="Descreva o motivo..." styleClass="form-field"/>
+        </VBox>
+
+        <!-- Observação -->
+        <VBox spacing="6.0">
+            <Label text="Observação" styleClass="form-label"/>
+            <TextArea fx:id="txtObservacao" prefRowCount="2"
+                      promptText="Observação opcional..."
+                      styleClass="form-textarea-clean" wrapText="true"/>
+        </VBox>
+
+        <!-- Mensagem de erro -->
+        <Label fx:id="lblErro" styleClass="error-label"
+               text="" visible="false" managed="false" wrapText="true"/>
+
+        <!-- Botões -->
+        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button onAction="#fechar" styleClass="secondary-button"
+                    text="Cancelar" mnemonicParsing="false"/>
+            <Button onAction="#guardarMovimentacao" styleClass="primary-button"
+                    text="Guardar Movimentação" mnemonicParsing="false"/>
+        </HBox>
+    </VBox>
+</VBox>

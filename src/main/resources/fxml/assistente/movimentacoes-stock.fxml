@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -22,7 +23,7 @@
       stylesheets="@../../css/assistente-style.css"
       styleClass="root">
 
-    <!-- HEADER -->
+    <!-- NAVBAR -->
     <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="header">
         <padding><Insets top="12.0" right="24.0" bottom="12.0" left="24.0" /></padding>
         <StackPane styleClass="logo-shell">
@@ -31,13 +32,13 @@
             </ImageView>
         </StackPane>
         <HBox alignment="CENTER_LEFT" spacing="8.0" HBox.hgrow="ALWAYS">
-            <Button onAction="#abrirDashboard"      styleClass="nav-button"        text="Dashboard"    mnemonicParsing="false" />
-            <Button onAction="#abrirConsultasDia"   styleClass="nav-button"        text="Consultas"    mnemonicParsing="false" />
-            <Button onAction="#abrirMateriais"      styleClass="nav-button"        text="Materiais"    mnemonicParsing="false" />
-            <Button onAction="#abrirMovimentacoes"  styleClass="nav-button-active" text="Movimentações" mnemonicParsing="false" />
-            <Button onAction="#abrirPedidosCompra"  styleClass="nav-button"        text="Pedidos"      mnemonicParsing="false" />
-            <Button onAction="#abrirFornecedores"   styleClass="nav-button"        text="Fornecedores" mnemonicParsing="false" />
-            <Button onAction="#abrirAlertas"        styleClass="nav-button"        text="Alertas"      mnemonicParsing="false" />
+            <Button onAction="#abrirDashboard"     styleClass="nav-button"        text="Dashboard"     mnemonicParsing="false" />
+            <Button onAction="#abrirConsultasDia"  styleClass="nav-button"        text="Consultas"     mnemonicParsing="false" />
+            <Button onAction="#abrirMateriais"     styleClass="nav-button"        text="Materiais"     mnemonicParsing="false" />
+            <Button onAction="#abrirMovimentacoes" styleClass="nav-button-active" text="Movimentações" mnemonicParsing="false" />
+            <Button onAction="#abrirPedidosCompra" styleClass="nav-button"        text="Pedidos"       mnemonicParsing="false" />
+            <Button onAction="#abrirFornecedores"  styleClass="nav-button"        text="Fornecedores"  mnemonicParsing="false" />
+            <Button onAction="#abrirAlertas"       styleClass="nav-button"        text="Alertas"       mnemonicParsing="false" />
         </HBox>
         <HBox alignment="CENTER_RIGHT" spacing="10.0">
             <VBox alignment="CENTER_RIGHT" spacing="2.0">
@@ -45,18 +46,14 @@
                 <Label styleClass="user-role" text="Assistente de Consultório" />
             </VBox>
             <Button onAction="#abrirPerfil" styleClass="icon-button" mnemonicParsing="false">
-                <graphic>
-                    <StackPane styleClass="icon-shell">
-                        <SVGPath content="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" styleClass="header-icon" />
-                    </StackPane>
-                </graphic>
+                <graphic><StackPane styleClass="icon-shell">
+                    <SVGPath content="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" styleClass="header-icon" />
+                </StackPane></graphic>
             </Button>
             <Button onAction="#fazerLogout" styleClass="icon-button" mnemonicParsing="false">
-                <graphic>
-                    <StackPane styleClass="icon-shell">
-                        <SVGPath content="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4" styleClass="header-icon" />
-                    </StackPane>
-                </graphic>
+                <graphic><StackPane styleClass="icon-shell">
+                    <SVGPath content="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4" styleClass="header-icon" />
+                </StackPane></graphic>
             </Button>
         </HBox>
     </HBox>
@@ -65,29 +62,38 @@
     <VBox spacing="18.0" styleClass="dashboard-body" VBox.vgrow="ALWAYS">
         <padding><Insets top="24.0" right="28.0" bottom="24.0" left="28.0" /></padding>
 
+        <!-- Cabeçalho da página -->
         <HBox alignment="CENTER_LEFT" spacing="14.0">
             <VBox spacing="4.0" HBox.hgrow="ALWAYS">
-                <Label styleClass="page-title" text="Movimentações de Stock" />
-                <Label styleClass="page-subtitle" text="Registe entradas e saídas de materiais e consulte o histórico." />
+                <Label styleClass="page-title"    text="Movimentações de Stock" />
+                <Label styleClass="page-subtitle" text="Consulte e registe entradas e saídas de materiais." />
             </VBox>
             <Button onAction="#abrirNovaMovimentacao" styleClass="primary-button"
                     text="+ Nova Movimentação" mnemonicParsing="false" />
         </HBox>
 
-        <HBox spacing="12.0">
+        <!-- Filtros -->
+        <HBox spacing="12.0" alignment="CENTER_LEFT">
             <TextField fx:id="txtPesquisa" promptText="Pesquisar por material"
                        styleClass="search-field" HBox.hgrow="ALWAYS" />
+            <DatePicker fx:id="dpDataInicio" promptText="dd/mm/aaaa" styleClass="date-filter" />
+            <DatePicker fx:id="dpDataFim"    promptText="dd/mm/aaaa" styleClass="date-filter" />
+            <Button onAction="#filtrarPorData" styleClass="secondary-button"
+                    text="Filtrar" mnemonicParsing="false" />
+            <Button onAction="#limparFiltros" styleClass="secondary-button"
+                    text="Limpar" mnemonicParsing="false" />
         </HBox>
 
+        <!-- Chips de tipo -->
         <HBox spacing="10.0">
-            <Button fx:id="btnTodas"   onAction="#filtrarTodas"   styleClass="filter-chip" text="Todas"  mnemonicParsing="false" />
-            <Button fx:id="btnEntrada" onAction="#filtrarEntrada" styleClass="filter-chip" text="Entrada" mnemonicParsing="false" />
-            <Button fx:id="btnSaida"   onAction="#filtrarSaida"   styleClass="filter-chip" text="Saida"  mnemonicParsing="false" />
-            <Button fx:id="btnAjuste"  onAction="#filtrarAjuste"  styleClass="filter-chip" text="Ajuste" mnemonicParsing="false" />
+            <Button fx:id="btnTodas"   onAction="#filtrarTodas"   styleClass="filter-chip" text="Todas"   mnemonicParsing="false" />
+            <Button fx:id="btnEntrada" onAction="#filtrarEntrada" styleClass="filter-chip" text="Entradas" mnemonicParsing="false" />
+            <Button fx:id="btnSaida"   onAction="#filtrarSaida"   styleClass="filter-chip" text="Saídas"   mnemonicParsing="false" />
         </HBox>
 
+        <!-- Tabela -->
         <VBox spacing="12.0" styleClass="section-card" VBox.vgrow="ALWAYS">
-            <HBox alignment="CENTER_LEFT">
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
                 <Label styleClass="section-title" text="Histórico de Movimentações" />
                 <Region HBox.hgrow="ALWAYS" />
                 <Label fx:id="lblTotalMovimentacoes" styleClass="section-caption" text="0 registos" />
@@ -95,15 +101,19 @@
 
             <TableView fx:id="tblMovimentacoes" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="colData"       prefWidth="140.0" text="Data / Hora" />
-                    <TableColumn fx:id="colMaterial"   prefWidth="220.0" text="Material" />
-                    <TableColumn fx:id="colTipo"       prefWidth="110.0" text="Tipo" />
-                    <TableColumn fx:id="colQuantidade" prefWidth="110.0" text="Quantidade" />
-                    <TableColumn fx:id="colResponsavel" prefWidth="180.0" text="Responsavel" />
-                    <TableColumn fx:id="colObservacoes" prefWidth="280.0" text="Observacoes" />
+                    <TableColumn fx:id="colData"        prefWidth="110.0" text="Data" />
+                    <TableColumn fx:id="colMaterial"    prefWidth="200.0" text="Material" />
+                    <TableColumn fx:id="colTipo"        prefWidth="100.0" text="Tipo" />
+                    <TableColumn fx:id="colQuantidade"  prefWidth="100.0" text="Quantidade" />
+                    <TableColumn fx:id="colMotivo"      prefWidth="220.0" text="Motivo" />
+                    <TableColumn fx:id="colResponsavel" prefWidth="160.0" text="Responsável" />
+                    <TableColumn fx:id="colObservacoes" prefWidth="220.0" text="Observação" />
                 </columns>
                 <placeholder>
-                    <Label text="Nenhuma movimentação encontrada." />
+                    <VBox alignment="CENTER" spacing="8.0" style="-fx-padding: 48 0;">
+                        <Label text="Nenhuma movimentação registada." styleClass="empty-table-title" />
+                        <Label text="Registe uma nova entrada ou saída de stock para começar." styleClass="empty-table-subtitle" />
+                    </VBox>
                 </placeholder>
             </TableView>
         </VBox>

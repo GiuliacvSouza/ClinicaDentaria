@@ -577,12 +577,74 @@
 
 .form-combo {
     -fx-pref-height: 42;
+    -fx-min-height: 42;
     -fx-background-color: #ffffff;
     -fx-border-color: #d8e5e1;
     -fx-border-radius: 12;
     -fx-background-radius: 12;
     -fx-font-family: "Poppins";
     -fx-font-size: 13px;
+    -fx-padding: 0;
+}
+
+.form-combo:focused,
+.form-combo:showing {
+    -fx-border-color: #2e7d72;
+    -fx-border-width: 1.5;
+}
+
+.form-combo > .list-cell {
+    -fx-background-color: transparent;
+    -fx-background-radius: 12;
+    -fx-padding: 0 12;
+    -fx-text-fill: #17312e;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+}
+
+.form-combo > .list-cell:empty {
+    -fx-text-fill: #90a3a0;
+}
+
+.form-combo .arrow-button {
+    -fx-background-color: #eef5f3;
+    -fx-background-radius: 0 11 11 0;
+    -fx-border-color: transparent;
+    -fx-padding: 0 12;
+    -fx-cursor: hand;
+}
+
+.form-combo .arrow-button:hover {
+    -fx-background-color: #e3efec;
+}
+
+.form-combo .arrow-button .arrow {
+    -fx-background-color: #2e7d72;
+}
+
+.form-combo .combo-box-popup .list-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d8e5e1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(20,54,49,0.12), 12, 0, 0, 4);
+}
+
+.form-combo .combo-box-popup .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 8 14;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+    -fx-text-fill: #17312e;
+}
+
+.form-combo .combo-box-popup .list-cell:hover {
+    -fx-background-color: #eef5f3;
+}
+
+.form-combo .combo-box-popup .list-cell:selected {
+    -fx-background-color: #d4ede9;
+    -fx-text-fill: #17312e;
 }
 
 .form-area {
@@ -1239,4 +1301,94 @@
 
 .btn-remover-item:hover {
     -fx-background-color: #ffd4d4;
+}
+
+/* ─── Badges de tipo de movimentação ────────────────────── */
+.badge-tipo-entrada {
+    -fx-background-color: #a7efe7;
+    -fx-background-radius: 10;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #0d4e47;
+}
+
+.badge-tipo-saida {
+    -fx-background-color: #ffd4d4;
+    -fx-background-radius: 10;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #7a1515;
+}
+
+.badge-tipo-outro {
+    -fx-background-color: #e4e9e7;
+    -fx-background-radius: 10;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #3d4947;
+}
+
+/* ─── Info box de stock do material (no modal) ───────────── */
+.stock-info-box {
+    -fx-background-color: #f7fbfa;
+    -fx-background-radius: 12;
+    -fx-border-color: #dce7e4;
+    -fx-border-radius: 12;
+    -fx-padding: 12 14;
+}
+
+.stock-info-label {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #5e7672;
+}
+
+.stock-info-value {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 13px;
+    -fx-text-fill: #17312e;
+}
+
+.stock-info-critico {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 12px;
+    -fx-text-fill: #ba1a1a;
+}
+
+.stock-info-normal {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 12px;
+    -fx-text-fill: #0d4e47;
+}
+
+/* ─── Estado vazio da tabela ─────────────────────────────── */
+.empty-table-title {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 14px;
+    -fx-text-fill: #5e7672;
+}
+
+.empty-table-subtitle {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 12px;
+    -fx-text-fill: #90a3a0;
+}
+
+/* ─── Botão fechar modal (mantido por compatibilidade) ───── */
+.modal-close-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5e7672;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+    -fx-padding: 2 8;
+    -fx-background-radius: 8;
+}
+
+.modal-close-btn:hover {
+    -fx-background-color: #edf4f2;
+    -fx-text-fill: #17312e;
 }
