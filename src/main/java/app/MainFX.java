@@ -49,10 +49,14 @@ public class MainFX extends Application {
         );
 
         stage.setTitle("Clínica Dentária");
-        stage.setMaximized(true); // abre em fullscreen desktop
+        stage.setMinWidth(980);
+        stage.setMinHeight(640);
+        stage.setWidth(1280);
+        stage.setHeight(780);
         stage.setScene(scene);
         SceneManager.setMainStage(stage);
         stage.show();
+        stage.centerOnScreen();
     }
 
     @Override

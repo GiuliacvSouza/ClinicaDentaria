@@ -45,7 +45,7 @@ public abstract class BaseAssistenteController {
 
     // ─── Navegação ────────────────────────────────────────────────────────────
 
-    private static final String CSS = "/css/assistente-dashboard.css";
+    private static final String CSS = "/css/assistente-style.css";
 
     @FXML
     protected void abrirDashboard() throws IOException {

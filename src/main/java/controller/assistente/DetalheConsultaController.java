@@ -104,6 +104,7 @@ public class DetalheConsultaController {
 
         lblTituloModal.setText("Detalhes da Consulta — " + hora);
         lblSubtituloModal.setText(dataHoraStr);
+        if (stage != null) stage.setTitle("Detalhes da Consulta — " + hora);
 
         // Badge de estado
         EstadoConsulta estado = c.getStatus();

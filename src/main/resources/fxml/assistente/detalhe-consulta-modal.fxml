@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
@@ -29,7 +28,6 @@
             <Label fx:id="lblSubtituloModal" styleClass="modal-subtitle" text="" />
         </VBox>
         <Label fx:id="lblEstadoBadge" styleClass="status-pill status-agendado" text="Agendada" />
-        <Button onAction="#fechar" styleClass="modal-close-btn" text="✕" mnemonicParsing="false" />
     </HBox>
 
     <Separator />
@@ -117,11 +115,4 @@
         </content>
     </ScrollPane>
 
-    <Separator />
-
-    <!-- Rodapé do modal -->
-    <HBox alignment="CENTER_RIGHT" spacing="10.0">
-        <padding><Insets top="14.0" right="20.0" bottom="14.0" left="20.0" /></padding>
-        <Button onAction="#fechar" styleClass="secondary-button" text="Fechar" mnemonicParsing="false" />
-    </HBox>
 </VBox>

@@ -11,6 +11,26 @@
     -fx-text-fill: #17312e;
 }
 
+.content-area,
+.tab-pane,
+.tab-pane > .tab-header-area,
+.tab-pane > .tab-content-area,
+.scroll-pane,
+.scroll-pane > .viewport,
+.list-view,
+.table-view {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.tab-pane:focused,
+.scroll-pane:focused,
+.list-view:focused,
+.table-view:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
 /* ─── Header / Nav ───────────────────────────────────────── */
 .header {
     -fx-background-color: #ffffff;
@@ -191,6 +211,11 @@
     -fx-cursor: hand;
 }
 
+.secondary-button:pressed,
+.secondary-button:focused {
+    -fx-background-color: #edf4f2;
+}
+
 .danger-button {
     -fx-background-color: #fff1f0;
     -fx-text-fill: #c0392b;
@@ -220,6 +245,73 @@
 .search-field:focused {
     -fx-border-color: #2e7d72;
     -fx-border-width: 1.5;
+}
+
+.date-filter {
+    -fx-pref-height: 44;
+    -fx-min-height: 44;
+    -fx-pref-width: 178;
+    -fx-min-width: 168;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-border-color: #d8e5e1;
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-padding: 0;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+}
+
+.date-filter:focused,
+.date-filter:showing {
+    -fx-border-color: #2e7d72;
+    -fx-border-width: 1.5;
+}
+
+.date-filter > .text-field {
+    -fx-background-color: transparent;
+    -fx-background-radius: 16 0 0 16;
+    -fx-border-color: transparent;
+    -fx-padding: 0 10 0 14;
+    -fx-text-fill: #17312e;
+    -fx-prompt-text-fill: #90a3a0;
+}
+
+.date-filter > .arrow-button {
+    -fx-background-color: #eef5f3;
+    -fx-background-radius: 11;
+    -fx-border-color: transparent;
+    -fx-padding: 0 12;
+    -fx-cursor: hand;
+}
+
+.date-filter > .arrow-button:hover {
+    -fx-background-color: #e3efec;
+}
+
+.date-filter > .arrow-button > .arrow {
+    -fx-background-color: #2e7d72;
+}
+
+.today-chip {
+    -fx-pref-height: 44;
+    -fx-min-height: 44;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #2f5c56;
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 12px;
+    -fx-background-radius: 16;
+    -fx-border-color: #d8e5e1;
+    -fx-border-radius: 16;
+    -fx-padding: 0 18;
+    -fx-cursor: hand;
+}
+
+.today-chip:hover,
+.today-chip:focused,
+.today-chip:pressed {
+    -fx-background-color: #edf4f2;
+    -fx-border-color: #b8d9d3;
 }
 
 /* ─── Chips de filtro ────────────────────────────────────── */
@@ -296,6 +388,12 @@
 
 .consulta-card:hover {
     -fx-background-color: #eef6f3;
+    -fx-border-color: #b8d9d3;
+}
+
+.consulta-card:focused,
+.consulta-card:pressed {
+    -fx-background-color: #ffffff;
     -fx-border-color: #b8d9d3;
 }
 
@@ -425,6 +523,14 @@
     -fx-text-fill: #456460;
 }
 
+.campo-invalido,
+.campo-invalido:focused {
+    -fx-border-color: #BA1A1A;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
 /* ─── Info items ─────────────────────────────────────────── */
 .info-item {
     -fx-background-color: #f7fbfa;
@@ -479,6 +585,61 @@
     -fx-font-size: 13px;
 }
 
+.form-area {
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0;
+    -fx-border-color: #d8e5e1;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 0;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+}
+
+.form-area .content {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-padding: 8 10;
+}
+
+.form-area:focused {
+    -fx-border-color: #2e7d72;
+    -fx-border-width: 1.5;
+}
+
+.form-area:focused .content {
+    -fx-background-color: #ffffff;
+}
+
+.form-check {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 12px;
+    -fx-text-fill: #244641;
+}
+
+.modal-root {
+    -fx-background-color: transparent;
+    -fx-font-family: "Poppins";
+}
+
+.modal-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18;
+    -fx-border-color: #dce7e4;
+    -fx-border-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(20,54,49,0.16), 24, 0, 0, 10);
+}
+
+.error-label {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 12px;
+    -fx-text-fill: #ba1a1a;
+    -fx-background-color: #fff4f4;
+    -fx-background-radius: 10;
+    -fx-padding: 8 10;
+}
+
 /* ─── Scrollbars ─────────────────────────────────────────── */
 .scroll-pane .viewport { -fx-background-color: transparent; }
 .scroll-bar:vertical   { -fx-pref-width: 8; -fx-background-color: transparent; }
@@ -506,6 +667,8 @@
     -fx-font-size: 11px;
     -fx-background-radius: 8;
     -fx-padding: 7 14;
+    -fx-min-width: 112;
+    -fx-pref-width: 112;
     -fx-cursor: hand;
 }
 
@@ -575,24 +738,36 @@
     -fx-font-family: "Poppins Medium";
     -fx-font-size: 11px;
     -fx-text-fill: #5e7672;
+    -fx-background-color: #edf4f2;
+    -fx-background-radius: 999;
+    -fx-padding: 4 10;
 }
 
 .stat-tag-danger {
     -fx-font-family: "Poppins SemiBold";
     -fx-font-size: 11px;
     -fx-text-fill: #a33030;
+    -fx-background-color: #ffe4e4;
+    -fx-background-radius: 999;
+    -fx-padding: 4 10;
 }
 
 .stat-tag-warn {
     -fx-font-family: "Poppins Medium";
     -fx-font-size: 11px;
     -fx-text-fill: #7a4a1e;
+    -fx-background-color: #fff0df;
+    -fx-background-radius: 999;
+    -fx-padding: 4 10;
 }
 
 .stat-tag-blue {
     -fx-font-family: "Poppins Medium";
     -fx-font-size: 11px;
     -fx-text-fill: #3d5068;
+    -fx-background-color: #e9eef8;
+    -fx-background-radius: 999;
+    -fx-padding: 4 10;
 }
 
 .stat-number {
@@ -623,12 +798,14 @@
     -fx-font-family: "Poppins";
     -fx-font-size: 13px;
     -fx-text-fill: #3d4947;
+    -fx-wrap-text: true;
 }
 
 .stat-desc-danger {
     -fx-font-family: "Poppins";
     -fx-font-size: 13px;
     -fx-text-fill: #93000a;
+    -fx-wrap-text: true;
 }
 
 /* ─── Dashboard — painéis (alertas / movimentações) ──────── */
@@ -642,11 +819,12 @@
 
 .panel-link-btn {
     -fx-background-color: transparent;
+    -fx-border-color: transparent;
     -fx-text-fill: #2e7d72;
     -fx-font-family: "Poppins SemiBold";
     -fx-font-size: 11px;
     -fx-cursor: hand;
-    -fx-padding: 0;
+    -fx-padding: 4 8;
 }
 
 .panel-link-btn:hover {
@@ -757,7 +935,7 @@
     -fx-font-family: "Poppins SemiBold";
     -fx-font-size: 11px;
     -fx-text-fill: #58706b;
-    -fx-letter-spacing: 0.4;
+    -fx-letter-spacing: 0;
 }
 
 .consultas-dash-table .table-row-cell {
@@ -771,7 +949,12 @@
 }
 
 .consultas-dash-table .table-row-cell:selected {
-    -fx-background-color: #e5f2ef;
+    -fx-background-color: #ffffff;
+}
+
+.consultas-dash-table .table-row-cell:focused,
+.consultas-dash-table .table-row-cell:pressed {
+    -fx-background-color: #ffffff;
 }
 
 .consultas-dash-table .table-cell {
@@ -781,6 +964,65 @@
     -fx-border-color: transparent;
     -fx-alignment: CENTER-LEFT;
     -fx-padding: 0 16;
+}
+
+.consultas-grid {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0 0 14 14;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.consultas-grid-header {
+    -fx-background-color: #f4f8f7;
+    -fx-border-color: transparent transparent #dce7e4 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-min-height: 42;
+    -fx-pref-height: 42;
+}
+
+.consultas-grid-row,
+.consultas-grid-row-alt {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #edf2f1 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-min-height: 60;
+    -fx-pref-height: 60;
+}
+
+.consultas-grid-row-alt {
+    -fx-background-color: #fafcfc;
+}
+
+.consulta-header-cell {
+    -fx-padding: 0 16;
+    -fx-min-width: 0;
+}
+
+.consulta-header-cell .label {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #58706b;
+}
+
+.consulta-body-cell {
+    -fx-padding: 0 16;
+    -fx-min-width: 0;
+}
+
+.consulta-body-cell .label {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+    -fx-text-fill: #17312e;
+}
+
+.consulta-body-cell .status-pill {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+}
+
+.consultas-grid-empty {
+    -fx-padding: 18 16;
 }
 
 /* badges de estado na tabela */
@@ -864,29 +1106,29 @@
     -fx-text-fill: #6f837f;
 }
 
-.modal-close-btn {
-    -fx-background-color: transparent;
-    -fx-text-fill: #5e7672;
-    -fx-font-size: 16px;
-    -fx-cursor: hand;
-    -fx-padding: 4 8;
-    -fx-background-radius: 8;
-}
-
-.modal-close-btn:hover {
-    -fx-background-color: #edf4f2;
-    -fx-text-fill: #17312e;
-}
-
 .detail-field-label {
     -fx-font-family: "Poppins Medium";
     -fx-font-size: 11px;
     -fx-text-fill: #5e7672;
-    -fx-letter-spacing: 0.2;
+    -fx-letter-spacing: 0;
 }
 
 .detail-field-value {
     -fx-font-family: "Poppins";
     -fx-font-size: 13px;
     -fx-text-fill: #17312e;
+}
+
+.account-status-pill {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #245f5a;
+    -fx-background-color: #edf4f2;
+    -fx-background-radius: 999;
+    -fx-padding: 4 10;
+}
+
+.content-scroll,
+.content-scroll > .viewport {
+    -fx-background-color: #ffffff;
 }

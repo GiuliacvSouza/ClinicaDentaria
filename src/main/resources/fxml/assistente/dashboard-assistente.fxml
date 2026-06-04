@@ -4,8 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -93,8 +91,9 @@
 
                     <!-- Consultas Agendadas -->
                     <VBox styleClass="stat-card-normal" spacing="6.0" HBox.hgrow="ALWAYS">
-                        <HBox alignment="CENTER_LEFT">
-                            <Label styleClass="stat-desc" text="Consultas Agendadas" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <Label styleClass="stat-desc" text="Consultas Agendadas" />
+                            <Region HBox.hgrow="ALWAYS" />
                             <Label styleClass="stat-tag-normal" text="Hoje" />
                         </HBox>
                         <Label fx:id="lblConsultasAgendadas" styleClass="stat-number" text="12" />
@@ -102,8 +101,9 @@
 
                     <!-- Materiais em Stock Crítico -->
                     <VBox styleClass="stat-card-danger" spacing="6.0" HBox.hgrow="ALWAYS">
-                        <HBox alignment="CENTER_LEFT">
-                            <Label styleClass="stat-desc-danger" text="Materiais em Stock Crítico" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <Label styleClass="stat-desc-danger" text="Materiais em Stock Crítico" />
+                            <Region HBox.hgrow="ALWAYS" />
                             <Label styleClass="stat-tag-danger" text="ALERTA" />
                         </HBox>
                         <Label fx:id="lblStockCritico" styleClass="stat-number-danger" text="04" />
@@ -111,8 +111,9 @@
 
                     <!-- Pedidos de Compra -->
                     <VBox styleClass="stat-card-normal" spacing="6.0" HBox.hgrow="ALWAYS">
-                        <HBox alignment="CENTER_LEFT">
-                            <Label styleClass="stat-desc" text="Pedidos de Compra" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <Label styleClass="stat-desc" text="Pedidos de Compra" />
+                            <Region HBox.hgrow="ALWAYS" />
                             <Label styleClass="stat-tag-warn" text="Pendentes" />
                         </HBox>
                         <Label fx:id="lblPedidosPendentes" styleClass="stat-number-warn" text="07" />
@@ -120,8 +121,9 @@
 
                     <!-- Movimentações de Stock -->
                     <VBox styleClass="stat-card-normal" spacing="6.0" HBox.hgrow="ALWAYS">
-                        <HBox alignment="CENTER_LEFT">
-                            <Label styleClass="stat-desc" text="Movimentações de Stock" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <Label styleClass="stat-desc" text="Movimentações de Stock" />
+                            <Region HBox.hgrow="ALWAYS" />
                             <Label styleClass="stat-tag-blue" text="Últimas 24h" />
                         </HBox>
                         <Label fx:id="lblMovimentacoes24h" styleClass="stat-number-blue" text="28" />
@@ -134,8 +136,9 @@
                     <!-- ALERTAS URGENTES -->
                     <VBox styleClass="section-card" spacing="0.0" HBox.hgrow="ALWAYS">
                         <!-- cabeçalho do painel -->
-                        <HBox styleClass="panel-header-bar" alignment="CENTER_LEFT">
-                            <Label styleClass="panel-section-title" text="Alertas Urgentes" HBox.hgrow="ALWAYS" />
+                        <HBox styleClass="panel-header-bar" alignment="CENTER_LEFT" spacing="12.0">
+                            <Label styleClass="panel-section-title" text="Alertas Urgentes" />
+                            <Region HBox.hgrow="ALWAYS" />
                             <Button styleClass="panel-link-btn" text="Ver todos"
                                     onAction="#abrirAlertas" mnemonicParsing="false" />
                         </HBox>
@@ -163,29 +166,18 @@
                 <VBox styleClass="section-card" spacing="0.0">
 
                     <!-- cabeçalho do painel -->
-                    <HBox styleClass="panel-header-bar" alignment="CENTER_LEFT" spacing="8.0">
-                        <Label styleClass="panel-section-title" text="Próximas Consultas do Dia" HBox.hgrow="ALWAYS" />
+                    <HBox styleClass="panel-header-bar" alignment="CENTER_LEFT" spacing="12.0">
+                        <Label styleClass="panel-section-title" text="Próximas Consultas do Dia" />
+                        <Region HBox.hgrow="ALWAYS" />
                         <Button styleClass="secondary-button" text="Ver agenda completa"
                                 onAction="#abrirConsultasDia" mnemonicParsing="false" />
                     </HBox>
 
-                    <!-- TableView com estilo próprio -->
-                    <TableView fx:id="tblConsultas" styleClass="consultas-dash-table"
-                               minHeight="240.0" maxHeight="320.0">
-                        <columns>
-                            <TableColumn fx:id="colHora"      text="HORA"          prefWidth="100.0" />
-                            <TableColumn fx:id="colPaciente"  text="PACIENTE"       prefWidth="210.0" />
-                            <TableColumn fx:id="colDentista"  text="DENTISTA"       prefWidth="180.0" />
-                            <TableColumn fx:id="colProcedimento" text="PROCEDIMENTO" prefWidth="180.0" />
-                            <TableColumn fx:id="colEstado"    text="ESTADO"         prefWidth="130.0" />
-                            <TableColumn fx:id="colAcoes"     text="AÇÕES"          prefWidth="120.0"
-                                         style="-fx-alignment: CENTER-RIGHT;" />
-                        </columns>
-                        <placeholder>
-                            <Label text="Sem consultas agendadas para hoje."
-                                   styleClass="section-caption" />
-                        </placeholder>
-                    </TableView>
+                    <!-- Grelha de consultas com colunas alinhadas -->
+                    <VBox fx:id="containerConsultasGrid"
+                          minHeight="240.0"
+                          maxHeight="320.0"
+                          styleClass="consultas-grid" />
 
                     <!-- Rodapé -->
                     <HBox alignment="CENTER" spacing="4.0">

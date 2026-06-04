@@ -17,6 +17,9 @@ public class Material {
     @JoinColumn(name = "idFornecedor")
     private Fornecedor idFornecedor;
 
+    @Column(name = "codigoInterno", length = 50)
+    private String codigoInterno;
+
     @Column(name = "nome", length = 100)
     private String nome;
 
@@ -52,6 +55,14 @@ public class Material {
 
     public void setIdFornecedor(Fornecedor idFornecedor) {
         this.idFornecedor = idFornecedor;
+    }
+
+    public String getCodigoInterno() {
+        return codigoInterno;
+    }
+
+    public void setCodigoInterno(String codigoInterno) {
+        this.codigoInterno = codigoInterno;
     }
 
     public String getNome() {

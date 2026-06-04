@@ -1,11 +1,15 @@
 package controller.assistente;
 
+import app.MainFX;
 import bll.MaterialService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -13,6 +17,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import model.Material;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -124,6 +130,34 @@ public class MateriaisController extends BaseAssistenteController {
     @FXML private void filtrarTodos()   { filtroStock = null;      atualizarEstilosChip(btnTodos);   aplicarFiltros(); }
     @FXML private void filtrarBaixo()   { filtroStock = "baixo";   atualizarEstilosChip(btnBaixo);   aplicarFiltros(); }
     @FXML private void filtrarCritico() { filtroStock = "critico"; atualizarEstilosChip(btnCritico); aplicarFiltros(); }
+
+    @FXML
+    private void onAdicionarMaterial() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/assistente/adicionar-material-modal.fxml"));
+            if (MainFX.getSpringContext() != null) {
+                loader.setControllerFactory(MainFX.getSpringContext()::getBean);
+            }
+
+            Parent root = loader.load();
+            Stage modal = new Stage();
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.initOwner(tblMateriais.getScene().getWindow());
+            modal.setResizable(false);
+            modal.setTitle("Adicionar Material");
+
+            AdicionarMaterialController controller = loader.getController();
+            controller.setStage(modal);
+            controller.setOnMaterialGuardado(this::carregarMateriais);
+
+            Scene scene = new Scene(root);
+            modal.setScene(scene);
+            modal.showAndWait();
+        } catch (Exception e) {
+            Label erro = new Label("Não foi possível abrir a janela para adicionar material.");
+            tblMateriais.setPlaceholder(erro);
+        }
+    }
 
     private void atualizarEstilosChip(Button ativo) {
         List<Button> chips = List.of(btnTodos, btnBaixo, btnCritico);

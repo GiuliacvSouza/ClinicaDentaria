@@ -76,8 +76,8 @@
         <HBox spacing="12.0" alignment="CENTER_LEFT">
             <TextField fx:id="txtPesquisa" promptText="Pesquisar por paciente ou dentista"
                        styleClass="search-field" HBox.hgrow="ALWAYS" />
-            <DatePicker fx:id="dpFiltroData" promptText="dd/mm/aaaa" styleClass="form-field" />
-            <Button fx:id="btnHoje" onAction="#filtrarHoje" styleClass="secondary-button"
+            <DatePicker fx:id="dpFiltroData" promptText="dd/mm/aaaa" styleClass="date-filter" />
+            <Button fx:id="btnHoje" onAction="#filtrarHoje" styleClass="today-chip"
                     text="Hoje" mnemonicParsing="false" />
         </HBox>
 
@@ -98,7 +98,7 @@
                 <Label fx:id="lblTotalConsultas" styleClass="section-caption" text="0 consultas" />
             </HBox>
 
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="content-scroll">
                 <content>
                     <VBox fx:id="containerConsultas" spacing="10.0">
                         <Label styleClass="section-caption" text="A carregar consultas..." />

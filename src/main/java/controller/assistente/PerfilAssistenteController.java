@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import model.Assistente;
 import model.Utilizador;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,15 @@ import java.time.format.DateTimeFormatter;
 public class PerfilAssistenteController extends BaseAssistenteController {
 
     private static final DateTimeFormatter DATA_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final String CAMPO_INVALIDO = "campo-invalido";
 
     // ─── FXML ─────────────────────────────────────────────────────────────────
 
     @FXML private Label     lblIniciais;
     @FXML private Label     lblNomeCompleto;
     @FXML private Label     lblEmail;
+    @FXML private Label     lblTelefoneResumo;
+    @FXML private Label     lblEstadoConta;
     @FXML private Label     lblDataAdmissao;
     @FXML private Label     lblFormacao;
     @FXML private Button    btnEditar;
@@ -49,6 +53,10 @@ public class PerfilAssistenteController extends BaseAssistenteController {
 
     @Override
     protected void inicializarEcra() {
+        aplicarFiltroNumerico(txtNif, 9);
+        aplicarFiltroNumerico(txtTelemovel, 9);
+        aplicarFiltroNumerico(txtTelefone, 9);
+        configurarLimpezaErro();
         preencherPerfil();
         atualizarModoEdicao(false);
     }
@@ -69,6 +77,10 @@ public class PerfilAssistenteController extends BaseAssistenteController {
         if (lblIniciais    != null) lblIniciais.setText((inicialA + inicialB).isBlank() ? "--" : inicialA + inicialB);
         if (lblNomeCompleto != null) lblNomeCompleto.setText(nomeCompleto.isBlank() ? "Assistente" : nomeCompleto);
         if (lblEmail       != null) lblEmail.setText(u.getEmail() != null ? u.getEmail() : "-");
+        if (lblTelefoneResumo != null) lblTelefoneResumo.setText(telefonePreferencial(u));
+        if (lblEstadoConta != null) lblEstadoConta.setText(u.getStatus() != null && !u.getStatus().isBlank()
+                ? u.getStatus().trim()
+                : "-");
 
         if (a != null) {
             if (lblDataAdmissao != null)
@@ -105,6 +117,7 @@ public class PerfilAssistenteController extends BaseAssistenteController {
         if (u == null) return;
 
         try {
+            limparCamposInvalidos();
             validar();
 
             u.setPrimeiroNome(txtPrimeiroNome.getText().trim());
@@ -140,6 +153,9 @@ public class PerfilAssistenteController extends BaseAssistenteController {
             throw new RuntimeException("Apelido é obrigatório.");
         if (txtEmail.getText() == null || txtEmail.getText().isBlank() || !txtEmail.getText().contains("@"))
             throw new RuntimeException("Email inválido.");
+        validarCampoNumerico(txtNif, false, "O NIF deve conter exatamente 9 dígitos.");
+        validarCampoNumerico(txtTelemovel, true, "O telemóvel deve conter 9 dígitos.");
+        validarCampoNumerico(txtTelefone, false, "O telefone deve conter 9 dígitos.");
     }
 
     private void atualizarModoEdicao(boolean ativo) {
@@ -159,5 +175,69 @@ public class PerfilAssistenteController extends BaseAssistenteController {
 
     private String valorOuNull(String valor) {
         return valor == null || valor.isBlank() ? null : valor.trim();
+    }
+
+    private void aplicarFiltroNumerico(TextField campo, int limite) {
+        if (campo == null) return;
+
+        campo.setTextFormatter(new TextFormatter<String>(change -> {
+            String novoTexto = change.getControlNewText();
+            return novoTexto.matches("\\d{0," + limite + "}") ? change : null;
+        }));
+    }
+
+    private void configurarLimpezaErro() {
+        configurarLimpezaErro(txtNif, false);
+        configurarLimpezaErro(txtTelemovel, true);
+        configurarLimpezaErro(txtTelefone, false);
+    }
+
+    private void configurarLimpezaErro(TextField campo, boolean obrigatorio) {
+        if (campo == null) return;
+
+        campo.textProperty().addListener((obs, antigo, novo) -> {
+            if (campoNumericoValido(novo, obrigatorio)) {
+                removerCampoInvalido(campo);
+            }
+        });
+    }
+
+    private void validarCampoNumerico(TextField campo, boolean obrigatorio, String mensagem) {
+        String valor = campo != null ? campo.getText() : null;
+        if (!campoNumericoValido(valor, obrigatorio)) {
+            marcarCampoInvalido(campo);
+            throw new RuntimeException(mensagem);
+        }
+    }
+
+    private boolean campoNumericoValido(String valor, boolean obrigatorio) {
+        if (valor == null || valor.isBlank()) {
+            return !obrigatorio;
+        }
+        return valor.matches("\\d{9}");
+    }
+
+    private void limparCamposInvalidos() {
+        removerCampoInvalido(txtNif);
+        removerCampoInvalido(txtTelemovel);
+        removerCampoInvalido(txtTelefone);
+    }
+
+    private void marcarCampoInvalido(TextField campo) {
+        if (campo != null && !campo.getStyleClass().contains(CAMPO_INVALIDO)) {
+            campo.getStyleClass().add(CAMPO_INVALIDO);
+        }
+    }
+
+    private void removerCampoInvalido(TextField campo) {
+        if (campo != null) {
+            campo.getStyleClass().remove(CAMPO_INVALIDO);
+        }
+    }
+
+    private String telefonePreferencial(Utilizador u) {
+        if (u.getTelemovel() != null && !u.getTelemovel().isBlank()) return u.getTelemovel().trim();
+        if (u.getTelefone() != null && !u.getTelefone().isBlank()) return u.getTelefone().trim();
+        return "-";
     }
 }

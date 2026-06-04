@@ -7,9 +7,6 @@ import bll.ConsultaService;
 import bll.MaterialService;
 import bll.MovimentacaoEstoqueService;
 import bll.PedidoCompraService;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -18,10 +15,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.OverrunStyle;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -74,14 +72,8 @@ public class AssistenteDashboardController {
     @FXML private VBox containerMovimentacoes;
 
     // Tabela — colunas sem sala/gabinete
-    @FXML private TableView<ConsultaAgendadaDTO>           tblConsultas;
-    @FXML private TableColumn<ConsultaAgendadaDTO, String> colHora;
-    @FXML private TableColumn<ConsultaAgendadaDTO, String> colPaciente;
-    @FXML private TableColumn<ConsultaAgendadaDTO, String> colDentista;
-    @FXML private TableColumn<ConsultaAgendadaDTO, String> colProcedimento;
-    @FXML private TableColumn<ConsultaAgendadaDTO, String> colEstado;
-    @FXML private TableColumn<ConsultaAgendadaDTO, String> colAcoes;
-    @FXML private Label                                    lblRestamConsultas;
+    @FXML private VBox  containerConsultasGrid;
+    @FXML private Label lblRestamConsultas;
 
     // ─── Services ─────────────────────────────────────────────────────────────
 
@@ -329,63 +321,97 @@ public class AssistenteDashboardController {
     // ── Tabela de próximas consultas ──────────────────────────────────────────
 
     private void configurarTabela() {
-        colHora.setCellValueFactory(c -> {
-            var dto = c.getValue();
-            if (dto.getDataHoraInicio() == null) return new SimpleStringProperty("--:--");
-            String h = LocalDateTime.ofInstant(dto.getDataHoraInicio(), ZoneId.systemDefault()).format(HORA_FMT);
-            return new SimpleStringProperty(h);
-        });
+        if (containerConsultasGrid != null) {
+            containerConsultasGrid.setFillWidth(true);
+        }
+    }
 
-        colPaciente.setCellValueFactory(c ->
-                new SimpleStringProperty(vazio(c.getValue().getNomePaciente())));
+    private GridPane criarGrelhaConsulta(String styleClass) {
+        GridPane grid = new GridPane();
+        grid.getStyleClass().add(styleClass);
+        grid.setMaxWidth(Double.MAX_VALUE);
+        VBox.setVgrow(grid, Priority.NEVER);
 
-        colDentista.setCellValueFactory(c -> {
-            String nome = c.getValue().getNomeDentista();
-            return new SimpleStringProperty(nome != null && !nome.isBlank() ? "Dr(a). " + nome : "-");
-        });
+        double[] percentagens = {10, 20, 24, 20, 13, 13};
+        for (double percentagem : percentagens) {
+            ColumnConstraints coluna = new ColumnConstraints();
+            coluna.setPercentWidth(percentagem);
+            coluna.setMinWidth(0);
+            coluna.setHgrow(Priority.ALWAYS);
+            grid.getColumnConstraints().add(coluna);
+        }
+        return grid;
+    }
 
-        colProcedimento.setCellValueFactory(c ->
-                new SimpleStringProperty(vazio(c.getValue().getProcedimento())));
+    private GridPane criarCabecalhoConsultas() {
+        GridPane header = criarGrelhaConsulta("consultas-grid-header");
+        adicionarCelulaTexto(header, 0, "Hora", "consulta-header-cell", Pos.CENTER_LEFT);
+        adicionarCelulaTexto(header, 1, "Paciente", "consulta-header-cell", Pos.CENTER_LEFT);
+        adicionarCelulaTexto(header, 2, "Dentista", "consulta-header-cell", Pos.CENTER_LEFT);
+        adicionarCelulaTexto(header, 3, "Procedimento", "consulta-header-cell", Pos.CENTER_LEFT);
+        adicionarCelulaTexto(header, 4, "Estado", "consulta-header-cell", Pos.CENTER);
+        adicionarCelulaTexto(header, 5, "Ações", "consulta-header-cell", Pos.CENTER);
+        return header;
+    }
 
-        colEstado.setCellValueFactory(c -> new SimpleStringProperty(textoEstado(c.getValue().getStatus())));
-        colEstado.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setGraphic(null); setText(null); return; }
-                Label badge = new Label(item);
-                badge.getStyleClass().addAll("status-pill", classeEstado(
-                        getTableRow() != null && getTableRow().getItem() != null
-                                ? ((ConsultaAgendadaDTO) getTableRow().getItem()).getStatus() : null));
-                setGraphic(badge);
-                setText(null);
-            }
-        });
+    private GridPane criarLinhaConsulta(ConsultaAgendadaDTO dto, boolean alternada) {
+        GridPane linha = criarGrelhaConsulta(alternada ? "consultas-grid-row-alt" : "consultas-grid-row");
 
-        colAcoes.setCellValueFactory(c -> new SimpleStringProperty(""));
-        colAcoes.setCellFactory(col -> new TableCell<>() {
-            private final Button btn = new Button("Ver detalhes");
-            { btn.getStyleClass().add("table-action-button"); }
+        String hora = "--:--";
+        if (dto.getDataHoraInicio() != null) {
+            hora = LocalDateTime.ofInstant(dto.getDataHoraInicio(), ZoneId.systemDefault()).format(HORA_FMT);
+        }
 
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null); return;
-                }
-                ConsultaAgendadaDTO dto = (ConsultaAgendadaDTO) getTableRow().getItem();
-                btn.setOnAction(e -> abrirModalDetalhes(dto.getIdConsulta()));
-                setGraphic(btn);
-                setText(null);
-            }
-        });
+        String dentista = dto.getNomeDentista();
+        dentista = dentista != null && !dentista.isBlank() ? "Dr(a). " + dentista : "-";
+
+        adicionarCelulaTexto(linha, 0, hora, "consulta-body-cell", Pos.CENTER_LEFT);
+        adicionarCelulaTexto(linha, 1, vazio(dto.getNomePaciente()), "consulta-body-cell", Pos.CENTER_LEFT);
+        adicionarCelulaTexto(linha, 2, dentista, "consulta-body-cell", Pos.CENTER_LEFT);
+        adicionarCelulaTexto(linha, 3, vazio(dto.getProcedimento()), "consulta-body-cell", Pos.CENTER_LEFT);
+
+        Label badge = new Label(textoEstado(dto.getStatus()));
+        badge.getStyleClass().addAll("status-pill", classeEstado(dto.getStatus()));
+        adicionarCelula(linha, 4, badge, "consulta-body-cell", Pos.CENTER);
+
+        Button btn = new Button("Ver pormenores");
+        btn.getStyleClass().add("table-action-button");
+        btn.setMinWidth(112);
+        btn.setPrefWidth(112);
+        btn.setMaxWidth(112);
+        btn.setOnAction(e -> abrirModalDetalhes(dto.getIdConsulta()));
+        adicionarCelula(linha, 5, btn, "consulta-body-cell", Pos.CENTER);
+
+        return linha;
+    }
+
+    private void adicionarCelulaTexto(GridPane grid, int coluna, String texto, String styleClass, Pos alinhamento) {
+        Label label = new Label(texto);
+        label.setTextOverrun(OverrunStyle.ELLIPSIS);
+        label.setMaxWidth(Double.MAX_VALUE);
+        adicionarCelula(grid, coluna, label, styleClass, alinhamento);
+    }
+
+    private void adicionarCelula(GridPane grid, int coluna, Region conteudo, String styleClass, Pos alinhamento) {
+        HBox celula = new HBox(conteudo);
+        celula.getStyleClass().add(styleClass);
+        celula.setAlignment(alinhamento);
+        celula.setMinWidth(0);
+        celula.setMaxWidth(Double.MAX_VALUE);
+        GridPane.setHgrow(celula, Priority.ALWAYS);
+        grid.add(celula, coluna, 0);
     }
 
     private void carregarConsultasHoje() {
-        ObservableList<ConsultaAgendadaDTO> rows = FXCollections.observableArrayList();
+        if (containerConsultasGrid == null) return;
+
+        containerConsultasGrid.getChildren().clear();
+        containerConsultasGrid.getChildren().add(criarCabecalhoConsultas());
+
+        List<ConsultaAgendadaDTO> rows = List.of();
         try {
             if (consultaService != null) {
-                List<ConsultaAgendadaDTO> hoje = consultaService.listarTodasAgendadas().stream()
+                rows = consultaService.listarTodasAgendadas().stream()
                         .filter(c -> c.getDataHoraInicio() != null
                                 && LocalDateTime.ofInstant(c.getDataHoraInicio(), ZoneId.systemDefault())
                                 .toLocalDate().equals(LocalDate.now()))
@@ -393,11 +419,18 @@ public class AssistenteDashboardController {
                                 Comparator.nullsLast(Comparator.naturalOrder())))
                         .limit(8)
                         .toList();
-                rows.addAll(hoje);
             }
         } catch (Exception ignored) {}
 
-        tblConsultas.setItems(rows);
+        if (rows.isEmpty()) {
+            Label vazio = new Label("Sem consultas agendadas para hoje.");
+            vazio.getStyleClass().addAll("section-caption", "consultas-grid-empty");
+            containerConsultasGrid.getChildren().add(vazio);
+        } else {
+            for (int i = 0; i < rows.size(); i++) {
+                containerConsultasGrid.getChildren().add(criarLinhaConsulta(rows.get(i), i % 2 != 0));
+            }
+        }
 
         long restam = rows.stream()
                 .filter(r -> r.getStatus() != EstadoConsulta.CONCLUIDA
@@ -421,7 +454,7 @@ public class AssistenteDashboardController {
 
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
-            modal.initOwner(tblConsultas.getScene().getWindow());
+            modal.initOwner(containerConsultasGrid.getScene().getWindow());
             modal.setResizable(false);
             modal.setTitle("Detalhes da Consulta");
 

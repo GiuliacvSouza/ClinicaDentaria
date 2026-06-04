@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.assistente.AdicionarMaterialController"
+      stylesheets="@../../css/assistente-style.css"
+      styleClass="modal-root"
+      prefWidth="620.0">
+
+    <VBox spacing="18.0" styleClass="modal-card">
+        <padding><Insets top="22.0" right="24.0" bottom="22.0" left="24.0"/></padding>
+
+        <VBox spacing="4.0">
+            <Label text="Adicionar Material" styleClass="modal-title"/>
+            <Label text="Preencha os dados do material para o adicionar ao stock." styleClass="modal-subtitle"/>
+        </VBox>
+
+        <GridPane hgap="14.0" vgap="12.0">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50.0"/>
+                <ColumnConstraints percentWidth="50.0"/>
+            </columnConstraints>
+
+            <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label text="Código interno *" styleClass="form-label"/>
+                <TextField fx:id="codigoInternoField" promptText="Ex.: MAT-001" styleClass="form-field"/>
+            </VBox>
+
+            <VBox spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label text="Nome do material *" styleClass="form-label"/>
+                <TextField fx:id="nomeField" promptText="Ex.: Luvas descartáveis" styleClass="form-field"/>
+            </VBox>
+
+            <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label text="Fornecedor *" styleClass="form-label"/>
+                <ComboBox fx:id="fornecedorComboBox" promptText="Selecione um fornecedor" maxWidth="Infinity" styleClass="form-combo"/>
+            </VBox>
+
+            <VBox spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label text="Unidade de medida *" styleClass="form-label"/>
+                <ComboBox fx:id="unidadeMedidaComboBox" promptText="Selecione uma unidade" maxWidth="Infinity" styleClass="form-combo"/>
+            </VBox>
+
+            <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                <Label text="Valor unitário" styleClass="form-label"/>
+                <TextField fx:id="valorUnitarioField" promptText="0,00" styleClass="form-field"/>
+            </VBox>
+
+            <VBox spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label text="Quantidade atual" styleClass="form-label"/>
+                <TextField fx:id="quantidadeAtualField" promptText="0" styleClass="form-field"/>
+            </VBox>
+
+            <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                <Label text="Quantidade mínima" styleClass="form-label"/>
+                <TextField fx:id="quantidadeMinimaField" promptText="0" styleClass="form-field"/>
+            </VBox>
+
+            <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                <Label text="Descrição" styleClass="form-label"/>
+                <TextArea fx:id="descricaoArea" promptText="Notas ou detalhes do material" prefRowCount="3" wrapText="true" styleClass="form-area"/>
+            </VBox>
+        </GridPane>
+
+        <CheckBox fx:id="ativoCheckBox" text="Material ativo" styleClass="form-check"/>
+
+        <Label fx:id="erroLabel" text="" visible="false" managed="false" styleClass="error-label"/>
+
+        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="cancelarButton" text="Cancelar" onAction="#cancelar" styleClass="secondary-button" mnemonicParsing="false"/>
+            <Button fx:id="guardarButton" text="Guardar Material" onAction="#guardarMaterial" styleClass="primary-button" mnemonicParsing="false"/>
+        </HBox>
+    </VBox>
+</VBox>

@@ -32,7 +32,7 @@
             <Button onAction="#abrirDashboard"      styleClass="nav-button"        text="Dashboard"    mnemonicParsing="false" />
             <Button onAction="#abrirConsultasDia"   styleClass="nav-button"        text="Consultas"    mnemonicParsing="false" />
             <Button onAction="#abrirMateriais"      styleClass="nav-button"        text="Materiais"    mnemonicParsing="false" />
-            <Button onAction="#abrirMovimentacoes"  styleClass="nav-button"        text="Movimentacoes" mnemonicParsing="false" />
+            <Button onAction="#abrirMovimentacoes"  styleClass="nav-button"        text="Movimentações" mnemonicParsing="false" />
             <Button onAction="#abrirPedidosCompra"  styleClass="nav-button"        text="Pedidos"      mnemonicParsing="false" />
             <Button onAction="#abrirFornecedores"   styleClass="nav-button"        text="Fornecedores" mnemonicParsing="false" />
             <Button onAction="#abrirAlertas"        styleClass="nav-button-active" text="Alertas"      mnemonicParsing="false" />
@@ -40,8 +40,15 @@
         <HBox alignment="CENTER_RIGHT" spacing="10.0">
             <VBox alignment="CENTER_RIGHT" spacing="2.0">
                 <Label fx:id="lblNomeUtilizador" styleClass="user-name" text="Assistente" />
-                <Label styleClass="user-role" text="Assistente de Consultorio" />
+                <Label styleClass="user-role" text="Assistente de Consultório" />
             </VBox>
+            <Button onAction="#abrirPerfil" styleClass="icon-button" mnemonicParsing="false">
+                <graphic>
+                    <StackPane styleClass="icon-shell">
+                        <SVGPath content="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" styleClass="header-icon" />
+                    </StackPane>
+                </graphic>
+            </Button>
             <Button onAction="#fazerLogout" styleClass="icon-button" mnemonicParsing="false">
                 <graphic>
                     <StackPane styleClass="icon-shell">
@@ -59,7 +66,7 @@
         <HBox alignment="CENTER_LEFT" spacing="14.0">
             <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                 <Label styleClass="page-title" text="Alertas de Stock" />
-                <Label styleClass="page-subtitle" text="Materiais com quantidade abaixo do nivel minimo configurado." />
+                <Label styleClass="page-subtitle" text="Materiais com quantidade abaixo do nível mínimo configurado." />
             </VBox>
             <Button onAction="#abrirPedidosCompra" styleClass="primary-button"
                     text="Criar Pedido de Compra" mnemonicParsing="false" />

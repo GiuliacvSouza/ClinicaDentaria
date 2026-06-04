@@ -34,7 +34,7 @@
             <Button onAction="#abrirDashboard"      styleClass="nav-button"        text="Dashboard"    mnemonicParsing="false" />
             <Button onAction="#abrirConsultasDia"   styleClass="nav-button"        text="Consultas"    mnemonicParsing="false" />
             <Button onAction="#abrirMateriais"      styleClass="nav-button"        text="Materiais"    mnemonicParsing="false" />
-            <Button onAction="#abrirMovimentacoes"  styleClass="nav-button-active" text="Movimentacoes" mnemonicParsing="false" />
+            <Button onAction="#abrirMovimentacoes"  styleClass="nav-button-active" text="Movimentações" mnemonicParsing="false" />
             <Button onAction="#abrirPedidosCompra"  styleClass="nav-button"        text="Pedidos"      mnemonicParsing="false" />
             <Button onAction="#abrirFornecedores"   styleClass="nav-button"        text="Fornecedores" mnemonicParsing="false" />
             <Button onAction="#abrirAlertas"        styleClass="nav-button"        text="Alertas"      mnemonicParsing="false" />
@@ -42,8 +42,15 @@
         <HBox alignment="CENTER_RIGHT" spacing="10.0">
             <VBox alignment="CENTER_RIGHT" spacing="2.0">
                 <Label fx:id="lblNomeUtilizador" styleClass="user-name" text="Assistente" />
-                <Label styleClass="user-role" text="Assistente de Consultorio" />
+                <Label styleClass="user-role" text="Assistente de Consultório" />
             </VBox>
+            <Button onAction="#abrirPerfil" styleClass="icon-button" mnemonicParsing="false">
+                <graphic>
+                    <StackPane styleClass="icon-shell">
+                        <SVGPath content="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" styleClass="header-icon" />
+                    </StackPane>
+                </graphic>
+            </Button>
             <Button onAction="#fazerLogout" styleClass="icon-button" mnemonicParsing="false">
                 <graphic>
                     <StackPane styleClass="icon-shell">
@@ -60,11 +67,11 @@
 
         <HBox alignment="CENTER_LEFT" spacing="14.0">
             <VBox spacing="4.0" HBox.hgrow="ALWAYS">
-                <Label styleClass="page-title" text="Movimentacoes de Stock" />
-                <Label styleClass="page-subtitle" text="Registe entradas e saidas de materiais e consulte o historico." />
+                <Label styleClass="page-title" text="Movimentações de Stock" />
+                <Label styleClass="page-subtitle" text="Registe entradas e saídas de materiais e consulte o histórico." />
             </VBox>
             <Button onAction="#abrirNovaMovimentacao" styleClass="primary-button"
-                    text="+ Nova Movimentacao" mnemonicParsing="false" />
+                    text="+ Nova Movimentação" mnemonicParsing="false" />
         </HBox>
 
         <HBox spacing="12.0">
@@ -81,7 +88,7 @@
 
         <VBox spacing="12.0" styleClass="section-card" VBox.vgrow="ALWAYS">
             <HBox alignment="CENTER_LEFT">
-                <Label styleClass="section-title" text="Historico de Movimentacoes" />
+                <Label styleClass="section-title" text="Histórico de Movimentações" />
                 <Region HBox.hgrow="ALWAYS" />
                 <Label fx:id="lblTotalMovimentacoes" styleClass="section-caption" text="0 registos" />
             </HBox>
@@ -96,7 +103,7 @@
                     <TableColumn fx:id="colObservacoes" prefWidth="280.0" text="Observacoes" />
                 </columns>
                 <placeholder>
-                    <Label text="Nenhuma movimentacao encontrada." />
+                    <Label text="Nenhuma movimentação encontrada." />
                 </placeholder>
             </TableView>
         </VBox>

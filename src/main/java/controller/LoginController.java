@@ -7,11 +7,18 @@ import bll.RecepcionistaService;
 import bll.UtilizadorService;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.Assistente;
 import model.Recepcionista;
@@ -32,10 +39,18 @@ public class LoginController {
     @FXML private Button btnEntrar;
     @FXML private Button btnTogglePassword;
     @FXML private Label lblErro;
+    @FXML private HBox loginRoot;
+    @FXML private StackPane imagePanel;
+    @FXML private VBox loginContent;
+    @FXML private StackPane passwordWrapper;
+    @FXML private ImageView imgClinica;
 
     private boolean senhaVisivel = false;
     private String senhaReal = "";
     private boolean atualizandoSenha = false;
+    private static final String INPUT_ERROR_CLASS = "login-input-error";
+    private static final String PASSWORD_FOCUSED_CLASS = "focused";
+    private static final String BUTTON_SUCCESS_CLASS = "primary-button-success";
 
     @Autowired
     private UtilizadorService utilizadorService;
@@ -52,13 +67,76 @@ public class LoginController {
 
     @FXML
     public void initialize() {
+        setupResponsiveLayout();
         setupEventHandlers();
         setupPlaceholders();
         setupPasswordToggle();
     }
 
+    private void setupResponsiveLayout() {
+        if (loginRoot != null && imagePanel != null && loginContent != null) {
+            imagePanel.prefWidthProperty().bind(loginRoot.widthProperty().multiply(0.40));
+            loginContent.prefWidthProperty().bind(loginRoot.widthProperty().multiply(0.60));
+        }
+
+        if (imagePanel != null) {
+            Rectangle clip = new Rectangle();
+            clip.widthProperty().bind(imagePanel.widthProperty());
+            clip.heightProperty().bind(imagePanel.heightProperty());
+            clip.setArcWidth(42);
+            clip.setArcHeight(42);
+            imagePanel.setClip(clip);
+        }
+
+        if (imgClinica != null && imagePanel != null) {
+            imgClinica.fitWidthProperty().bind(imagePanel.widthProperty());
+            imgClinica.fitHeightProperty().bind(imagePanel.heightProperty());
+            imgClinica.imageProperty().addListener((obs, antiga, nova) -> atualizarViewportImagem());
+            imagePanel.widthProperty().addListener((obs, antiga, nova) -> atualizarViewportImagem());
+            imagePanel.heightProperty().addListener((obs, antiga, nova) -> atualizarViewportImagem());
+            atualizarViewportImagem();
+        }
+
+        if (passwordWrapper != null && txtPassword != null) {
+            txtPassword.focusedProperty().addListener((obs, antigo, focado) -> alternarClasse(
+                    passwordWrapper, PASSWORD_FOCUSED_CLASS, focado));
+        }
+
+        if (passwordWrapper != null && btnTogglePassword != null) {
+            btnTogglePassword.focusedProperty().addListener((obs, antigo, focado) -> alternarClasse(
+                    passwordWrapper, PASSWORD_FOCUSED_CLASS, focado));
+        }
+
+        if (lblErro != null) {
+            lblErro.managedProperty().bind(lblErro.visibleProperty());
+        }
+    }
+
+    private void atualizarViewportImagem() {
+        if (imgClinica == null || imagePanel == null) return;
+
+        Image imagem = imgClinica.getImage();
+        double larguraPainel = imagePanel.getWidth();
+        double alturaPainel = imagePanel.getHeight();
+        if (imagem == null || larguraPainel <= 0 || alturaPainel <= 0) return;
+
+        double larguraImagem = imagem.getWidth();
+        double alturaImagem = imagem.getHeight();
+        double proporcaoImagem = larguraImagem / alturaImagem;
+        double proporcaoPainel = larguraPainel / alturaPainel;
+
+        if (proporcaoImagem > proporcaoPainel) {
+            double larguraVisivel = alturaImagem * proporcaoPainel;
+            double x = (larguraImagem - larguraVisivel) / 2;
+            imgClinica.setViewport(new Rectangle2D(x, 0, larguraVisivel, alturaImagem));
+        } else {
+            double alturaVisivel = larguraImagem / proporcaoPainel;
+            double y = Math.max(0, (alturaImagem - alturaVisivel) / 2);
+            imgClinica.setViewport(new Rectangle2D(0, y, larguraImagem, alturaVisivel));
+        }
+    }
+
     private void setupPasswordToggle() {
-        // Setup já feito no FXML com SVGPath
     }
 
     private void setupEventHandlers() {
@@ -78,12 +156,12 @@ public class LoginController {
 
         txtEmail.textProperty().addListener((obs, old, newVal) -> {
             lblErro.setVisible(false);
-            txtEmail.setStyle("");
+            removerClasse(txtEmail, INPUT_ERROR_CLASS);
         });
 
         txtPassword.textProperty().addListener((obs, old, newVal) -> {
             lblErro.setVisible(false);
-            txtPassword.setStyle("");
+            removerClasse(passwordWrapper, INPUT_ERROR_CLASS);
             if (!atualizandoSenha) {
                 if (!senhaVisivel) {
                     senhaReal = newVal;
@@ -134,19 +212,19 @@ public class LoginController {
         if (senha.isEmpty()) {
             showError("Por favor, insira a palavra-passe");
             txtPassword.requestFocus();
-            highlightError(txtPassword);
+            highlightError(passwordWrapper);
             return;
         }
 
         if (!isValidEmail(email)) {
-            showError("Por favor, insira um email valido");
+            showError("Por favor, insira um email válido");
             txtEmail.requestFocus();
             highlightError(txtEmail);
             return;
         }
 
         btnEntrar.setDisable(true);
-        btnEntrar.setText("A ENTRAR...");
+        btnEntrar.setText("A entrar...");
 
         new Thread(() -> {
             try {
@@ -183,20 +261,20 @@ public class LoginController {
 
                         showSuccessAndNavigate();
                     } else {
-                        showError("Email, palavra-passe invalidos ou conta inativa");
+                        showError("Email ou palavra-passe inválidos, ou conta inativa");
                         txtPassword.clear();
                         txtPassword.requestFocus();
                         highlightError(txtEmail);
-                        highlightError(txtPassword);
+                        highlightError(passwordWrapper);
                         btnEntrar.setDisable(false);
-                        btnEntrar.setText("ENTRAR");
+                        btnEntrar.setText("Entrar");
                     }
                 });
             } catch (Exception e) {
                 javafx.application.Platform.runLater(() -> {
                     showError("Erro: " + e.getMessage());
                     btnEntrar.setDisable(false);
-                    btnEntrar.setText("ENTRAR");
+                    btnEntrar.setText("Entrar");
                 });
             }
         }).start();
@@ -208,7 +286,7 @@ public class LoginController {
     }
 
     private void showSuccessAndNavigate() {
-        btnEntrar.setStyle("-fx-background-color: #4CAF50;");
+        adicionarClasse(btnEntrar, BUTTON_SUCCESS_CLASS);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
         delay.setOnFinished(event -> {
@@ -230,8 +308,8 @@ public class LoginController {
             e.printStackTrace();
             showError("Erro ao carregar a agenda: " + e.getMessage());
             btnEntrar.setDisable(false);
-            btnEntrar.setText("ENTRAR");
-            btnEntrar.setStyle("");
+            btnEntrar.setText("Entrar");
+            removerClasse(btnEntrar, BUTTON_SUCCESS_CLASS);
         }
     }
 
@@ -243,8 +321,8 @@ public class LoginController {
             e.printStackTrace();
             showError("Erro ao carregar o dashboard do assistente: " + e.getMessage());
             btnEntrar.setDisable(false);
-            btnEntrar.setText("ENTRAR");
-            btnEntrar.setStyle("");
+            btnEntrar.setText("Entrar");
+            removerClasse(btnEntrar, BUTTON_SUCCESS_CLASS);
         }
     }
 
@@ -257,11 +335,31 @@ public class LoginController {
         delay.play();
     }
 
-    private void highlightError(Control campo) {
-        campo.setStyle("-fx-border-color: #FB2424; -fx-border-width: 2px;");
+    private void highlightError(Node campo) {
+        adicionarClasse(campo, INPUT_ERROR_CLASS);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(3));
-        delay.setOnFinished(event -> campo.setStyle(""));
+        delay.setOnFinished(event -> removerClasse(campo, INPUT_ERROR_CLASS));
         delay.play();
+    }
+
+    private void adicionarClasse(Node node, String styleClass) {
+        if (node != null && !node.getStyleClass().contains(styleClass)) {
+            node.getStyleClass().add(styleClass);
+        }
+    }
+
+    private void removerClasse(Node node, String styleClass) {
+        if (node != null) {
+            node.getStyleClass().remove(styleClass);
+        }
+    }
+
+    private void alternarClasse(Node node, String styleClass, boolean ativa) {
+        if (ativa) {
+            adicionarClasse(node, styleClass);
+        } else {
+            removerClasse(node, styleClass);
+        }
     }
 }

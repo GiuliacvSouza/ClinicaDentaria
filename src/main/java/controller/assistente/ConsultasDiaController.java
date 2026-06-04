@@ -18,6 +18,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import model.dto.ConsultaAgendadaDTO;
 import model.enums.EstadoConsulta;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import java.util.List;
 public class ConsultasDiaController extends BaseAssistenteController {
 
     private static final DateTimeFormatter HORA_FMT = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter DATA_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     // ─── FXML ─────────────────────────────────────────────────────────────────
 
@@ -63,7 +65,20 @@ public class ConsultasDiaController extends BaseAssistenteController {
     @Override
     protected void inicializarEcra() {
         filtroData = LocalDate.now();
-        if (dpFiltroData != null) dpFiltroData.setValue(filtroData);
+        if (dpFiltroData != null) {
+            dpFiltroData.setConverter(new StringConverter<>() {
+                @Override
+                public String toString(LocalDate value) {
+                    return value != null ? value.format(DATA_FMT) : "";
+                }
+
+                @Override
+                public LocalDate fromString(String value) {
+                    return value == null || value.isBlank() ? null : LocalDate.parse(value.trim(), DATA_FMT);
+                }
+            });
+            dpFiltroData.setValue(filtroData);
+        }
 
         if (txtPesquisa != null)
             txtPesquisa.textProperty().addListener((obs, o, n) -> carregarConsultas());
@@ -166,6 +181,7 @@ public class ConsultasDiaController extends BaseAssistenteController {
 
         Label lblHora = new Label(hora);
         lblHora.getStyleClass().add("consulta-hora");
+        lblHora.setMinWidth(72);
 
         VBox info = new VBox(2);
         Label lblPaciente = new Label(c.getNomePaciente() != null ? c.getNomePaciente() : "Paciente");
@@ -176,8 +192,10 @@ public class ConsultasDiaController extends BaseAssistenteController {
         if (c.getProcedimento() != null) meta += (meta.isBlank() ? "" : " · ") + c.getProcedimento();
         Label lblMeta = new Label(meta);
         lblMeta.getStyleClass().add("consulta-meta");
+        lblMeta.setWrapText(true);
 
         info.getChildren().addAll(lblPaciente, lblMeta);
+        HBox.setHgrow(info, Priority.ALWAYS);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -185,8 +203,10 @@ public class ConsultasDiaController extends BaseAssistenteController {
         Label badge = new Label(textoEstado(c.getStatus()));
         badge.getStyleClass().addAll("status-pill", classeEstado(c.getStatus()));
 
-        Button btnDetalhes = new Button("Ver detalhes");
+        Button btnDetalhes = new Button("Ver pormenores");
         btnDetalhes.getStyleClass().add("table-action-button");
+        btnDetalhes.setMinWidth(112);
+        btnDetalhes.setPrefWidth(112);
         btnDetalhes.setOnAction(e -> abrirModalDetalhes(c.getIdConsulta()));
 
         linha.getChildren().addAll(lblHora, info, spacer, badge, btnDetalhes);

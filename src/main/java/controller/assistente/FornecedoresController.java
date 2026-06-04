@@ -76,7 +76,7 @@ public class FornecedoresController extends BaseAssistenteController {
 
         colAcoes.setCellValueFactory(c -> new SimpleStringProperty(""));
         colAcoes.setCellFactory(col -> new TableCell<>() {
-            private final Button btnVer = new Button("Ver detalhes");
+            private final Button btnVer = new Button("Ver pormenores");
             { btnVer.getStyleClass().add("table-action-button"); }
 
             @Override
