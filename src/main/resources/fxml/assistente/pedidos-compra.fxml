@@ -96,16 +96,17 @@
 
             <TableView fx:id="tblPedidos" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="colNumero"      prefWidth="100.0" text="Numero" />
-                    <TableColumn fx:id="colFornecedor"  prefWidth="200.0" text="Fornecedor" />
-                    <TableColumn fx:id="colDataPedido"  prefWidth="140.0" text="Data Pedido" />
-                    <TableColumn fx:id="colDataEntrega" prefWidth="140.0" text="Data Entrega" />
-                    <TableColumn fx:id="colEstado"      prefWidth="120.0" text="Estado" />
-                    <TableColumn fx:id="colValorTotal"  prefWidth="120.0" text="Valor Total" />
-                    <TableColumn fx:id="colAcoes"       prefWidth="160.0" text="Acoes" />
+                    <TableColumn fx:id="colNumero"       prefWidth="80.0"  text="Nº" />
+                    <TableColumn fx:id="colFornecedor"   prefWidth="200.0" text="Fornecedor" />
+                    <TableColumn fx:id="colDataPedido"   prefWidth="120.0" text="Data" />
+                    <TableColumn fx:id="colAssistente"   prefWidth="160.0" text="Responsável" />
+                    <TableColumn fx:id="colEstado"       prefWidth="120.0" text="Estado" />
+                    <TableColumn fx:id="colTotalItens"   prefWidth="80.0"  text="Itens" />
+                    <TableColumn fx:id="colValorTotal"   prefWidth="110.0" text="Total" />
+                    <TableColumn fx:id="colAcoes"        prefWidth="220.0" text="Ações" />
                 </columns>
                 <placeholder>
-                    <Label text="Nenhum pedido encontrado." />
+                    <Label styleClass="section-caption" text="Nenhum pedido encontrado." />
                 </placeholder>
             </TableView>
         </VBox>

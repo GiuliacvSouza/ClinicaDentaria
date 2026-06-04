@@ -1132,3 +1132,111 @@
 .content-scroll > .viewport {
     -fx-background-color: #ffffff;
 }
+
+/* ─── Formulário modal — textarea ────────────────────────── */
+.form-textarea {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d8e5e1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+    -fx-padding: 10 12;
+}
+
+.form-textarea:focused {
+    -fx-border-color: #2e7d72;
+    -fx-border-width: 1.5;
+}
+
+/* TextArea sem a linha/sombra interna do ScrollPane interno */
+.form-textarea-clean {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d8e5e1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+    -fx-padding: 0;
+    -fx-text-box-border: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.form-textarea-clean .content {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10 12;
+}
+
+.form-textarea-clean:focused {
+    -fx-border-color: #2e7d72;
+    -fx-border-width: 1.5;
+}
+
+.form-textarea-clean .scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.form-textarea-clean .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ─── Mensagem de erro inline ────────────────────────────── */
+.form-error-label {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 12px;
+    -fx-text-fill: #ba1a1a;
+}
+
+/* ─── Badges de estado de pedido ────────────────────────── */
+.badge-estado-pendente {
+    -fx-background-color: #d5e0f8;
+    -fx-background-radius: 10;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #364e6e;
+}
+
+.badge-estado-enviado {
+    -fx-background-color: #fff2a2;
+    -fx-background-radius: 10;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #5c4a00;
+}
+
+.badge-estado-recebido {
+    -fx-background-color: #a7efe7;
+    -fx-background-radius: 10;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #0d4e47;
+}
+
+.badge-estado-cancelado {
+    -fx-background-color: #ffd4d4;
+    -fx-background-radius: 10;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #7a1515;
+}
+
+/* ─── Botão de remover item (pequeno, discreto) ─────────── */
+.btn-remover-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ba1a1a;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-padding: 2 6;
+    -fx-background-radius: 6;
+}
+
+.btn-remover-item:hover {
+    -fx-background-color: #ffd4d4;
+}

@@ -7,21 +7,28 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "itemPedido")
+@Table(name = "item_pedido")
 public class ItemPedido {
+
     @EmbeddedId
     private ItemPedidoId id;
 
+    /**
+     * insertable=false / updatable=false porque a coluna já é gerida pelo @EmbeddedId.
+     * Sem isso o Hibernate gera a coluna duas vezes.
+     */
     @MapsId("idMaterial")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "idMaterial", nullable = false)
+    @JoinColumn(name = "id_material", nullable = false,
+                insertable = false, updatable = false)
     private Material idMaterial;
 
     @MapsId("idPedido")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "idPedido", nullable = false)
+    @JoinColumn(name = "id_pedido", nullable = false,
+                insertable = false, updatable = false)
     private PedidoCompra idPedido;
 
     @Column(name = "quantidade", nullable = false)
@@ -30,44 +37,20 @@ public class ItemPedido {
     @Column(name = "valor", nullable = false, precision = 10, scale = 2)
     private BigDecimal valor;
 
-    public ItemPedidoId getId() {
-        return id;
-    }
+    // ─── Getters / Setters ────────────────────────────────────────────────────
 
-    public void setId(ItemPedidoId id) {
-        this.id = id;
-    }
+    public ItemPedidoId getId()                { return id; }
+    public void setId(ItemPedidoId id)         { this.id = id; }
 
-    public Material getIdMaterial() {
-        return idMaterial;
-    }
+    public Material getIdMaterial()            { return idMaterial; }
+    public void setIdMaterial(Material m)      { this.idMaterial = m; }
 
-    public void setIdMaterial(Material idMaterial) {
-        this.idMaterial = idMaterial;
-    }
+    public PedidoCompra getIdPedido()          { return idPedido; }
+    public void setIdPedido(PedidoCompra p)    { this.idPedido = p; }
 
-    public PedidoCompra getIdPedido() {
-        return idPedido;
-    }
+    public Integer getQuantidade()             { return quantidade; }
+    public void setQuantidade(Integer q)       { this.quantidade = q; }
 
-    public void setIdPedido(PedidoCompra idPedido) {
-        this.idPedido = idPedido;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
-    }
-
+    public BigDecimal getValor()               { return valor; }
+    public void setValor(BigDecimal v)         { this.valor = v; }
 }

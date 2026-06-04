@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<VBox prefHeight="768.0" prefWidth="1366.0"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.assistente.NovoPedidoCompraController"
+      stylesheets="@../../css/assistente-style.css"
+      styleClass="root">
+
+    <!-- ═══ NAVBAR (igual às outras páginas) ═══ -->
+    <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="header">
+        <padding><Insets top="12.0" right="24.0" bottom="12.0" left="24.0" /></padding>
+        <StackPane styleClass="logo-shell">
+            <ImageView fitHeight="42.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image">
+                <image><Image url="@../../images/logo.png" /></image>
+            </ImageView>
+        </StackPane>
+        <HBox alignment="CENTER_LEFT" spacing="8.0" HBox.hgrow="ALWAYS">
+            <Button onAction="#abrirDashboard"     styleClass="nav-button"        text="Dashboard"         mnemonicParsing="false" />
+            <Button onAction="#abrirConsultasDia"  styleClass="nav-button"        text="Consultas"         mnemonicParsing="false" />
+            <Button onAction="#abrirMateriais"     styleClass="nav-button"        text="Materiais"         mnemonicParsing="false" />
+            <Button onAction="#abrirMovimentacoes" styleClass="nav-button"        text="Movimentações"     mnemonicParsing="false" />
+            <Button onAction="#abrirPedidosCompra" styleClass="nav-button-active" text="Pedidos"           mnemonicParsing="false" />
+            <Button onAction="#abrirFornecedores"  styleClass="nav-button"        text="Fornecedores"      mnemonicParsing="false" />
+            <Button onAction="#abrirAlertas"       styleClass="nav-button"        text="Alertas"           mnemonicParsing="false" />
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+            <VBox alignment="CENTER_RIGHT" spacing="2.0">
+                <Label fx:id="lblNomeUtilizador" styleClass="user-name" text="Assistente" />
+                <Label styleClass="user-role" text="Assistente de Consultório" />
+            </VBox>
+            <Button onAction="#abrirPerfil" styleClass="icon-button" mnemonicParsing="false">
+                <graphic>
+                    <StackPane styleClass="icon-shell">
+                        <SVGPath content="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+                                 styleClass="header-icon" />
+                    </StackPane>
+                </graphic>
+            </Button>
+            <Button onAction="#fazerLogout" styleClass="icon-button" mnemonicParsing="false">
+                <graphic>
+                    <StackPane styleClass="icon-shell">
+                        <SVGPath content="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"
+                                 styleClass="header-icon" />
+                    </StackPane>
+                </graphic>
+            </Button>
+        </HBox>
+    </HBox>
+
+    <!-- ═══ CONTEÚDO ═══ -->
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+        <content>
+            <VBox spacing="20.0" styleClass="dashboard-body">
+                <padding><Insets top="24.0" right="28.0" bottom="32.0" left="28.0" /></padding>
+
+                <!-- Cabeçalho da página -->
+                <HBox alignment="CENTER_LEFT" spacing="14.0">
+                    <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                        <Label styleClass="page-title"    text="Novo Pedido de Compra" />
+                        <Label styleClass="page-subtitle" text="Selecione o fornecedor e adicione os materiais pretendidos." />
+                    </VBox>
+                    <Button onAction="#voltarAosPedidos" styleClass="secondary-button"
+                            text="← Voltar aos Pedidos" mnemonicParsing="false" />
+                </HBox>
+
+                <!-- Secção 1 — Dados do Pedido -->
+                <VBox styleClass="section-card" spacing="14.0">
+                    <Label styleClass="section-title" text="Dados do Pedido" />
+
+                    <VBox spacing="6.0">
+                        <Label styleClass="detail-field-label" text="Fornecedor *" />
+                        <ComboBox fx:id="cbFornecedor" maxWidth="Infinity"
+                                  promptText="Selecionar fornecedor"
+                                  styleClass="form-combo" />
+                    </VBox>
+
+                    <VBox spacing="6.0">
+                        <Label styleClass="detail-field-label" text="Observações" />
+                        <TextArea fx:id="txtObservacoes" prefRowCount="3"
+                                  promptText="Observações opcionais sobre este pedido..."
+                                  styleClass="form-textarea-clean" wrapText="true" />
+                    </VBox>
+                </VBox>
+
+                <!-- Secção 2 — Adicionar Material -->
+                <VBox styleClass="section-card" spacing="14.0">
+                    <Label styleClass="section-title" text="Adicionar Material" />
+
+                    <GridPane hgap="14.0" vgap="0.0">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="38.0" />
+                            <ColumnConstraints percentWidth="22.0" />
+                            <ColumnConstraints percentWidth="22.0" />
+                            <ColumnConstraints percentWidth="18.0" />
+                        </columnConstraints>
+
+                        <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label styleClass="detail-field-label" text="Material *" />
+                            <ComboBox fx:id="cbMaterial" maxWidth="Infinity"
+                                      promptText="Selecionar material"
+                                      styleClass="form-combo" />
+                        </VBox>
+
+                        <VBox spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label styleClass="detail-field-label" text="Quantidade *" />
+                            <TextField fx:id="txtQuantidade" promptText="0"
+                                       styleClass="form-field" />
+                        </VBox>
+
+                        <VBox spacing="6.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                            <Label styleClass="detail-field-label" text="Valor unitário (€) *" />
+                            <TextField fx:id="txtValorUnitario" promptText="0.00"
+                                       styleClass="form-field" />
+                        </VBox>
+
+                        <VBox spacing="6.0" GridPane.columnIndex="3" GridPane.rowIndex="0"
+                              alignment="BOTTOM_LEFT">
+                            <Region minHeight="20.0" />
+                            <Button onAction="#adicionarItem" styleClass="primary-button"
+                                    text="Adicionar" mnemonicParsing="false"
+                                    maxWidth="Infinity" />
+                        </VBox>
+                    </GridPane>
+
+                    <Label fx:id="lblErroItem" styleClass="form-error-label"
+                           text="" visible="false" managed="false" wrapText="true" />
+                </VBox>
+
+                <!-- Secção 3 — Itens do Pedido -->
+                <VBox styleClass="section-card" spacing="12.0">
+                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                        <Label styleClass="section-title" text="Itens do Pedido" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="lblTotalItens" styleClass="section-caption" text="0 itens" />
+                    </HBox>
+
+                    <TableView fx:id="tblItens" styleClass="dashboard-table"
+                               minHeight="140.0" prefHeight="200.0">
+                        <columns>
+                            <TableColumn fx:id="colItemMaterial"  text="Material"        prefWidth="260.0" />
+                            <TableColumn fx:id="colItemQtd"       text="Quantidade"      prefWidth="120.0" />
+                            <TableColumn fx:id="colItemValorUnit" text="Valor unit. (€)"  prefWidth="130.0" />
+                            <TableColumn fx:id="colItemSubtotal"  text="Subtotal (€)"    prefWidth="130.0" />
+                            <TableColumn fx:id="colItemRemover"   text=""                prefWidth="80.0"
+                                         style="-fx-alignment: CENTER;" />
+                        </columns>
+                        <placeholder>
+                            <VBox alignment="CENTER" spacing="6.0">
+                                <padding><Insets top="20.0" bottom="20.0" /></padding>
+                                <Label styleClass="section-title"
+                                       text="Nenhum item adicionado." />
+                                <Label styleClass="section-caption"
+                                       text="Use o formulário acima para adicionar materiais ao pedido." />
+                            </VBox>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+
+                <!-- Secção 4 — Resumo e acções -->
+                <VBox styleClass="section-card" spacing="14.0">
+                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <Label styleClass="detail-field-label" text="Total do pedido:" />
+                        <Label fx:id="lblTotalPedido" styleClass="section-title" text="0,00 €" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="lblErroPedido" styleClass="form-error-label"
+                               text="" visible="false" managed="false" />
+                        <Button onAction="#voltarAosPedidos" styleClass="secondary-button"
+                                text="Cancelar" mnemonicParsing="false" />
+                        <Button onAction="#guardarPedido" styleClass="primary-button"
+                                text="Guardar Pedido" mnemonicParsing="false" />
+                    </HBox>
+                </VBox>
+
+            </VBox>
+        </content>
+    </ScrollPane>
+</VBox>

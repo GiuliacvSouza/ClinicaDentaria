@@ -8,36 +8,34 @@ import java.util.Objects;
 
 @Embeddable
 public class ItemPedidoId implements Serializable {
+
     private static final long serialVersionUID = 9148983576092388547L;
-    @Column(name = "idMaterial", nullable = false)
+
+    @Column(name = "id_material", nullable = false)
     private Integer idMaterial;
 
-    @Column(name = "idPedido", nullable = false)
+    @Column(name = "id_pedido", nullable = false)
     private Integer idPedido;
 
-    public Integer getIdMaterial() {
-        return idMaterial;
-    }
+    public ItemPedidoId() {}
 
-    public void setIdMaterial(Integer idMaterial) {
+    public ItemPedidoId(Integer idMaterial, Integer idPedido) {
         this.idMaterial = idMaterial;
+        this.idPedido   = idPedido;
     }
 
-    public Integer getIdPedido() {
-        return idPedido;
-    }
+    public Integer getIdMaterial()          { return idMaterial; }
+    public void setIdMaterial(Integer v)    { this.idMaterial = v; }
 
-    public void setIdPedido(Integer idPedido) {
-        this.idPedido = idPedido;
-    }
+    public Integer getIdPedido()            { return idPedido; }
+    public void setIdPedido(Integer v)      { this.idPedido = v; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ItemPedidoId entity = (ItemPedidoId) o;
-        return Objects.equals(this.idMaterial, entity.idMaterial) &&
-                Objects.equals(this.idPedido, entity.idPedido);
+        if (!(o instanceof ItemPedidoId that)) return false;
+        return Objects.equals(idMaterial, that.idMaterial)
+                && Objects.equals(idPedido, that.idPedido);
     }
 
     @Override
