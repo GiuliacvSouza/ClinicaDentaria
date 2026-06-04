@@ -2,6 +2,7 @@ package controller;
 
 import app.SceneManager;
 import app.SessionContext;
+import bll.AssistenteService;
 import bll.RecepcionistaService;
 import bll.UtilizadorService;
 import javafx.animation.PauseTransition;
@@ -12,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
+import model.Assistente;
 import model.Recepcionista;
 import model.Utilizador;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +43,12 @@ public class LoginController {
     @Autowired
     private RecepcionistaService recepcionistaService;
 
+    @Autowired
+    private AssistenteService assistenteService;
+
     private Utilizador utilizadorLogado;
     private Recepcionista recepcionistaLogado;
+    private Assistente assistenteLogado;
 
     @FXML
     public void initialize() {
@@ -156,11 +162,25 @@ public class LoginController {
                             } catch (Exception ignored) {
                                 recepcionistaLogado = null;
                             }
+                            assistenteLogado = null;
+                        } else if ("ASSISTENTE".equals(user.getTipoUtilizador())) {
+                            try {
+                                assistenteLogado = assistenteService.buscarPorUtilizadorId(user.getId());
+                            } catch (Exception ignored) {
+                                assistenteLogado = null;
+                            }
+                            recepcionistaLogado = null;
                         }
 
                         user.setUltimoAcesso(Instant.now());
                         utilizadorService.salvar(user);
-                        SessionContext.iniciarSessao(utilizadorLogado, recepcionistaLogado);
+
+                        if ("ASSISTENTE".equals(user.getTipoUtilizador())) {
+                            SessionContext.iniciarSessaoAssistente(utilizadorLogado, assistenteLogado);
+                        } else {
+                            SessionContext.iniciarSessao(utilizadorLogado, recepcionistaLogado);
+                        }
+
                         showSuccessAndNavigate();
                     } else {
                         showError("Email, palavra-passe invalidos ou conta inativa");
@@ -191,7 +211,14 @@ public class LoginController {
         btnEntrar.setStyle("-fx-background-color: #4CAF50;");
 
         PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
-        delay.setOnFinished(event -> openAgenda());
+        delay.setOnFinished(event -> {
+            Utilizador u = SessionContext.getUtilizadorLogado();
+            if (u != null && "ASSISTENTE".equals(u.getTipoUtilizador())) {
+                openDashboardAssistente();
+            } else {
+                openAgenda();
+            }
+        });
         delay.play();
     }
 
@@ -202,6 +229,19 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
             showError("Erro ao carregar a agenda: " + e.getMessage());
+            btnEntrar.setDisable(false);
+            btnEntrar.setText("ENTRAR");
+            btnEntrar.setStyle("");
+        }
+    }
+
+    private void openDashboardAssistente() {
+        try {
+            SceneManager.trocarTela("/fxml/assistente/dashboard-assistente.fxml", "/css/assistente-style.css");
+            SceneManager.getMainStage().setTitle("Clinica Dentaria - Assistente");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Erro ao carregar o dashboard do assistente: " + e.getMessage());
             btnEntrar.setDisable(false);
             btnEntrar.setText("ENTRAR");
             btnEntrar.setStyle("");

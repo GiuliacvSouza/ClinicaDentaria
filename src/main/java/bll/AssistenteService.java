@@ -39,6 +39,11 @@ public class AssistenteService {
                 .orElseThrow(() -> new RuntimeException("Assistente não encontrado"));
     }
 
+    public Assistente buscarPorUtilizadorId(Integer utilizadorId) {
+        return repository.findByUtilizadorId(utilizadorId)
+                .orElseThrow(() -> new RuntimeException("Assistente não encontrado para o utilizador: " + utilizadorId));
+    }
+
     public void desativar(Integer id) {
         Assistente assistente = buscarPorId(id);
         assistente.setAtivo(false);

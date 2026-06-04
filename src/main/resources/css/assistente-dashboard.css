@@ -1,0 +1,698 @@
+/* ═══════════════════════════════════════════════════════════════════
+   assistente-dashboard.css
+   Dashboard do Assistente de Consultório — JavaFX
+   Paleta: #00685F (teal primário), #F5FAF8 (fundo), #171D1C (texto)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Root ──────────────────────────────────────────────────────── */
+.root {
+    -fx-background-color: #F5FAF8;
+    -fx-font-family: "Poppins";
+    -fx-text-fill: #171D1C;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SIDEBAR
+   ══════════════════════════════════════════════════════════════════ */
+.sidebar {
+    -fx-background-color: #028F83;
+    -fx-min-width: 248;
+    -fx-pref-width: 248;
+    -fx-max-width: 248;
+}
+
+.sidebar-brand-title {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+}
+
+.sidebar-brand-subtitle {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 11px;
+    -fx-text-fill: rgba(255,255,255,0.75);
+    -fx-letter-spacing: 0.3;
+}
+
+.sidebar-divider {
+    -fx-border-color: rgba(255,255,255,0.18);
+    -fx-border-width: 0 0 1 0;
+    -fx-pref-height: 1;
+}
+
+/* Item de nav normal */
+.nav-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-family: "Poppins";
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 10 16;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-graphic-text-gap: 10;
+}
+
+.nav-item:hover {
+    -fx-background-color: rgba(0,0,0,0.12);
+    -fx-text-fill: white;
+}
+
+/* Item ativo */
+.nav-item-active {
+    -fx-background-color: #00685F;
+    -fx-text-fill: white;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 10 16;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-graphic-text-gap: 10;
+    -fx-border-color: transparent transparent transparent #89F5E7;
+    -fx-border-width: 0 0 0 3;
+}
+
+/* Botão logout no fundo da sidebar */
+.nav-logout {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255,255,255,0.75);
+    -fx-font-family: "Poppins";
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 10 16;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-graphic-text-gap: 10;
+}
+
+.nav-logout:hover {
+    -fx-background-color: rgba(0,0,0,0.15);
+    -fx-text-fill: white;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   TOPBAR
+   ══════════════════════════════════════════════════════════════════ */
+.topbar {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #BCC9C6 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-min-height: 64;
+    -fx-pref-height: 64;
+}
+
+.search-box {
+    -fx-background-color: #EAEFED;
+    -fx-background-radius: 12;
+    -fx-pref-height: 38;
+    -fx-pref-width: 340;
+    -fx-padding: 0 14;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+    -fx-text-fill: #3D4947;
+    -fx-prompt-text-fill: #6B7280;
+}
+
+.search-box:focused {
+    -fx-border-color: #00685F;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+}
+
+.topbar-icon-btn {
+    -fx-background-color: transparent;
+    -fx-padding: 6;
+    -fx-cursor: hand;
+}
+
+.topbar-icon-btn:hover {
+    -fx-background-color: #F0F5F2;
+    -fx-background-radius: 8;
+}
+
+.topbar-notif-icon {
+    -fx-fill: #3D4947;
+}
+
+.topbar-user-name {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 14px;
+    -fx-text-fill: #171D1C;
+    -fx-alignment: CENTER-RIGHT;
+}
+
+.topbar-user-role {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #3D4947;
+    -fx-alignment: CENTER-RIGHT;
+    -fx-letter-spacing: 0.2;
+}
+
+.topbar-avatar {
+    -fx-background-color: #89F5E7;
+    -fx-background-radius: 12;
+    -fx-min-width: 40;
+    -fx-pref-width: 40;
+    -fx-max-width: 40;
+    -fx-min-height: 40;
+    -fx-pref-height: 40;
+    -fx-max-height: 40;
+    -fx-border-color: #BCC9C6;
+    -fx-border-radius: 12;
+}
+
+.topbar-avatar-text {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 13px;
+    -fx-text-fill: #00201D;
+}
+
+.topbar-divider {
+    -fx-border-color: #BCC9C6;
+    -fx-border-width: 0 0 0 1;
+    -fx-pref-width: 1;
+    -fx-min-height: 32;
+    -fx-pref-height: 32;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ÁREA PRINCIPAL
+   ══════════════════════════════════════════════════════════════════ */
+.main-area {
+    -fx-background-color: #F9FAFB;
+}
+
+/* ── Saudação ──────────────────────────────────────────────────── */
+.greeting-title {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 28px;
+    -fx-text-fill: #171D1C;
+}
+
+.greeting-subtitle {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 14px;
+    -fx-text-fill: #3D4947;
+    -fx-wrap-text: true;
+}
+
+/* ── Botões de ação principal ──────────────────────────────────── */
+.btn-action-primary {
+    -fx-background-color: #00685F;
+    -fx-text-fill: white;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 14px;
+    -fx-background-radius: 4;
+    -fx-padding: 14 24;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);
+}
+
+.btn-action-primary:hover {
+    -fx-background-color: #005249;
+}
+
+.btn-action-secondary {
+    -fx-background-color: #008378;
+    -fx-text-fill: #F4FFFC;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 14px;
+    -fx-background-radius: 4;
+    -fx-padding: 14 24;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);
+}
+
+.btn-action-secondary:hover {
+    -fx-background-color: #006d63;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CARDS DE RESUMO (stat cards)
+   ══════════════════════════════════════════════════════════════════ */
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #BCC9C6;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 4, 0, 0, 1);
+}
+
+.stat-card-danger {
+    -fx-background-color: #FFDAD6;
+    -fx-background-radius: 8;
+    -fx-border-color: #BA1A1A;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 16;
+}
+
+/* Tag (pequena label no canto) */
+.stat-tag {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #3D4947;
+    -fx-letter-spacing: 0.2;
+}
+
+.stat-tag-danger {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #93000A;
+    -fx-letter-spacing: 0.2;
+}
+
+.stat-tag-warn {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #3D4947;
+    -fx-letter-spacing: 0.2;
+}
+
+/* Label descritiva do card */
+.stat-label {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 14px;
+    -fx-text-fill: #3D4947;
+}
+
+.stat-label-danger {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 14px;
+    -fx-text-fill: #93000A;
+}
+
+/* Valor numérico grande */
+.stat-value {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 30px;
+    -fx-text-fill: #00685F;
+}
+
+.stat-value-danger {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 30px;
+    -fx-text-fill: #BA1A1A;
+}
+
+.stat-value-warn {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 30px;
+    -fx-text-fill: #924628;
+}
+
+.stat-value-blue {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 30px;
+    -fx-text-fill: #545F73;
+}
+
+/* Ícone do card (quadrado colorido) */
+.stat-icon-teal {
+    -fx-background-color: #89F5E7;
+    -fx-background-radius: 4;
+    -fx-min-width: 28; -fx-pref-width: 28; -fx-max-width: 28;
+    -fx-min-height: 28; -fx-pref-height: 28; -fx-max-height: 28;
+}
+
+.stat-icon-red {
+    -fx-background-color: transparent;
+    -fx-min-width: 28; -fx-pref-width: 28; -fx-max-width: 28;
+    -fx-min-height: 28; -fx-pref-height: 28; -fx-max-height: 28;
+}
+
+.stat-icon-orange {
+    -fx-background-color: #FFDBCE;
+    -fx-background-radius: 4;
+    -fx-min-width: 28; -fx-pref-width: 28; -fx-max-width: 28;
+    -fx-min-height: 28; -fx-pref-height: 28; -fx-max-height: 28;
+}
+
+.stat-icon-blue {
+    -fx-background-color: #D5E0F8;
+    -fx-background-radius: 4;
+    -fx-min-width: 28; -fx-pref-width: 28; -fx-max-width: 28;
+    -fx-min-height: 28; -fx-pref-height: 28; -fx-max-height: 28;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   PAINÉIS (alertas, movimentações, consultas)
+   ══════════════════════════════════════════════════════════════════ */
+.panel-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #BCC9C6;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 4, 0, 0, 1);
+}
+
+.panel-header {
+    -fx-background-color: #E4E9E7;
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: transparent transparent #BCC9C6 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10 16;
+}
+
+.panel-title {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 15px;
+    -fx-text-fill: #171D1C;
+}
+
+.panel-section-title {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 15px;
+    -fx-text-fill: #171D1C;
+}
+
+.panel-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #00685F;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 0.2;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+}
+
+.panel-link:hover {
+    -fx-underline: true;
+}
+
+.panel-link-outline {
+    -fx-background-color: transparent;
+    -fx-text-fill: #00685F;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 0.2;
+    -fx-cursor: hand;
+    -fx-padding: 4 14;
+    -fx-border-color: #00685F;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.panel-link-outline:hover {
+    -fx-background-color: #E8F5F3;
+}
+
+/* ── Linha de separação dentro de painéis ──────────────────────── */
+.row-separator {
+    -fx-border-color: #BCC9C6;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ── Alertas urgentes ──────────────────────────────────────────── */
+.alert-row {
+    -fx-padding: 6 8;
+}
+
+.alert-bar-red {
+    -fx-background-color: #BA1A1A;
+    -fx-min-width: 4; -fx-pref-width: 4; -fx-max-width: 4;
+    -fx-background-radius: 2;
+}
+
+.alert-bar-orange {
+    -fx-background-color: #924628;
+    -fx-min-width: 4; -fx-pref-width: 4; -fx-max-width: 4;
+    -fx-background-radius: 2;
+}
+
+.alert-bar-teal {
+    -fx-background-color: #00685F;
+    -fx-min-width: 4; -fx-pref-width: 4; -fx-max-width: 4;
+    -fx-background-radius: 2;
+}
+
+.alert-title {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 14px;
+    -fx-text-fill: #171D1C;
+}
+
+.alert-subtitle {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #3D4947;
+    -fx-letter-spacing: 0.2;
+    -fx-wrap-text: true;
+}
+
+/* ── Movimentações recentes ────────────────────────────────────── */
+.mov-row {
+    -fx-padding: 14 16;
+}
+
+.mov-dot-out {
+    -fx-background-color: #BA1A1A;
+    -fx-background-radius: 50;
+    -fx-min-width: 12; -fx-pref-width: 12; -fx-max-width: 12;
+    -fx-min-height: 12; -fx-pref-height: 12; -fx-max-height: 12;
+}
+
+.mov-dot-in {
+    -fx-background-color: #00685F;
+    -fx-background-radius: 50;
+    -fx-min-width: 12; -fx-pref-width: 12; -fx-max-width: 12;
+    -fx-min-height: 12; -fx-pref-height: 12; -fx-max-height: 12;
+}
+
+.mov-title {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 14px;
+    -fx-text-fill: #171D1C;
+}
+
+.mov-subtitle {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #3D4947;
+    -fx-letter-spacing: 0.2;
+}
+
+.mov-time {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #3D4947;
+    -fx-letter-spacing: 0.2;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   TABELA DE CONSULTAS
+   ══════════════════════════════════════════════════════════════════ */
+.consultas-table {
+    -fx-background-color: white;
+    -fx-background-radius: 0 0 8 8;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.consultas-table .column-header-background {
+    -fx-background-color: #F0F5F2;
+}
+
+.consultas-table .column-header,
+.consultas-table .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #BCC9C6 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 16 24;
+}
+
+.consultas-table .label {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 12px;
+    -fx-text-fill: #3D4947;
+    -fx-letter-spacing: 0.6;
+}
+
+.consultas-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #BCC9C6 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-pref-height: 72;
+}
+
+.consultas-table .table-row-cell:odd {
+    -fx-background-color: #F9FAFB;
+}
+
+.consultas-table .table-row-cell:selected {
+    -fx-background-color: #E8F5F3;
+}
+
+.consultas-table .table-row-cell:hover {
+    -fx-background-color: #F0F9F7;
+}
+
+.consultas-table .table-cell {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+    -fx-text-fill: #3D4947;
+    -fx-border-color: transparent;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 0 24;
+}
+
+/* Hora em destaque */
+.cell-hora {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 15px;
+    -fx-text-fill: #171D1C;
+}
+
+/* Avatar iniciais */
+.avatar-teal {
+    -fx-background-color: #89F5E7;
+    -fx-background-radius: 12;
+    -fx-min-width: 32; -fx-pref-width: 32; -fx-max-width: 32;
+    -fx-min-height: 32; -fx-pref-height: 32; -fx-max-height: 32;
+}
+
+.avatar-orange {
+    -fx-background-color: #FFDBCE;
+    -fx-background-radius: 12;
+    -fx-min-width: 32; -fx-pref-width: 32; -fx-max-width: 32;
+    -fx-min-height: 32; -fx-pref-height: 32; -fx-max-height: 32;
+}
+
+.avatar-gray {
+    -fx-background-color: #BCC9C6;
+    -fx-background-radius: 12;
+    -fx-min-width: 32; -fx-pref-width: 32; -fx-max-width: 32;
+    -fx-min-height: 32; -fx-pref-height: 32; -fx-max-height: 32;
+}
+
+.avatar-initials-teal {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #00201D;
+}
+
+.avatar-initials-orange {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #370E00;
+}
+
+.avatar-initials-gray {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #3D4947;
+}
+
+/* Badges de estado */
+.badge-pendente {
+    -fx-background-color: #D5E0F8;
+    -fx-background-radius: 12;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #586377;
+}
+
+.badge-confirmado {
+    -fx-background-color: #89F5E7;
+    -fx-background-radius: 12;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #005049;
+}
+
+.badge-em-espera {
+    -fx-background-color: #FFDBCE;
+    -fx-background-radius: 12;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #924628;
+}
+
+.badge-cancelado {
+    -fx-background-color: #FFDAD6;
+    -fx-background-radius: 12;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #93000A;
+}
+
+/* Botão "ver detalhes" na tabela */
+.btn-ver-detalhes {
+    -fx-background-color: transparent;
+    -fx-text-fill: #00685F;
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-padding: 6 12;
+    -fx-border-color: #00685F;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.btn-ver-detalhes:hover {
+    -fx-background-color: #E8F5F3;
+}
+
+/* Rodapé da tabela */
+.table-footer {
+    -fx-border-color: #BCC9C6;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 14 24;
+    -fx-background-color: white;
+    -fx-background-radius: 0 0 8 8;
+}
+
+.table-footer-text {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #3D4947;
+}
+
+.table-footer-highlight {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #00685F;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   TOAST / SNACKBAR de sucesso
+   ══════════════════════════════════════════════════════════════════ */
+.toast-success {
+    -fx-background-color: #1C6B53;
+    -fx-background-radius: 8;
+    -fx-padding: 12 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.20), 12, 0, 0, 4);
+}
+
+.toast-text {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 13px;
+    -fx-text-fill: white;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ══════════════════════════════════════════════════════════════════ */
+.scroll-pane { -fx-background-color: transparent; -fx-border-color: transparent; }
+.scroll-pane .viewport { -fx-background-color: transparent; }
+.scroll-bar:vertical   { -fx-pref-width: 8;  -fx-background-color: transparent; }
+.scroll-bar:horizontal { -fx-pref-height: 8; -fx-background-color: transparent; }
+.scroll-bar .track     { -fx-background-color: transparent; }
+.scroll-bar .thumb {
+    -fx-background-color: rgba(0,0,0,0.14);
+    -fx-background-radius: 4;
+}
+.scroll-bar:hover .thumb { -fx-background-color: rgba(0,0,0,0.26); }
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-opacity: 0; -fx-max-height: 0; -fx-max-width: 0; -fx-padding: 0;
+}

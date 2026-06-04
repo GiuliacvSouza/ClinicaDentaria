@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<VBox prefHeight="768.0" prefWidth="1366.0"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.assistente.FornecedoresController"
+      stylesheets="@../../css/assistente-style.css"
+      styleClass="root">
+
+    <!-- HEADER -->
+    <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="header">
+        <padding><Insets top="12.0" right="24.0" bottom="12.0" left="24.0" /></padding>
+        <StackPane styleClass="logo-shell">
+            <ImageView fitHeight="42.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image">
+                <image><Image url="@../../images/logo.png" /></image>
+            </ImageView>
+        </StackPane>
+        <HBox alignment="CENTER_LEFT" spacing="8.0" HBox.hgrow="ALWAYS">
+            <Button onAction="#abrirDashboard"      styleClass="nav-button"        text="Dashboard"    mnemonicParsing="false" />
+            <Button onAction="#abrirConsultasDia"   styleClass="nav-button"        text="Consultas"    mnemonicParsing="false" />
+            <Button onAction="#abrirMateriais"      styleClass="nav-button"        text="Materiais"    mnemonicParsing="false" />
+            <Button onAction="#abrirMovimentacoes"  styleClass="nav-button"        text="Movimentacoes" mnemonicParsing="false" />
+            <Button onAction="#abrirPedidosCompra"  styleClass="nav-button"        text="Pedidos"      mnemonicParsing="false" />
+            <Button onAction="#abrirFornecedores"   styleClass="nav-button-active" text="Fornecedores" mnemonicParsing="false" />
+            <Button onAction="#abrirAlertas"        styleClass="nav-button"        text="Alertas"      mnemonicParsing="false" />
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+            <VBox alignment="CENTER_RIGHT" spacing="2.0">
+                <Label fx:id="lblNomeUtilizador" styleClass="user-name" text="Assistente" />
+                <Label styleClass="user-role" text="Assistente de Consultorio" />
+            </VBox>
+            <Button onAction="#fazerLogout" styleClass="icon-button" mnemonicParsing="false">
+                <graphic>
+                    <StackPane styleClass="icon-shell">
+                        <SVGPath content="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4" styleClass="header-icon" />
+                    </StackPane>
+                </graphic>
+            </Button>
+        </HBox>
+    </HBox>
+
+    <!-- CONTEÚDO -->
+    <VBox spacing="18.0" styleClass="dashboard-body" VBox.vgrow="ALWAYS">
+        <padding><Insets top="24.0" right="28.0" bottom="24.0" left="28.0" /></padding>
+
+        <HBox alignment="CENTER_LEFT" spacing="14.0">
+            <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                <Label styleClass="page-title" text="Fornecedores" />
+                <Label styleClass="page-subtitle" text="Consulte e gira os fornecedores de materiais e consumiveis." />
+            </VBox>
+        </HBox>
+
+        <HBox spacing="12.0">
+            <TextField fx:id="txtPesquisa" promptText="Pesquisar por nome, NIF ou email"
+                       styleClass="search-field" HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <VBox spacing="12.0" styleClass="section-card" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT">
+                <Label styleClass="section-title" text="Lista de Fornecedores" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblTotalFornecedores" styleClass="section-caption" text="0 fornecedores" />
+            </HBox>
+
+            <TableView fx:id="tblFornecedores" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colNome"     prefWidth="240.0" text="Nome" />
+                    <TableColumn fx:id="colNif"      prefWidth="120.0" text="NIF" />
+                    <TableColumn fx:id="colEmail"    prefWidth="200.0" text="Email" />
+                    <TableColumn fx:id="colTelefone" prefWidth="140.0" text="Telefone" />
+                    <TableColumn fx:id="colCategoria" prefWidth="160.0" text="Categoria" />
+                    <TableColumn fx:id="colAcoes"    prefWidth="160.0" text="Acoes" />
+                </columns>
+                <placeholder>
+                    <Label text="Nenhum fornecedor encontrado." />
+                </placeholder>
+            </TableView>
+        </VBox>
+    </VBox>
+</VBox>
