@@ -83,23 +83,26 @@
 
                 <!-- Procedimentos associados ao atendimento -->
                 <VBox styleClass="section-card" spacing="12.0">
-                    <HBox alignment="CENTER_LEFT">
-                        <Label styleClass="section-title" text="Procedimentos" HBox.hgrow="ALWAYS" />
+                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                        <Label styleClass="section-title" text="Procedimentos" />
+                        <Region HBox.hgrow="ALWAYS" />
                         <Label fx:id="lblTotalProcedimentos" styleClass="section-caption" text="" />
                     </HBox>
 
                     <TableView fx:id="tblProcedimentos" styleClass="dashboard-table"
-                               minHeight="100.0" maxHeight="200.0">
+                               minHeight="100.0" maxHeight="240.0">
                         <columns>
-                            <TableColumn fx:id="colProcNome"      text="Procedimento"  prefWidth="260.0" />
-                            <TableColumn fx:id="colProcTipo"      text="Tipo"          prefWidth="120.0" />
-                            <TableColumn fx:id="colProcQtd"       text="Quantidade"    prefWidth="100.0" />
-                            <TableColumn fx:id="colProcDuracao"   text="Duração (min)" prefWidth="110.0" />
-                            <TableColumn fx:id="colProcValor"     text="Valor"         prefWidth="90.0" />
+                            <TableColumn fx:id="colProcNome"    text="Procedimento"  prefWidth="230.0" minWidth="120.0" />
+                            <TableColumn fx:id="colProcTipo"    text="Tipo"          prefWidth="140.0" minWidth="80.0" />
+                            <TableColumn fx:id="colProcQtd"     text="Quantidade"    prefWidth="90.0"  minWidth="60.0"  style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="colProcDuracao" text="Duração (min)" prefWidth="110.0" minWidth="80.0"  style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="colProcValor"   text="Valor"         prefWidth="90.0"  minWidth="60.0"  style="-fx-alignment: CENTER_RIGHT;" />
                         </columns>
                         <placeholder>
-                            <Label styleClass="section-caption"
-                                   text="Nenhum procedimento registado para esta consulta." />
+                            <VBox alignment="CENTER" spacing="6.0" style="-fx-padding: 32 0;">
+                                <Label text="Nenhum procedimento associado." styleClass="empty-table-title" />
+                                <Label text="Não existem procedimentos registados para esta consulta." styleClass="empty-table-subtitle" />
+                            </VBox>
                         </placeholder>
                     </TableView>
                 </VBox>

@@ -151,7 +151,10 @@ public class DetalheConsultaController {
         } catch (Exception ignored) { /* sem atendimento associado */ }
 
         tblProcedimentos.setItems(FXCollections.observableArrayList(procs));
-        lblTotalProcedimentos.setText(procs.isEmpty() ? "" : procs.size() + " procedimento(s)");
+        int total = procs.size();
+        lblTotalProcedimentos.setText(total == 0 ? "0 procedimentos"
+                : total == 1 ? "1 procedimento"
+                : total + " procedimentos");
     }
 
     private void configurarTabelaProcedimentos() {
@@ -169,12 +172,14 @@ public class DetalheConsultaController {
             Integer qty = c.getValue().getQuantidade();
             return new SimpleStringProperty(qty != null ? String.valueOf(qty) : "1");
         });
+        colProcQtd.setStyle("-fx-alignment: CENTER;");
 
         colProcDuracao.setCellValueFactory(c -> {
             var p = c.getValue().getIdProcedimento();
             return new SimpleStringProperty(
                     p != null && p.getDuracaoEstimada() != null ? p.getDuracaoEstimada() + " min" : "-");
         });
+        colProcDuracao.setStyle("-fx-alignment: CENTER;");
 
         colProcValor.setCellValueFactory(c -> {
             var p = c.getValue().getIdProcedimento();
@@ -186,6 +191,7 @@ public class DetalheConsultaController {
             }
             return new SimpleStringProperty(String.format("%.2f €", val));
         });
+        colProcValor.setStyle("-fx-alignment: CENTER_RIGHT;");
     }
 
     // ─── Ação ─────────────────────────────────────────────────────────────────
