@@ -74,7 +74,7 @@
         <!-- Filtros -->
         <HBox spacing="14.0" alignment="CENTER_LEFT">
             <TextField fx:id="txtPesquisa" promptText="Pesquisar por paciente ou NIF..." styleClass="search-field" HBox.hgrow="ALWAYS" />
-            <DatePicker fx:id="dpData" prefHeight="38.0" prefWidth="180.0" promptText="Selecionar Data" />
+            <DatePicker fx:id="dpData" prefHeight="38.0" prefWidth="180.0" promptText="Selecionar Data" styleClass="date-picker" />
             <Button fx:id="btnHoje" onAction="#escolherHoje" styleClass="secondary-button" text="Hoje" mnemonicParsing="false" />
         </HBox>
 

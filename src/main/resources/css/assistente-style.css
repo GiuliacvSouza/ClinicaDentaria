@@ -293,6 +293,161 @@
     -fx-background-color: #2e7d72;
 }
 
+/* ═══════════════════════════════════════════════════════════
+   DatePicker — Estilo Moderno Unificado
+   Aplicado a todas as páginas (Dentista, Assistente, Rececionista)
+   ═══════════════════════════════════════════════════════════ */
+.date-picker,
+.date-filter,
+.nova-marcacao-date,
+.profile-date {
+    -fx-pref-height: 44;
+    -fx-min-height: 44;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14;
+    -fx-border-color: #d8e5e1;
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+    -fx-padding: 0;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+}
+
+.date-picker:focused,
+.date-picker:showing,
+.date-filter:focused,
+.date-filter:showing,
+.nova-marcacao-date:focused,
+.nova-marcacao-date:showing,
+.profile-date:focused,
+.profile-date:showing {
+    -fx-border-color: #2e7d72;
+    -fx-border-width: 1.5;
+}
+
+.date-picker > .text-field,
+.date-filter > .text-field,
+.nova-marcacao-date > .text-field,
+.profile-date > .text-field {
+    -fx-background-color: transparent;
+    -fx-background-radius: 14 0 0 14;
+    -fx-border-color: transparent;
+    -fx-padding: 0 10 0 14;
+    -fx-text-fill: #17312e;
+    -fx-prompt-text-fill: #90a3a0;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+}
+
+.date-picker > .arrow-button,
+.date-filter > .arrow-button,
+.nova-marcacao-date > .arrow-button,
+.profile-date > .arrow-button {
+    -fx-background-color: #eef5f3;
+    -fx-background-radius: 11;
+    -fx-border-color: transparent;
+    -fx-padding: 0 12;
+    -fx-cursor: hand;
+    -fx-min-width: 36;
+    -fx-pref-width: 36;
+}
+
+.date-picker > .arrow-button:hover,
+.date-filter > .arrow-button:hover,
+.nova-marcacao-date > .arrow-button:hover,
+.profile-date > .arrow-button:hover {
+    -fx-background-color: #dceee9;
+}
+
+.date-picker > .arrow-button > .arrow,
+.date-filter > .arrow-button > .arrow,
+.nova-marcacao-date > .arrow-button > .arrow,
+.profile-date > .arrow-button > .arrow {
+    -fx-background-color: #2e7d72;
+}
+
+/* ─── Popup Calendar ─────────────────────────────────────── */
+.date-picker-popup {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14;
+    -fx-border-color: #dce7e4;
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(20,54,49,0.16), 16, 0, 0, 6);
+    -fx-padding: 8;
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #ffffff;
+    -fx-padding: 4 0 8 0;
+}
+
+.date-picker-popup .month-year-pane .spinner .label {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 14px;
+    -fx-text-fill: #17312e;
+}
+
+.date-picker-popup .month-year-pane .spinner .button {
+    -fx-background-color: #eef5f3;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-min-width: 32;
+    -fx-min-height: 32;
+}
+
+.date-picker-popup .month-year-pane .spinner .button:hover {
+    -fx-background-color: #dceee9;
+}
+
+.date-picker-popup .calendar-grid {
+    -fx-background-color: transparent;
+    -fx-padding: 4 0 0 0;
+}
+
+.date-picker-popup .calendar-grid .day-cell {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-text-fill: #17312e;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 12px;
+    -fx-padding: 4;
+    -fx-cursor: hand;
+}
+
+.date-picker-popup .calendar-grid .day-cell:hover {
+    -fx-background-color: #eef5f3;
+}
+
+.date-picker-popup .calendar-grid .day-cell:selected {
+    -fx-background-color: #2e7d72;
+    -fx-text-fill: #ffffff;
+}
+
+.date-picker-popup .calendar-grid .day-cell:today {
+    -fx-border-color: #2e7d72;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.date-picker-popup .calendar-grid .day-cell:disabled {
+    -fx-text-fill: #c4d1ce;
+    -fx-opacity: 0.6;
+}
+
+.date-picker-popup .calendar-grid .week-number-cell {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 11px;
+    -fx-text-fill: #90a3a0;
+}
+
+.date-picker-popup .calendar-grid .day-cell:today:selected {
+    -fx-background-color: #2e7d72;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: transparent;
+}
+
 .today-chip {
     -fx-pref-height: 44;
     -fx-min-height: 44;

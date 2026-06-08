@@ -127,11 +127,11 @@
                                 <HBox spacing="12.0">
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <Label text="Data Prevista Início:" styleClass="patient-history-label" />
-                                        <DatePicker fx:id="dpDataInicio" styleClass="search-field" maxWidth="Infinity" />
+                                        <DatePicker fx:id="dpDataInicio" styleClass="date-picker" maxWidth="Infinity" />
                                     </VBox>
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <Label text="Data Prevista Fim:" styleClass="patient-history-label" />
-                                        <DatePicker fx:id="dpDataFim" styleClass="search-field" maxWidth="Infinity" />
+                                        <DatePicker fx:id="dpDataFim" styleClass="date-picker" maxWidth="Infinity" />
                                     </VBox>
                                 </HBox>
 

@@ -134,7 +134,7 @@
     -fx-border-width: 1.2;
     -fx-border-radius: 14;
     -fx-background-radius: 14;
-    -fx-padding: 0 14 0 18;
+    -fx-padding: 0 3 0 18;
     -fx-pref-height: 56;
     -fx-min-height: 56;
     -fx-max-height: 56;
@@ -171,21 +171,28 @@
     -fx-border-width: 0;
 }
 
+.login-password-inner .scroll-pane,
+.login-password-inner .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
 .password-eye-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-padding: 0;
     -fx-cursor: hand;
     -fx-text-fill: #667875;
-    -fx-min-width: 36;
-    -fx-pref-width: 36;
-    -fx-max-width: 36;
-    -fx-min-height: 36;
-    -fx-pref-height: 36;
-    -fx-max-height: 36;
+    -fx-min-width: 40;
+    -fx-pref-width: 40;
+    -fx-max-width: 40;
+    -fx-min-height: 56;
+    -fx-pref-height: 56;
+    -fx-max-height: 56;
     -fx-alignment: center;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+    -fx-background-radius: 14;
+    -fx-background-insets: 2;
 }
 
 .password-eye-button:hover {

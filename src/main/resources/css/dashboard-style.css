@@ -367,38 +367,149 @@
     -fx-font-size: 12px;
 }
 
-/* ─── DatePicker: sub-componentes ────────────────────────── */
-.nova-marcacao-date > .text-field {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-background-radius: 10 0 0 10;
-    -fx-padding: 0 8 0 12;
+/* ─── DatePicker: Estilo Moderno Unificado ───────────────── */
+.nova-marcacao-date,
+.profile-date,
+.date-picker {
+    -fx-pref-height: 44;
+    -fx-min-height: 44;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14;
+    -fx-border-color: #d8e5e1;
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+    -fx-padding: 0;
     -fx-font-family: "Poppins";
-    -fx-font-size: 12px;
-    -fx-text-fill: #151515;
-    -fx-prompt-text-fill: #b0b0b0;
-}
-
-.nova-marcacao-date > .arrow-button {
-    -fx-background-color: #f0f0f0;
-    -fx-background-radius: 0 10 10 0;
-    -fx-border-color: transparent;
-    -fx-padding: 0 10;
-    -fx-cursor: hand;
-}
-
-.nova-marcacao-date > .arrow-button:hover {
-    -fx-background-color: #e5e5e5;
-}
-
-.nova-marcacao-date > .arrow-button > .arrow {
-    -fx-background-color: #4c948c;
+    -fx-font-size: 13px;
 }
 
 .nova-marcacao-date:focused,
-.nova-marcacao-date:showing {
+.nova-marcacao-date:showing,
+.profile-date:focused,
+.profile-date:showing,
+.date-picker:focused,
+.date-picker:showing {
     -fx-border-color: #4c948c;
     -fx-border-width: 1.5;
+}
+
+.nova-marcacao-date > .text-field,
+.profile-date > .text-field,
+.date-picker > .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 14 0 0 14;
+    -fx-padding: 0 10 0 14;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+    -fx-text-fill: #17312e;
+    -fx-prompt-text-fill: #90a3a0;
+}
+
+.nova-marcacao-date > .arrow-button,
+.profile-date > .arrow-button,
+.date-picker > .arrow-button {
+    -fx-background-color: #eef5f3;
+    -fx-background-radius: 11;
+    -fx-border-color: transparent;
+    -fx-padding: 0 12;
+    -fx-cursor: hand;
+    -fx-min-width: 36;
+    -fx-pref-width: 36;
+}
+
+.nova-marcacao-date > .arrow-button:hover,
+.profile-date > .arrow-button:hover,
+.date-picker > .arrow-button:hover {
+    -fx-background-color: #dceee9;
+}
+
+.nova-marcacao-date > .arrow-button > .arrow,
+.profile-date > .arrow-button > .arrow,
+.date-picker > .arrow-button > .arrow {
+    -fx-background-color: #4c948c;
+}
+
+/* ─── Popup Calendar ─────────────────────────────────────── */
+.date-picker-popup {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14;
+    -fx-border-color: #dce7e4;
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(20,54,49,0.16), 16, 0, 0, 6);
+    -fx-padding: 8;
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #ffffff;
+    -fx-padding: 4 0 8 0;
+}
+
+.date-picker-popup .month-year-pane .spinner .label {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 14px;
+    -fx-text-fill: #17312e;
+}
+
+.date-picker-popup .month-year-pane .spinner .button {
+    -fx-background-color: #eef5f3;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-min-width: 32;
+    -fx-min-height: 32;
+}
+
+.date-picker-popup .month-year-pane .spinner .button:hover {
+    -fx-background-color: #dceee9;
+}
+
+.date-picker-popup .calendar-grid {
+    -fx-background-color: transparent;
+    -fx-padding: 4 0 0 0;
+}
+
+.date-picker-popup .calendar-grid .day-cell {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-text-fill: #17312e;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 12px;
+    -fx-padding: 4;
+    -fx-cursor: hand;
+}
+
+.date-picker-popup .calendar-grid .day-cell:hover {
+    -fx-background-color: #eef5f3;
+}
+
+.date-picker-popup .calendar-grid .day-cell:selected {
+    -fx-background-color: #4c948c;
+    -fx-text-fill: #ffffff;
+}
+
+.date-picker-popup .calendar-grid .day-cell:today {
+    -fx-border-color: #4c948c;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.date-picker-popup .calendar-grid .day-cell:disabled {
+    -fx-text-fill: #c4d1ce;
+    -fx-opacity: 0.6;
+}
+
+.date-picker-popup .calendar-grid .week-number-cell {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 11px;
+    -fx-text-fill: #90a3a0;
+}
+
+.date-picker-popup .calendar-grid .day-cell:today:selected {
+    -fx-background-color: #4c948c;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: transparent;
 }
 
 .nova-marcacao-combo .list-cell {
