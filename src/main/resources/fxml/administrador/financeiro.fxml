@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+
+<VBox prefHeight="768.0" prefWidth="1366.0"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.administrador.FinanceiroController"
+      stylesheets="@../../css/assistente-style.css"
+      styleClass="root">
+
+    <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="header">
+        <padding><Insets top="12.0" right="24.0" bottom="12.0" left="24.0" /></padding>
+        <StackPane styleClass="logo-shell">
+            <ImageView fitHeight="42.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image">
+                <image><Image url="@../../images/logo.png" /></image>
+            </ImageView>
+        </StackPane>
+        <HBox alignment="CENTER_LEFT" spacing="8.0" HBox.hgrow="ALWAYS">
+            <Button onAction="#abrirDashboard" styleClass="nav-button" text="Dashboard" mnemonicParsing="false" />
+            <Button onAction="#abrirUtilizadores" styleClass="nav-button" text="Utilizadores" mnemonicParsing="false" />
+            <Button onAction="#abrirAgendaClinica" styleClass="nav-button" text="Agenda Clínica" mnemonicParsing="false" />
+            <Button onAction="#abrirProcedimentos" styleClass="nav-button" text="Procedimentos" mnemonicParsing="false" />
+            <Button onAction="#abrirFinanceiro" styleClass="nav-button-active" text="Financeiro" mnemonicParsing="false" />
+            <Button onAction="#abrirEstoque" styleClass="nav-button" text="Estoque" mnemonicParsing="false" />
+            <Button onAction="#abrirAuditoria" styleClass="nav-button" text="Auditoria" mnemonicParsing="false" />
+            <Button onAction="#abrirSeguros" styleClass="nav-button" text="Seguros" mnemonicParsing="false" />
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+            <VBox alignment="CENTER_RIGHT" spacing="2.0">
+                <Label fx:id="lblNomeUtilizador" styleClass="user-name" text="Administrador" />
+                <Label styleClass="user-role" text="Administrador" />
+            </VBox>
+            <Button onAction="#fazerLogout" styleClass="icon-button" mnemonicParsing="false">
+                <graphic>
+                    <StackPane styleClass="icon-shell">
+                        <SVGPath content="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4" styleClass="header-icon" />
+                    </StackPane>
+                </graphic>
+            </Button>
+        </HBox>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+        <VBox spacing="16.0" styleClass="dashboard-body">
+            <padding><Insets top="20.0" right="20.0" bottom="20.0" left="20.0" /></padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+                <Label styleClass="page-title" text="Relatórios Financeiros" HBox.hgrow="ALWAYS" />
+                <Label styleClass="form-label" text="Período:" />
+                <DatePicker fx:id="dpInicio" styleClass="date-filter" />
+                <Label styleClass="form-label" text="até" />
+                <DatePicker fx:id="dpFim" styleClass="date-filter" />
+                <Button onAction="#aplicarFiltro" styleClass="primary-button" text="Aplicar" prefHeight="40.0" />
+                <Button onAction="#resetFiltro" styleClass="secondary-button" text="Hoje" prefHeight="40.0" />
+            </HBox>
+
+            <!-- Indicadores -->
+            <HBox spacing="14.0">
+                <VBox styleClass="stat-card-normal" spacing="6.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="stat-desc" text="Receita Diária" />
+                    <Label fx:id="lblReceitaDiaria" styleClass="stat-number" text="€ 0,00" />
+                </VBox>
+                <VBox styleClass="stat-card-normal" spacing="6.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="stat-desc" text="Receita Mensal" />
+                    <Label fx:id="lblReceitaMensal" styleClass="stat-number" text="€ 0,00" />
+                </VBox>
+                <VBox styleClass="stat-card-normal" spacing="6.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="stat-desc" text="Receita Anual" />
+                    <Label fx:id="lblReceitaAnual" styleClass="stat-number" text="€ 0,00" />
+                </VBox>
+            </HBox>
+
+            <HBox spacing="14.0">
+                <VBox styleClass="stat-card-normal" spacing="6.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="stat-desc" text="Despesas Diárias" />
+                    <Label fx:id="lblDespesaDiaria" styleClass="stat-number-warn" text="€ 0,00" />
+                </VBox>
+                <VBox styleClass="stat-card-normal" spacing="6.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="stat-desc" text="Despesas Mensais" />
+                    <Label fx:id="lblDespesaMensal" styleClass="stat-number-warn" text="€ 0,00" />
+                </VBox>
+                <VBox styleClass="stat-card-accent" spacing="6.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="stat-label-light" text="Lucro Líquido (Mês)" />
+                    <Label fx:id="lblLucroLiquido" styleClass="stat-value-light" text="€ 0,00" />
+                </VBox>
+            </HBox>
+
+            <!-- Gráfico Financeiro -->
+            <VBox styleClass="section-card" spacing="10.0">
+                <padding><Insets top="16.0" right="16.0" bottom="16.0" left="16.0" /></padding>
+                <Label styleClass="panel-section-title" text="Desempenho Financeiro (Mensal)" />
+                <BarChart fx:id="graficoFinanceiro" prefHeight="260.0" legendSide="BOTTOM">
+                    <xAxis>
+                        <CategoryAxis label="Categoria" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Valor (€)" />
+                    </yAxis>
+                </BarChart>
+            </VBox>
+
+            <!-- Tabelas -->
+            <TabPane VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                <tabs>
+                    <Tab text="Faturas" closable="false">
+                        <TableView fx:id="tabelaFaturas" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colFaturaId" text="ID" prefWidth="60.0" />
+                                <TableColumn fx:id="colFaturaData" text="Data" prefWidth="120.0" />
+                                <TableColumn fx:id="colFaturaValor" text="Valor" prefWidth="120.0" />
+                                <TableColumn fx:id="colFaturaEstado" text="Estado" prefWidth="120.0" />
+                            </columns>
+                        </TableView>
+                    </Tab>
+                    <Tab text="Pagamentos" closable="false">
+                        <TableView fx:id="tabelaPagamentos" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colPagId" text="ID" prefWidth="60.0" />
+                                <TableColumn fx:id="colPagData" text="Data" prefWidth="120.0" />
+                                <TableColumn fx:id="colPagValor" text="Valor" prefWidth="120.0" />
+                                <TableColumn fx:id="colPagMetodo" text="Método" prefWidth="160.0" />
+                            </columns>
+                        </TableView>
+                    </Tab>
+                    <Tab text="Pedidos de Compra" closable="false">
+                        <TableView fx:id="tabelaPedidos" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colPedidoId" text="ID" prefWidth="60.0" />
+                                <TableColumn fx:id="colPedidoData" text="Data" prefWidth="120.0" />
+                                <TableColumn fx:id="colPedidoEstado" text="Estado" prefWidth="160.0" />
+                            </columns>
+                        </TableView>
+                    </Tab>
+                </tabs>
+            </TabPane>
+        </VBox>
+    </ScrollPane>
+</VBox>
