@@ -18,7 +18,8 @@
       fx:controller="controller.RegistoPacienteController"
       spacing="14.0"
       prefWidth="540.0"
-      styleClass="nova-marcacao-root">
+      styleClass="nova-marcacao-root"
+      stylesheets="@../../css/dashboard-style.css">
 
     <padding>
         <Insets top="24.0" right="28.0" bottom="24.0" left="28.0" />
@@ -27,10 +28,9 @@
     <HBox alignment="CENTER_LEFT">
         <VBox spacing="2.0">
             <Label text="Registo de Paciente" styleClass="nova-marcacao-title" />
-            <Label text="Preencha as informaÃ§Ãµes necessÃ¡rias" styleClass="nova-marcacao-subtitle" />
+            <Label text="Preencha as informações necessárias" styleClass="nova-marcacao-subtitle" />
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
-
     </HBox>
 
     <GridPane hgap="14.0" vgap="12.0">
@@ -41,42 +41,54 @@
 
         <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
             <Label text="Nome *" styleClass="nova-marcacao-label" />
-            <TextField fx:id="txtNome" promptText="Introduza o nome" styleClass="nova-marcacao-campo" />
+            <TextField fx:id="txtNome" promptText="Introduza o nome"
+                       styleClass="nova-marcacao-campo" maxWidth="Infinity" />
         </VBox>
 
         <VBox spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
             <Label text="Apelido *" styleClass="nova-marcacao-label" />
-            <TextField fx:id="txtApelido" promptText="Introduza o apelido" styleClass="nova-marcacao-campo" />
+            <TextField fx:id="txtApelido" promptText="Introduza o apelido"
+                       styleClass="nova-marcacao-campo" maxWidth="Infinity" />
         </VBox>
 
         <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2">
-            <Label text="NIF (NÃºmero de IdentificaÃ§Ã£o Fiscal) *" styleClass="nova-marcacao-label" />
-            <TextField fx:id="txtNif" promptText="9 dÃ­gitos" styleClass="nova-marcacao-campo" />
+            <Label text="NIF (Número de Identificação Fiscal) *" styleClass="nova-marcacao-label" />
+            <TextField fx:id="txtNif" promptText="9 dígitos"
+                       styleClass="nova-marcacao-campo" maxWidth="Infinity" />
         </VBox>
 
         <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2">
-            <Label text="TelemÃ³vel *" styleClass="nova-marcacao-label" />
-            <TextField fx:id="txtTelemovel" promptText="9xxxxxxx" styleClass="nova-marcacao-campo" />
+            <Label text="Telemóvel *" styleClass="nova-marcacao-label" />
+            <TextField fx:id="txtTelemovel" promptText="9xxxxxxx"
+                       styleClass="nova-marcacao-campo" maxWidth="Infinity" />
         </VBox>
 
         <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
             <Label text="Email" styleClass="nova-marcacao-label" />
-            <TextField fx:id="txtEmail" promptText="exemplo@email.com" styleClass="nova-marcacao-campo" />
+            <TextField fx:id="txtEmail" promptText="exemplo@email.com"
+                       styleClass="nova-marcacao-campo" maxWidth="Infinity" />
         </VBox>
 
         <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2">
             <Label text="Data de Nascimento *" styleClass="nova-marcacao-label" />
-            <DatePicker fx:id="dpDataNascimento" styleClass="nova-marcacao-date" />
+            <DatePicker fx:id="dpDataNascimento"
+                        styleClass="nova-marcacao-date"
+                        maxWidth="Infinity" />
         </VBox>
 
         <VBox spacing="6.0" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2">
             <Label text="Seguro" styleClass="nova-marcacao-label" />
-            <ComboBox fx:id="cbSeguro" promptText="Selecione o seguro" styleClass="nova-marcacao-combo" />
+            <ComboBox fx:id="cbSeguro" promptText="Selecione o seguro"
+                      styleClass="nova-marcacao-combo" maxWidth="Infinity" />
         </VBox>
     </GridPane>
 
     <HBox spacing="12.0">
-        <Button text="CANCELAR" onAction="#cancelar" styleClass="nova-marcacao-cancelar" HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
-        <Button text="REGISTAR PACIENTE" onAction="#registarPaciente" styleClass="nova-marcacao-confirmar" HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+        <Button text="CANCELAR" onAction="#cancelar"
+                styleClass="nova-marcacao-cancelar"
+                HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+        <Button text="REGISTAR PACIENTE" onAction="#registarPaciente"
+                styleClass="nova-marcacao-confirmar"
+                HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
     </HBox>
 </VBox>

@@ -154,7 +154,7 @@
 
                     <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="payment-details-scroll">
                         <content>
-                            <VBox fx:id="paymentDetailsContent" spacing="18.0" styleClass="sidebar-body">
+                            <VBox fx:id="paymentDetailsContent" spacing="14.0" styleClass="sidebar-body">
                                 <VBox spacing="5.0">
                                     <Label styleClass="sub-section-title" text="Dados do Paciente" />
                                     <VBox spacing="3.0">
@@ -165,7 +165,7 @@
 
                                 <Separator />
 
-                                <VBox spacing="10.0">
+                                <VBox spacing="8.0">
                                     <Label styleClass="sub-section-title" text="Procedimentos" />
                                     <GridPane hgap="10.0" styleClass="procedure-table-header">
                                         <columnConstraints>
@@ -190,12 +190,26 @@
                                     </ScrollPane>
                                 </VBox>
 
-                                <VBox spacing="6.0">
+                                <VBox spacing="6.0" styleClass="insurance-section">
                                     <Label styleClass="sub-section-title" text="Seguro" />
                                     <ComboBox fx:id="seguroCombo" maxWidth="Infinity" promptText="Selecionar seguro" styleClass="insurance-combo" />
                                 </VBox>
 
                                 <VBox spacing="14.0" styleClass="payment-footer-card">
+                                    <!-- Decomposição financeira -->
+                                    <VBox fx:id="ivaDecomposicaoBox" spacing="6.0">
+                                        <HBox alignment="CENTER_LEFT" styleClass="iva-row">
+                                            <Label styleClass="iva-label" text="Valor base" />
+                                            <Region HBox.hgrow="ALWAYS" />
+                                            <Label fx:id="valorBaseLabel" styleClass="iva-value" text="-" />
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" styleClass="iva-row">
+                                            <Label fx:id="taxaIvaDescLabel" styleClass="iva-label" text="IVA (0%)" />
+                                            <Region HBox.hgrow="ALWAYS" />
+                                            <Label fx:id="valorIvaLabel" styleClass="iva-value" text="-" />
+                                        </HBox>
+                                    </VBox>
+
                                     <HBox alignment="CENTER_LEFT" styleClass="value-row">
                                         <Label styleClass="total-pay-label" text="Valor Final" />
                                         <Region HBox.hgrow="ALWAYS" />

@@ -12,6 +12,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import model.Paciente;
 import model.PacientexSeguro;
 import model.PacientexSeguroId;
@@ -23,6 +24,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 
 @Component
@@ -48,9 +51,63 @@ public class RegistoPacienteController {
     @FXML
     public void initialize() {
         if (dpDataNascimento != null) {
-            dpDataNascimento.setPromptText("dd/mm/aaaa");
+            // Garantir que o promptText é aplicado também no editor (TextField interno)
+            // e configurar o formato de apresentação para dd/MM/yyyy (PT-PT)
+            configurarDatePickerPT(dpDataNascimento);
         }
         configurarComboSeguro();
+    }
+
+    /**
+     * Aplica formatação e promptText consistentes ao DatePicker,
+     * garantindo que o campo de data segue o mesmo design das restantes datas da aplicação.
+     */
+    private void configurarDatePickerPT(DatePicker datePicker) {
+        if (datePicker == null) {
+            return;
+        }
+        String pattern = "dd/MM/yyyy";
+        datePicker.setPromptText(pattern);
+        // Forçar o promptText a aparecer também no editor (TextField interno)
+        if (datePicker.getEditor() != null) {
+            datePicker.getEditor().setPromptText(pattern);
+        }
+        // Converter valor <-> texto em PT-PT (dd/MM/yyyy)
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern(pattern);
+        StringConverter<java.time.LocalDate> converter = new StringConverter<>() {
+            @Override
+            public String toString(java.time.LocalDate date) {
+                return date == null ? "" : date.format(formatter);
+            }
+
+            @Override
+            public java.time.LocalDate fromString(String string) {
+                if (string == null || string.isBlank()) {
+                    return null;
+                }
+                try {
+                    return java.time.LocalDate.parse(string.trim(), formatter);
+                } catch (java.time.format.DateTimeParseException ex) {
+                    return null;
+                }
+            }
+        };
+        datePicker.setConverter(converter);
+        if (datePicker.getEditor() != null) {
+            datePicker.getEditor().setTextFormatter(
+                new javafx.scene.control.TextFormatter<>(converter, null, change -> {
+                    String novo = change.getControlNewText();
+                    // Permitir apenas dígitos e barras, com tamanho máximo 10 (dd/MM/yyyy)
+                    if (novo.length() > 10) {
+                        return null;
+                    }
+                    if (!novo.matches("[0-9/]*")) {
+                        return null;
+                    }
+                    return change;
+                })
+            );
+        }
     }
 
     public void setStage(Stage stage) {
