@@ -1,6 +1,7 @@
 package bll;
 
 import dal.ProntuarioRepository;
+import model.Paciente;
 import model.Prontuario;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,32 @@ public class ProntuarioService {
     public Prontuario buscarPorId(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Prontuário não encontrado."));
+    }
+
+    public Prontuario buscarPorPaciente(Integer pacienteId) {
+        if (pacienteId == null) {
+            return null;
+        }
+        return repository.findByPacienteIdComUtilizador(pacienteId)
+                .orElse(null);
+    }
+
+    @Transactional
+    public Prontuario obterOuCriarPorPaciente(Paciente paciente) {
+        if (paciente == null || paciente.getId() == null) {
+            throw new RuntimeException("Paciente obrigatorio para prontuario.");
+        }
+
+        Prontuario existente = buscarPorPaciente(paciente.getId());
+        if (existente != null) {
+            return existente;
+        }
+
+        Prontuario prontuario = new Prontuario();
+        prontuario.setPaciente(entityManager.merge(paciente));
+        prontuario.setDatacriacao(LocalDate.now());
+        prontuario.setUltimaAtualizacao(LocalDate.now());
+        return repository.save(prontuario);
     }
 
     public Prontuario atualizar(Prontuario prontuario) {

@@ -3,6 +3,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,15 @@ public class Atendimento {
 
     @Column(name = "diagnostico", length = Integer.MAX_VALUE)
     private String diagnostico;
+
+    @Column(name = "dataAtendimento")
+    private LocalDate dataAtendimento;
+
+    @Column(name = "procedimentosRealizados", length = Integer.MAX_VALUE)
+    private String procedimentosRealizados;
+
+    @Column(name = "assinaturaDentista", length = 150)
+    private String assinaturaDentista;
 
     @Column(name = "retorno")
     private Boolean retorno;
@@ -52,6 +62,30 @@ public class Atendimento {
 
     public void setDiagnostico(String diagnostico) {
         this.diagnostico = diagnostico;
+    }
+
+    public LocalDate getDataAtendimento() {
+        return dataAtendimento;
+    }
+
+    public void setDataAtendimento(LocalDate dataAtendimento) {
+        this.dataAtendimento = dataAtendimento;
+    }
+
+    public String getProcedimentosRealizados() {
+        return procedimentosRealizados;
+    }
+
+    public void setProcedimentosRealizados(String procedimentosRealizados) {
+        this.procedimentosRealizados = procedimentosRealizados;
+    }
+
+    public String getAssinaturaDentista() {
+        return assinaturaDentista;
+    }
+
+    public void setAssinaturaDentista(String assinaturaDentista) {
+        this.assinaturaDentista = assinaturaDentista;
     }
 
     public Boolean getRetorno() {

@@ -62,6 +62,14 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
            "LEFT JOIN FETCH d.utilizador")
     List<Consulta> findAllEager();
 
+    @Query("SELECT DISTINCT c FROM Consulta c " +
+           "LEFT JOIN FETCH c.idPaciente p " +
+           "LEFT JOIN FETCH p.utilizador " +
+           "LEFT JOIN FETCH c.idDentista d " +
+           "LEFT JOIN FETCH d.utilizador " +
+           "WHERE d.id = :idDentista")
+    List<Consulta> findByDentistaIdEager(@Param("idDentista") Integer idDentista);
+
     @Query("SELECT c FROM Consulta c " +
            "LEFT JOIN FETCH c.idPaciente p " +
            "LEFT JOIN FETCH p.utilizador " +
@@ -81,6 +89,19 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
 
     @Query("SELECT c FROM Consulta c WHERE c.idDentista.id = :idDentista AND c.dataHoraInicio BETWEEN :inicio AND :fim")
     List<Consulta> findByDentistaEDia(
+            @Param("idDentista") Integer idDentista,
+            @Param("inicio") Instant inicio,
+            @Param("fim") Instant fim
+    );
+
+    @Query("SELECT DISTINCT c FROM Consulta c " +
+           "LEFT JOIN FETCH c.idPaciente p " +
+           "LEFT JOIN FETCH p.utilizador " +
+           "LEFT JOIN FETCH c.idDentista d " +
+           "LEFT JOIN FETCH d.utilizador " +
+           "WHERE d.id = :idDentista AND c.dataHoraInicio BETWEEN :inicio AND :fim " +
+           "ORDER BY c.dataHoraInicio ASC")
+    List<Consulta> findByDentistaEDiaEager(
             @Param("idDentista") Integer idDentista,
             @Param("inicio") Instant inicio,
             @Param("fim") Instant fim

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<VBox prefHeight="768.0" prefWidth="1366.0"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.dentista.PrescricoesDentistaController"
+      stylesheets="@../../css/assistente-style.css"
+      styleClass="root">
+
+    <!-- Navbar Horizontal -->
+    <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="header">
+        <padding><Insets top="12.0" right="24.0" bottom="12.0" left="24.0" /></padding>
+
+        <StackPane styleClass="logo-shell">
+            <ImageView fitHeight="42.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image">
+                <image><Image url="@../../images/logo.png" /></image>
+            </ImageView>
+        </StackPane>
+
+        <HBox alignment="CENTER_LEFT" spacing="8.0" HBox.hgrow="ALWAYS">
+            <Button onAction="#abrirDashboard" styleClass="nav-button" text="Dashboard" mnemonicParsing="false" />
+            <Button onAction="#abrirAgenda" styleClass="nav-button" text="Agenda" mnemonicParsing="false" />
+            <Button onAction="#abrirProntuarios" styleClass="nav-button" text="Prontuários" mnemonicParsing="false" />
+            <Button onAction="#abrirPrescricoes" styleClass="nav-button-active" text="Prescrições" mnemonicParsing="false" />
+            <Button onAction="#abrirPlanosTratamento" styleClass="nav-button" text="Planos de Tratamento" mnemonicParsing="false" />
+        </HBox>
+
+        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+            <VBox alignment="CENTER_RIGHT" spacing="2.0">
+                <Label fx:id="lblNomeUtilizador" styleClass="user-name" text="Dr. Dentista" />
+                <Label styleClass="user-role" text="Médico Dentista" />
+            </VBox>
+            <Button onAction="#abrirPerfil" styleClass="icon-button" mnemonicParsing="false">
+                <graphic>
+                    <StackPane styleClass="icon-shell">
+                        <SVGPath content="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" styleClass="header-icon" />
+                    </StackPane>
+                </graphic>
+            </Button>
+            <Button onAction="#fazerLogout" styleClass="icon-button" mnemonicParsing="false">
+                <graphic>
+                    <StackPane styleClass="icon-shell">
+                        <SVGPath content="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4" styleClass="header-icon" />
+                    </StackPane>
+                </graphic>
+            </Button>
+        </HBox>
+    </HBox>
+
+    <!-- Conteúdo Principal -->
+    <SplitPane dividerPositions="0.6" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 10;">
+        <items>
+            <!-- Lado Esquerdo: Histórico de Receitas -->
+            <VBox spacing="14.0" styleClass="section-card">
+                <padding><Insets top="14.0" right="14.0" bottom="14.0" left="14.0" /></padding>
+                <Label styleClass="section-title" text="Prescrições Emitidas" />
+                <TextField fx:id="txtPesquisa" promptText="Pesquisar por paciente..." styleClass="search-field" />
+                <TableView fx:id="tblPrescricoes" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colData" prefWidth="100.0" text="Data" />
+                        <TableColumn fx:id="colPaciente" prefWidth="180.0" text="Paciente" />
+                        <TableColumn fx:id="colMedicamento" prefWidth="160.0" text="Medicamento" />
+                        <TableColumn fx:id="colPosologia" prefWidth="200.0" text="Posologia / Duração" />
+                        <TableColumn fx:id="colConsulta" prefWidth="120.0" text="Consulta" />
+                    </columns>
+                    <placeholder>
+                        <Label text="Nenhuma prescrição encontrada." />
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- Lado Direito: Nova Receita -->
+            <VBox spacing="14.0" styleClass="section-card">
+                <padding><Insets top="14.0" right="14.0" bottom="14.0" left="14.0" /></padding>
+                <Label styleClass="section-title" text="Nova Prescrição Digital" />
+                
+                <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+                    <Label text="Selecione o Paciente:" styleClass="patient-history-label" />
+                    <ComboBox fx:id="cbPaciente" promptText="Escolher paciente..." styleClass="search-field" maxWidth="Infinity" />
+
+                    <Label text="Medicamento Receitado:" styleClass="patient-history-label" />
+                    <TextField fx:id="txtMedicamento" promptText="Ex: Amoxicilina 875mg" styleClass="search-field" />
+
+                    <Label text="Posologia:" styleClass="patient-history-label" />
+                    <TextField fx:id="txtPosologia" promptText="Ex: 1 comprimido de 12h em 12h" styleClass="search-field" />
+
+                    <Label text="Duração / Tempo de Tratamento:" styleClass="patient-history-label" />
+                    <TextField fx:id="txtTempoTratamento" promptText="Ex: 8 dias" styleClass="search-field" />
+
+                    <Label text="Observações adicionais:" styleClass="patient-history-label" />
+                    <TextArea fx:id="txtObservacoes" promptText="Tomar junto com as refeições, etc..." prefHeight="90.0" wrapText="true" styleClass="search-field" />
+
+                    <Label text="Assinatura:" styleClass="patient-history-label" />
+                    <TextField fx:id="txtAssinatura" promptText="Assinatura do médico" styleClass="search-field" />
+                </VBox>
+
+                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                    <Button onAction="#limparFormulario" text="Limpar" styleClass="secondary-button" />
+                    <Button fx:id="btnEmitir" onAction="#emitirPrescricao" text="Emitir Prescrição" styleClass="primary-button" />
+                </HBox>
+            </VBox>
+        </items>
+    </SplitPane>
+</VBox>

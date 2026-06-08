@@ -25,6 +25,13 @@ public class AnamneseService {
         return anamneseRepository.findById(id);
     }
 
+    public Optional<Anamnese> buscarPorAtendimento(Integer idAtendimento) {
+        if (idAtendimento == null) {
+            return Optional.empty();
+        }
+        return anamneseRepository.findByIdAtendimento_Id(idAtendimento);
+    }
+
     public Anamnese salvar(Anamnese anamnese) {
 
         if (anamnese.getIdAtendimento() == null)

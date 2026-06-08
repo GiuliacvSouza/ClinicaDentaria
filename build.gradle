@@ -40,11 +40,8 @@ application {
     mainClass = 'app.Launcher'
 }
 
-bootJar {
-    mainClass = 'app.Launcher'
-    manifest {
-        attributes 'Main-Class': 'app.Launcher'
-    }
+tasks.named('bootJar') {
+    enabled = false
 }
 
 tasks.named('bootRun') {

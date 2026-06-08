@@ -3,6 +3,7 @@ package controller;
 import app.SceneManager;
 import app.SessionContext;
 import bll.AssistenteService;
+import bll.DentistaService;
 import bll.RecepcionistaService;
 import bll.UtilizadorService;
 import javafx.animation.PauseTransition;
@@ -21,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.Assistente;
+import model.Dentista;
 import model.Recepcionista;
 import model.Utilizador;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +63,13 @@ public class LoginController {
     @Autowired
     private AssistenteService assistenteService;
 
+    @Autowired
+    private DentistaService dentistaService;
+
     private Utilizador utilizadorLogado;
     private Recepcionista recepcionistaLogado;
     private Assistente assistenteLogado;
+    private Dentista dentistaLogado;
 
     @FXML
     public void initialize() {
@@ -231,33 +237,52 @@ public class LoginController {
                 Utilizador user = utilizadorService.autenticar(email, senha);
 
                 javafx.application.Platform.runLater(() -> {
-                    if (user != null && "ativo".equalsIgnoreCase(user.getStatus())) {
-                        utilizadorLogado = user;
+        if (user != null && "ativo".equalsIgnoreCase(user.getStatus())) {
+                            utilizadorLogado = user;
 
-                        if ("RECEPCIONISTA".equals(user.getTipoUtilizador())) {
-                            try {
-                                recepcionistaLogado = recepcionistaService.buscarPorUtilizadorId(user.getId());
-                            } catch (Exception ignored) {
-                                recepcionistaLogado = null;
-                            }
-                            assistenteLogado = null;
-                        } else if ("ASSISTENTE".equals(user.getTipoUtilizador())) {
-                            try {
-                                assistenteLogado = assistenteService.buscarPorUtilizadorId(user.getId());
-                            } catch (Exception ignored) {
+                            if ("RECEPCIONISTA".equals(user.getTipoUtilizador())) {
+                                try {
+                                    recepcionistaLogado = recepcionistaService.buscarPorUtilizadorId(user.getId());
+                                } catch (Exception ignored) {
+                                    recepcionistaLogado = null;
+                                }
                                 assistenteLogado = null;
+                                dentistaLogado = null;
+                            } else if ("ASSISTENTE".equals(user.getTipoUtilizador())) {
+                                try {
+                                    assistenteLogado = assistenteService.buscarPorUtilizadorId(user.getId());
+                                } catch (Exception ignored) {
+                                    assistenteLogado = null;
+                                }
+                                recepcionistaLogado = null;
+                                dentistaLogado = null;
+                            } else if ("DENTISTA".equals(user.getTipoUtilizador())) {
+                                try {
+                                    dentistaLogado = dentistaService.buscarPorUtilizadorId(user.getId());
+                                } catch (Exception ignored) {
+                                    dentistaLogado = null;
+                                }
+                                recepcionistaLogado = null;
+                                assistenteLogado = null;
+                            } else if ("ADMINISTRADOR".equals(user.getTipoUtilizador())) {
+                                // Administrador usa apenas o Utilizador base
+                                recepcionistaLogado = null;
+                                assistenteLogado = null;
+                                dentistaLogado = null;
                             }
-                            recepcionistaLogado = null;
-                        }
 
-                        user.setUltimoAcesso(Instant.now());
-                        utilizadorService.salvar(user);
+                            user.setUltimoAcesso(Instant.now());
+                            utilizadorService.salvar(user);
 
-                        if ("ASSISTENTE".equals(user.getTipoUtilizador())) {
-                            SessionContext.iniciarSessaoAssistente(utilizadorLogado, assistenteLogado);
-                        } else {
-                            SessionContext.iniciarSessao(utilizadorLogado, recepcionistaLogado);
-                        }
+                            if ("ASSISTENTE".equals(user.getTipoUtilizador())) {
+                                SessionContext.iniciarSessaoAssistente(utilizadorLogado, assistenteLogado);
+                            } else if ("DENTISTA".equals(user.getTipoUtilizador())) {
+                                SessionContext.iniciarSessaoDentista(utilizadorLogado, dentistaLogado);
+                            } else if ("ADMINISTRADOR".equals(user.getTipoUtilizador())) {
+                                SessionContext.iniciarSessaoAdministrador(utilizadorLogado);
+                            } else {
+                                SessionContext.iniciarSessao(utilizadorLogado, recepcionistaLogado);
+                            }
 
                         showSuccessAndNavigate();
                     } else {
@@ -293,6 +318,10 @@ public class LoginController {
             Utilizador u = SessionContext.getUtilizadorLogado();
             if (u != null && "ASSISTENTE".equals(u.getTipoUtilizador())) {
                 openDashboardAssistente();
+            } else if (u != null && "DENTISTA".equals(u.getTipoUtilizador())) {
+                openDashboardDentista();
+            } else if (u != null && "ADMINISTRADOR".equals(u.getTipoUtilizador())) {
+                openDashboardAdministrador();
             } else {
                 openAgenda();
             }
@@ -320,6 +349,32 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
             showError("Erro ao carregar o dashboard do assistente: " + e.getMessage());
+            btnEntrar.setDisable(false);
+            btnEntrar.setText("Entrar");
+            removerClasse(btnEntrar, BUTTON_SUCCESS_CLASS);
+        }
+    }
+
+    private void openDashboardDentista() {
+        try {
+            SceneManager.trocarTela("/fxml/dentista/dashboard-dentista.fxml", "/css/assistente-style.css");
+            SceneManager.getMainStage().setTitle("Clinica Dentaria - Dentista");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Erro ao carregar o dashboard do dentista: " + e.getMessage());
+            btnEntrar.setDisable(false);
+            btnEntrar.setText("Entrar");
+            removerClasse(btnEntrar, BUTTON_SUCCESS_CLASS);
+        }
+    }
+
+    private void openDashboardAdministrador() {
+        try {
+            SceneManager.trocarTela("/fxml/administrador/dashboard-administrador.fxml", "/css/assistente-style.css");
+            SceneManager.getMainStage().setTitle("Clinica Dentaria - Administrador");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Erro ao carregar o dashboard do administrador: " + e.getMessage());
             btnEntrar.setDisable(false);
             btnEntrar.setText("Entrar");
             removerClasse(btnEntrar, BUTTON_SUCCESS_CLASS);

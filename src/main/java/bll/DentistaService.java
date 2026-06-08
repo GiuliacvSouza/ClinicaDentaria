@@ -73,6 +73,14 @@ public class DentistaService {
                 .orElseThrow(() -> new RuntimeException("Dentista não encontrado."));
     }
 
+    public Dentista buscarPorUtilizadorId(Integer idUtilizador) {
+        if (idUtilizador == null) {
+            return null;
+        }
+        return repository.findByUtilizadorId(idUtilizador)
+                .orElse(null);
+    }
+
     public Dentista desativar(Integer id) {
         Dentista dentista = buscarPorId(id);
         dentista.setAtivo(false);

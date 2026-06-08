@@ -27,6 +27,19 @@ public class SceneManager {
         mainStage = stage;
     }
 
+    private static String parseQueryAndGetCleanPath(String fxmlPath) {
+        String cleanPath = fxmlPath;
+        int qIndex = fxmlPath.indexOf('?');
+        if (qIndex != -1) {
+            cleanPath = fxmlPath.substring(0, qIndex);
+            String query = fxmlPath.substring(qIndex + 1);
+            SessionContext.setCurrentQuery(query);
+        } else {
+            SessionContext.limparQuery();
+        }
+        return cleanPath;
+    }
+
     /**
      * Troca a cena preservando tamanho, posição e estado da janela.
      *
@@ -40,10 +53,11 @@ public class SceneManager {
             throw new RuntimeException("SceneManager nao foi inicializado. Chame setMainStage() primeiro.");
         }
 
-        var resource = SceneManager.class.getResource(fxmlPath);
+        String cleanPath = parseQueryAndGetCleanPath(fxmlPath);
+        var resource = SceneManager.class.getResource(cleanPath);
         if (resource == null) {
-            System.err.println("[SCENEMANAGER] ERRO: FXML nao encontrado: " + fxmlPath);
-            throw new RuntimeException("FXML nao encontrado: " + fxmlPath);
+            System.err.println("[SCENEMANAGER] ERRO: FXML nao encontrado: " + cleanPath);
+            throw new RuntimeException("FXML nao encontrado: " + cleanPath);
         }
 
         FXMLLoader loader = new FXMLLoader(resource);
@@ -55,7 +69,7 @@ public class SceneManager {
         try {
             root = loader.load();
         } catch (IOException e) {
-            System.err.println("[SCENEMANAGER] ERRO ao carregar FXML: " + fxmlPath);
+            System.err.println("[SCENEMANAGER] ERRO ao carregar FXML: " + cleanPath);
             e.printStackTrace();
             throw e;
         }
@@ -88,10 +102,11 @@ public class SceneManager {
             throw new RuntimeException("SceneManager nao foi inicializado.");
         }
 
-        var resource = SceneManager.class.getResource(fxmlPath);
+        String cleanPath = parseQueryAndGetCleanPath(fxmlPath);
+        var resource = SceneManager.class.getResource(cleanPath);
         if (resource == null) {
-            System.err.println("[SCENEMANAGER] ERRO: FXML nao encontrado (maximizado): " + fxmlPath);
-            throw new RuntimeException("FXML nao encontrado: " + fxmlPath);
+            System.err.println("[SCENEMANAGER] ERRO: FXML nao encontrado (maximizado): " + cleanPath);
+            throw new RuntimeException("FXML nao encontrado: " + cleanPath);
         }
 
         FXMLLoader loader = new FXMLLoader(resource);
@@ -103,7 +118,7 @@ public class SceneManager {
         try {
             root = loader.load();
         } catch (IOException e) {
-            System.err.println("[SCENEMANAGER] ERRO ao carregar FXML (maximizado): " + fxmlPath);
+            System.err.println("[SCENEMANAGER] ERRO ao carregar FXML (maximizado): " + cleanPath);
             e.printStackTrace();
             throw e;
         }

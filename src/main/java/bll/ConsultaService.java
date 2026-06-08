@@ -135,6 +135,41 @@ public class ConsultaService {
         return repository.findByDentistaEDia(dentistaId, inicio, fim);
     }
 
+    public List<ConsultaAgendadaDTO> listarAgendadasPorDentista(Integer dentistaId) {
+        if (dentistaId == null) {
+            return List.of();
+        }
+
+        return repository.findByDentistaIdEager(dentistaId).stream()
+                .sorted(Comparator.comparing(Consulta::getDataHoraInicio, Comparator.nullsLast(Comparator.naturalOrder())))
+                .map(this::toConsultaAgendadaDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ConsultaAgendadaDTO> listarAgendadasPorDentistaEStatus(Integer dentistaId, EstadoConsulta status) {
+        if (dentistaId == null) {
+            return List.of();
+        }
+
+        return repository.findByDentistaIdEager(dentistaId).stream()
+                .filter(c -> status == null || c.getStatus() == status)
+                .sorted(Comparator.comparing(Consulta::getDataHoraInicio, Comparator.nullsLast(Comparator.naturalOrder())))
+                .map(this::toConsultaAgendadaDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ConsultaAgendadaDTO> listarAgendadasPorDentistaEDia(Integer dentistaId, LocalDate data) {
+        if (dentistaId == null || data == null) {
+            return List.of();
+        }
+
+        Instant inicio = data.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant fim = data.plusDays(1).atStartOfDay(ZoneId.systemDefault()).minusNanos(1).toInstant();
+        return repository.findByDentistaEDiaEager(dentistaId, inicio, fim).stream()
+                .map(this::toConsultaAgendadaDTO)
+                .collect(Collectors.toList());
+    }
+
     public Consulta buscarPorId(Integer id) {
         return repository.findByIdEager(id)
                 .orElseThrow(() -> new RuntimeException("Consulta nao encontrada"));

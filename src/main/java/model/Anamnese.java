@@ -44,8 +44,20 @@ public class Anamnese {
     @Column(name = "usaMedicamento")
     private Boolean usaMedicamento;
 
+    @Column(name = "medicamentos", length = Integer.MAX_VALUE)
+    private String medicamentos;
+
     @Column(name = "temAlergia")
     private Boolean temAlergia;
+
+    @Column(name = "alergias", length = Integer.MAX_VALUE)
+    private String alergias;
+
+    @Column(name = "cirurgiasAnteriores", length = Integer.MAX_VALUE)
+    private String cirurgiasAnteriores;
+
+    @Column(name = "habitosRelevantes", length = Integer.MAX_VALUE)
+    private String habitosRelevantes;
 
     @Column(name = "eFumante")
     private Boolean eFumante;
@@ -141,12 +153,44 @@ public class Anamnese {
         this.usaMedicamento = usaMedicamento;
     }
 
+    public String getMedicamentos() {
+        return medicamentos;
+    }
+
+    public void setMedicamentos(String medicamentos) {
+        this.medicamentos = medicamentos;
+    }
+
     public Boolean getTemAlergia() {
         return temAlergia;
     }
 
     public void setTemAlergia(Boolean temAlergia) {
         this.temAlergia = temAlergia;
+    }
+
+    public String getAlergias() {
+        return alergias;
+    }
+
+    public void setAlergias(String alergias) {
+        this.alergias = alergias;
+    }
+
+    public String getCirurgiasAnteriores() {
+        return cirurgiasAnteriores;
+    }
+
+    public void setCirurgiasAnteriores(String cirurgiasAnteriores) {
+        this.cirurgiasAnteriores = cirurgiasAnteriores;
+    }
+
+    public String getHabitosRelevantes() {
+        return habitosRelevantes;
+    }
+
+    public void setHabitosRelevantes(String habitosRelevantes) {
+        this.habitosRelevantes = habitosRelevantes;
     }
 
     public Boolean geteFumante() {

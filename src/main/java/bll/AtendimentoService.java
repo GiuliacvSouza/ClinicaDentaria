@@ -35,6 +35,13 @@ public class AtendimentoService {
         return repository.findAll();
     }
 
+    public List<Atendimento> listarPorPaciente(Integer pacienteId) {
+        if (pacienteId == null) {
+            return List.of();
+        }
+        return repository.findByPacienteIdComDetalhes(pacienteId);
+    }
+
     public Atendimento buscarPorId(Integer id) {
 
         return repository.findByIdComDetalhes(id)
@@ -53,6 +60,19 @@ public class AtendimentoService {
 
         // Se houver multiplos atendimentos para a mesma consulta, retorna o mais recente (ordenado no repo)
         return atendimentos.get(0);
+    }
+
+    public Atendimento obterOuCriarPorConsulta(Consulta consulta) {
+        Atendimento existente = buscarPorConsulta(consulta);
+        if (existente != null) {
+            return existente;
+        }
+
+        Atendimento atendimento = new Atendimento();
+        atendimento.setIdConsulta(consulta);
+        atendimento.setDataAtendimento(java.time.LocalDate.now());
+        atendimento.setRetorno(false);
+        return salvar(atendimento);
     }
 
     public void excluir(Integer id) {

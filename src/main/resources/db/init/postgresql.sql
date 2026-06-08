@@ -106,3 +106,23 @@ ALTER TABLE IF EXISTS consulta
         'EM_CONSULTA'
     ))
 @@
+
+-- Tabela de auditoria do sistema (RF35)
+CREATE TABLE IF NOT EXISTS auditoria_log (
+    id_auditoria SERIAL PRIMARY KEY,
+    data_hora TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    utilizador_nome VARCHAR(200),
+    utilizador_perfil VARCHAR(50),
+    operacao VARCHAR(100) NOT NULL,
+    descricao TEXT
+)
+@@
+
+CREATE INDEX IF NOT EXISTS idx_auditoria_data_hora ON auditoria_log(data_hora DESC)
+@@
+
+CREATE INDEX IF NOT EXISTS idx_auditoria_utilizador ON auditoria_log(utilizador_nome)
+@@
+
+CREATE INDEX IF NOT EXISTS idx_auditoria_operacao ON auditoria_log(operacao)
+@@

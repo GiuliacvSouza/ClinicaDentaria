@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<VBox prefHeight="768.0" prefWidth="1366.0"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.dentista.AtendimentoDentistaController"
+      stylesheets="@../../css/assistente-style.css"
+      styleClass="root">
+
+    <!-- Navbar Horizontal -->
+    <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="header">
+        <padding><Insets top="12.0" right="24.0" bottom="12.0" left="24.0" /></padding>
+        <StackPane styleClass="logo-shell">
+            <ImageView fitHeight="42.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image">
+                <image><Image url="@../../images/logo.png" /></image>
+            </ImageView>
+        </StackPane>
+        <HBox alignment="CENTER_LEFT" spacing="8.0" HBox.hgrow="ALWAYS">
+            <Button onAction="#abrirDashboard" styleClass="nav-button" text="Dashboard" mnemonicParsing="false" />
+            <Button onAction="#abrirAgenda" styleClass="nav-button" text="Agenda" mnemonicParsing="false" />
+            <Button onAction="#abrirProntuarios" styleClass="nav-button" text="Prontuários" mnemonicParsing="false" />
+            <Button onAction="#abrirPrescricoes" styleClass="nav-button" text="Prescrições" mnemonicParsing="false" />
+            <Button onAction="#abrirPlanosTratamento" styleClass="nav-button" text="Planos de Tratamento" mnemonicParsing="false" />
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+            <VBox alignment="CENTER_RIGHT" spacing="2.0">
+                <Label fx:id="lblNomeUtilizador" styleClass="user-name" text="Dr. Dentista" />
+                <Label styleClass="user-role" text="Médico Dentista" />
+            </VBox>
+            <Button onAction="#abrirPerfil" styleClass="icon-button" mnemonicParsing="false">
+                <graphic>
+                    <StackPane styleClass="icon-shell">
+                        <SVGPath content="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" styleClass="header-icon" />
+                    </StackPane>
+                </graphic>
+            </Button>
+            <Button onAction="#fazerLogout" styleClass="icon-button" mnemonicParsing="false">
+                <graphic>
+                    <StackPane styleClass="icon-shell">
+                        <SVGPath content="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4" styleClass="header-icon" />
+                    </StackPane>
+                </graphic>
+            </Button>
+        </HBox>
+    </HBox>
+
+    <!-- Top Bar: Patient + Consulta info + Action Buttons -->
+    <HBox spacing="16.0" styleClass="section-card" style="-fx-background-radius: 0; -fx-padding: 10 20;">
+        <padding><Insets top="10.0" right="20.0" bottom="10.0" left="20.0" /></padding>
+
+        <StackPane styleClass="avatar-shell" prefWidth="44.0" prefHeight="44.0" style="-fx-background-color: #0066cc; -fx-background-radius: 22;">
+            <Label fx:id="lblIniciais" text="PA" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+        </StackPane>
+
+        <VBox spacing="1.0">
+            <Label fx:id="lblNomePaciente" text="Paciente" styleClass="section-title" style="-fx-font-size: 16px;" />
+            <Label fx:id="lblInfoConsulta" text="Consulta #0 | --/--/---- --:-- | -" styleClass="section-caption" wrapText="true" />
+        </VBox>
+
+        <Region HBox.hgrow="ALWAYS" />
+
+        <Label text="Estado:" styleClass="section-caption" />
+        <Label fx:id="lblEstadoConsulta" text="-" style="-fx-font-weight: bold; -fx-text-fill: #0066cc; -fx-font-size: 13px;" />
+
+        <Region prefWidth="20.0" />
+
+        <Button fx:id="btnGuardar" onAction="#guardarAtendimento" text="Guardar" styleClass="secondary-button" disable="true" />
+        <Button fx:id="btnFinalizar" onAction="#finalizarConsulta" text="Finalizar Consulta" styleClass="primary-button" style="-fx-background-color: #28a745;" disable="true" />
+        <Button onAction="#voltar" text="Voltar" styleClass="secondary-button" />
+    </HBox>
+
+    <!-- Main Content: Left Summary + Right Tabs -->
+    <SplitPane dividerPositions="0.25" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 8;">
+        <items>
+            <!-- LEFT COLUMN: Patient Summary + Clinical History -->
+            <VBox spacing="12.0" styleClass="section-card" minWidth="240.0">
+                <padding><Insets top="14.0" right="10.0" bottom="14.0" left="10.0" /></padding>
+
+                <Label styleClass="section-title" text="Resumo do Paciente" style="-fx-font-size: 13px;" />
+
+                <VBox spacing="4.0" styleClass="patient-info-card" style="-fx-padding: 10;">
+                    <Label fx:id="lblResumoNome" text="-" styleClass="patient-history-label" style="-fx-font-weight: bold;" />
+                    <Label fx:id="lblResumoIdade" text="-" styleClass="section-caption" />
+                    <Label fx:id="lblResumoNif" text="-" styleClass="section-caption" />
+                    <Label fx:id="lblResumoTelefone" text="-" styleClass="section-caption" />
+                    <Label fx:id="lblResumoAlergias" text="Alergias: -" styleClass="section-caption" wrapText="true" />
+                    <Label fx:id="lblResumoMedicamentos" text="Medicamentos: -" styleClass="section-caption" wrapText="true" />
+                </VBox>
+
+                <Label styleClass="section-title" text="Histórico Clínico" style="-fx-font-size: 13px;" />
+                <TableView fx:id="tblHistoricoClinico" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colHistData" prefWidth="80.0" text="Data" />
+                        <TableColumn fx:id="colHistDiag" prefWidth="160.0" text="Diagnóstico" />
+                    </columns>
+                    <placeholder>
+                        <Label text="Sem histórico." styleClass="section-caption" />
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- RIGHT COLUMN: 6 Tabs -->
+            <TabPane tabClosingPolicy="UNAVAILABLE" styleClass="section-card" style="-fx-background-color: transparent;">
+                <padding><Insets top="0" right="0" bottom="0" left="0" /></padding>
+                <tabs>
+
+                    <!-- TAB 1: PRONTUÁRIO -->
+                    <Tab text="Prontuário">
+                        <content>
+                            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+                                <content>
+                                    <VBox spacing="14.0" style="-fx-padding: 14;">
+                                        <Label text="Dados do Prontuário Clínico" styleClass="section-title" style="-fx-font-size: 14px;" />
+                                        <GridPane hgap="12.0" vgap="8.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints minWidth="120.0" prefWidth="120.0" />
+                                                <ColumnConstraints hgrow="ALWAYS" />
+                                            </columnConstraints>
+                                            <children>
+                                                <Label text="Grupo Sanguíneo:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="patient-history-label" />
+                                                <TextField fx:id="txtGrupoSanguineo" promptText="Ex: A+" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="search-field" maxWidth="150" />
+
+                                                <Label text="Histórico Médico:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="patient-history-label" />
+                                                <TextArea fx:id="txtHistoricoMedico" promptText="Doenças anteriores, tratamentos crónicos..." prefHeight="60.0" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="search-field" />
+
+                                                <Label text="Alergias:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="patient-history-label" />
+                                                <TextArea fx:id="txtAlergiasProntuario" promptText="Alergias a medicamentos, látex, etc..." prefHeight="60.0" wrapText="true" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="search-field" />
+
+                                                <Label text="Medicamentos:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="patient-history-label" />
+                                                <TextArea fx:id="txtMedicamentosProntuario" promptText="Medicamentos em uso contínuo..." prefHeight="60.0" wrapText="true" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="search-field" />
+
+                                                <Label text="Hist. Odontológico:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="patient-history-label" />
+                                                <TextArea fx:id="txtHistoricoOdontologico" promptText="Tratamentos dentários anteriores..." prefHeight="60.0" wrapText="true" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="search-field" />
+
+                                                <Label text="Observações:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="patient-history-label" />
+                                                <TextArea fx:id="txtObservacoesProntuario" promptText="Notas gerais..." prefHeight="60.0" wrapText="true" GridPane.rowIndex="5" GridPane.columnIndex="1" styleClass="search-field" />
+                                            </children>
+                                        </GridPane>
+                                        <HBox alignment="CENTER_RIGHT">
+                                            <Button fx:id="btnGuardarProntuario" onAction="#guardarProntuario" text="Atualizar Prontuário" styleClass="primary-button" disable="true" />
+                                        </HBox>
+                                    </VBox>
+                                </content>
+                            </ScrollPane>
+                        </content>
+                    </Tab>
+
+                    <!-- TAB 2: ANAMNESE -->
+                    <Tab text="Anamnese">
+                        <content>
+                            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+                                <content>
+                                    <VBox spacing="14.0" style="-fx-padding: 14;">
+                                        <HBox alignment="CENTER_LEFT">
+                                            <Label text="Registro de Anamnese" styleClass="section-title" style="-fx-font-size: 14px;" />
+                                            <Region HBox.hgrow="ALWAYS" />
+                                            <Label fx:id="lblStatusAnamnese" text="-" styleClass="section-caption" />
+                                        </HBox>
+
+                                        <GridPane hgap="12.0" vgap="8.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints percentWidth="50.0" />
+                                                <ColumnConstraints percentWidth="50.0" />
+                                            </columnConstraints>
+                                            <children>
+                                                <CheckBox fx:id="chkDiabetes" text="Diabético" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                                                <CheckBox fx:id="chkHipertensao" text="Hipertenso" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                                                <CheckBox fx:id="chkHepatite" text="Hepatite" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                                                <CheckBox fx:id="chkDoencaGrave" text="Doença Grave" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                                                <CheckBox fx:id="chkFumante" text="Fumador" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                                                <CheckBox fx:id="chkUsaMedicamento" text="Toma Medicamentos" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                                                <CheckBox fx:id="chkTemAlergia" text="Tem Alergias" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                                            </children>
+                                        </GridPane>
+
+                                        <TextField fx:id="txtMedicamentosAnamnese" promptText="Medicamentos: especifique..." styleClass="search-field" />
+                                        <TextField fx:id="txtAlergiasAnamnese" promptText="Alergias: especifique..." styleClass="search-field" />
+                                        <TextField fx:id="txtCirurgiasAnteriores" promptText="Cirurgias anteriores..." styleClass="search-field" />
+                                        <TextField fx:id="txtOutrasDoencas" promptText="Outras doenças ou condições..." styleClass="search-field" />
+                                        <TextField fx:id="txtHabitosRelevantes" promptText="Hábitos relevantes..." styleClass="search-field" />
+                                        <TextArea fx:id="txtObservacoesAnamnese" promptText="Observações clínicas..." prefHeight="60.0" wrapText="true" styleClass="search-field" />
+
+                                        <HBox alignment="CENTER_RIGHT">
+                                            <Button fx:id="btnGuardarAnamnese" onAction="#guardarAnamnese" text="Gravar Anamnese" styleClass="primary-button" disable="true" />
+                                        </HBox>
+                                    </VBox>
+                                </content>
+                            </ScrollPane>
+                        </content>
+                    </Tab>
+
+                    <!-- TAB 3: DIAGNÓSTICO -->
+                    <Tab text="Diagnóstico">
+                        <content>
+                            <VBox spacing="14.0" style="-fx-padding: 14;">
+                                <Label text="Diagnóstico Clínico" styleClass="section-title" style="-fx-font-size: 14px;" />
+                                <TextArea fx:id="txtDiagnostico" promptText="Descreva o diagnóstico do paciente..." prefHeight="120.0" wrapText="true" styleClass="search-field" />
+
+                                <Label text="Procedimentos Realizados" styleClass="section-title" style="-fx-font-size: 14px;" />
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <ComboBox fx:id="cbProcedimento" promptText="Selecionar procedimento..." styleClass="search-field" HBox.hgrow="ALWAYS" maxWidth="Infinity" disable="true" />
+                                    <Label text="Qtd:" styleClass="patient-history-label" />
+                                    <Spinner fx:id="spProcQuantidade" prefWidth="80.0" disable="true" />
+                                    <Button fx:id="btnAdicionarProcedimento" onAction="#adicionarProcedimento" text="Adicionar" styleClass="primary-button" disable="true" />
+                                </HBox>
+                                <TableView fx:id="tblProcedimentos" styleClass="dashboard-table" prefHeight="150.0">
+                                    <columns>
+                                        <TableColumn fx:id="colProcNome" prefWidth="200.0" text="Procedimento" />
+                                        <TableColumn fx:id="colProcValor" prefWidth="100.0" text="Valor" />
+                                        <TableColumn fx:id="colProcQuantidade" prefWidth="80.0" text="Qtd" />
+                                        <TableColumn fx:id="colProcTotal" prefWidth="100.0" text="Total" />
+                                    </columns>
+                                    <placeholder><Label text="Nenhum procedimento registado." /></placeholder>
+                                </TableView>
+
+                                <Label text="Observações Clínicas:" styleClass="patient-history-label" />
+                                <TextArea fx:id="txtObservacoes" promptText="Observações adicionais..." prefHeight="80.0" wrapText="true" styleClass="search-field" />
+                            </VBox>
+                        </content>
+                    </Tab>
+
+                    <!-- TAB 4: MATERIAIS -->
+                    <Tab text="Materiais">
+                        <content>
+                            <VBox spacing="14.0" style="-fx-padding: 14;">
+                                <Label text="Materiais Utilizados" styleClass="section-title" style="-fx-font-size: 14px;" />
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <ComboBox fx:id="cbMaterial" promptText="Selecionar material..." styleClass="search-field" HBox.hgrow="ALWAYS" maxWidth="Infinity" disable="true" />
+                                    <Label text="Qtd:" styleClass="patient-history-label" />
+                                    <Spinner fx:id="spMatQuantidade" prefWidth="80.0" disable="true" />
+                                    <Button fx:id="btnAdicionarMaterial" onAction="#adicionarMaterial" text="Adicionar" styleClass="primary-button" disable="true" />
+                                </HBox>
+                                <TableView fx:id="tblMateriais" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="colMatNome" prefWidth="200.0" text="Material" />
+                                        <TableColumn fx:id="colMatQuantidade" prefWidth="80.0" text="Qtd" />
+                                        <TableColumn fx:id="colMatValorUnit" prefWidth="100.0" text="Valor Unit." />
+                                        <TableColumn fx:id="colMatTotal" prefWidth="100.0" text="Total" />
+                                    </columns>
+                                    <placeholder><Label text="Nenhum material registado." /></placeholder>
+                                </TableView>
+                            </VBox>
+                        </content>
+                    </Tab>
+
+                    <!-- TAB 5: PRESCRIÇÕES -->
+                    <Tab text="Prescrições">
+                        <content>
+                            <VBox spacing="14.0" style="-fx-padding: 14;">
+                                <Label text="Prescrições do Paciente" styleClass="section-title" style="-fx-font-size: 14px;" />
+                                <TableView fx:id="tblPrescricoes" styleClass="dashboard-table" prefHeight="150.0">
+                                    <columns>
+                                        <TableColumn fx:id="colPrescData" prefWidth="90.0" text="Data" />
+                                        <TableColumn fx:id="colPrescMedicamento" prefWidth="180.0" text="Medicamento" />
+                                        <TableColumn fx:id="colPrescPosologia" prefWidth="200.0" text="Posologia" />
+                                    </columns>
+                                    <placeholder><Label text="Nenhuma prescrição para este paciente." /></placeholder>
+                                </TableView>
+
+                                <Label text="Nova Prescrição" styleClass="section-title" style="-fx-font-size: 13px;" />
+                                <GridPane hgap="10.0" vgap="8.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints percentWidth="50.0" />
+                                        <ColumnConstraints percentWidth="50.0" />
+                                    </columnConstraints>
+                                    <children>
+                                        <VBox spacing="4.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                            <Label text="Medicamento:" styleClass="patient-history-label" />
+                                            <TextField fx:id="txtPrescMedicamento" promptText="Ex: Amoxicilina 875mg" styleClass="search-field" />
+                                        </VBox>
+                                        <VBox spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                            <Label text="Posologia:" styleClass="patient-history-label" />
+                                            <TextField fx:id="txtPrescPosologia" promptText="Ex: 1 comp. 12/12h" styleClass="search-field" />
+                                        </VBox>
+                                    </children>
+                                </GridPane>
+                                <TextField fx:id="txtPrescTempo" promptText="Duração do tratamento (Ex: 8 dias)..." styleClass="search-field" />
+                                <TextArea fx:id="txtPrescObservacoes" promptText="Observações..." prefHeight="60.0" wrapText="true" styleClass="search-field" />
+                                <HBox alignment="CENTER_RIGHT">
+                                    <Button onAction="#emitirPrescricaoAtendimento" text="Adicionar Prescrição" styleClass="primary-button" disable="true" />
+                                </HBox>
+                            </VBox>
+                        </content>
+                    </Tab>
+
+                    <!-- TAB 6: PLANO DE TRATAMENTO -->
+                    <Tab text="Plano de Tratamento">
+                        <content>
+                            <VBox spacing="14.0" style="-fx-padding: 14;">
+                                <Label text="Planos de Tratamento do Paciente" styleClass="section-title" style="-fx-font-size: 14px;" />
+                                <TableView fx:id="tblPlanosTratamento" styleClass="dashboard-table" prefHeight="150.0">
+                                    <columns>
+                                        <TableColumn fx:id="colPlanoData" prefWidth="90.0" text="Data Início" />
+                                        <TableColumn fx:id="colPlanoObjetivo" prefWidth="200.0" text="Objetivo" />
+                                        <TableColumn fx:id="colPlanoEstado" prefWidth="100.0" text="Estado" />
+                                        <TableColumn fx:id="colPlanoProgresso" prefWidth="150.0" text="Progresso" />
+                                    </columns>
+                                    <placeholder><Label text="Nenhum plano de tratamento." /></placeholder>
+                                </TableView>
+
+                                <Label text="Novo / Editar Plano" styleClass="section-title" style="-fx-font-size: 13px;" />
+                                <TextField fx:id="txtPlanoObjetivo" promptText="Objetivo do tratamento..." styleClass="search-field" />
+                                <TextArea fx:id="txtPlanoEtapas" promptText="Etapas do tratamento..." prefHeight="60.0" wrapText="true" styleClass="search-field" />
+                                <TextArea fx:id="txtPlanoProcedimentos" promptText="Procedimentos previstos..." prefHeight="60.0" wrapText="true" styleClass="search-field" />
+                                <HBox spacing="12.0">
+                                    <DatePicker fx:id="dpPlanoDataInicio" promptText="Data início" styleClass="search-field" HBox.hgrow="ALWAYS" />
+                                    <DatePicker fx:id="dpPlanoDataFim" promptText="Data fim" styleClass="search-field" HBox.hgrow="ALWAYS" />
+                                    <TextField fx:id="txtPlanoProgresso" promptText="Progresso (ex: 50%)" styleClass="search-field" HBox.hgrow="ALWAYS" />
+                                </HBox>
+                                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                                    <Button fx:id="btnPlanoNovo" onAction="#novoPlano" text="Novo Plano" styleClass="secondary-button" disable="true" />
+                                    <Button fx:id="btnPlanoSalvar" onAction="#salvarPlanoAtendimento" text="Guardar Plano" styleClass="primary-button" disable="true" />
+                                </HBox>
+                            </VBox>
+                        </content>
+                    </Tab>
+
+                </tabs>
+            </TabPane>
+        </items>
+    </SplitPane>
+</VBox>
