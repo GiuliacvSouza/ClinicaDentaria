@@ -75,6 +75,12 @@ public class PaymentController {
     private static final Locale LOCALE_PT = Locale.forLanguageTag("pt-PT");
     private static final DateTimeFormatter DATA_HORA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     private static final DateTimeFormatter DATA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final String MSG_IVA_ISENTO = "Isento / 0%";
+    private static final String MSG_IVA_PREFIXO = "IVA (";
+    private static final String MSG_IVA_SUFIXO = "%)";
+    private static final String MSG_SEM_FATURA = "-";
+    private static final String MSG_PRONTA_A_EMITIR = "Pronta a emitir";
+    private static final String MSG_DATA_INDISPONIVEL = "-";
 
     @Autowired private ConsultaService consultaService;
     @Autowired private AtendimentoService atendimentoService;
@@ -95,6 +101,10 @@ public class PaymentController {
     @FXML private Label dataEmissaoLabel;
     @FXML private VBox procedimentosContainer;
     @FXML private Label valorPagarLabel;
+    @FXML private Label valorBaseLabel;
+    @FXML private Label valorIvaLabel;
+    @FXML private Label taxaIvaDescLabel;
+    @FXML private VBox ivaDecomposicaoBox;
     @FXML private ComboBox<Seguro> seguroCombo;
     @FXML private ToggleButton numerarioBtn;
     @FXML private ToggleButton multibancoBtn;
@@ -340,13 +350,29 @@ public class PaymentController {
 
     private void preencherResumoFatura() {
         if (faturaAtual == null) {
-            estadoFaturaLabel.setText("Pronta a emitir");
-            dataEmissaoLabel.setText("-");
+            estadoFaturaLabel.setText(MSG_PRONTA_A_EMITIR);
+            dataEmissaoLabel.setText(MSG_DATA_INDISPONIVEL);
             return;
         }
 
-        estadoFaturaLabel.setText(faturaAtual.getEstado() == null ? "-" : formatarEstadoFatura(faturaAtual.getEstado()));
-        dataEmissaoLabel.setText(faturaAtual.getDataEmissao() == null ? "-" : faturaAtual.getDataEmissao().format(DATA_FORMATTER));
+        estadoFaturaLabel.setText(faturaAtual.getEstado() == null ? MSG_SEM_FATURA : formatarEstadoFatura(faturaAtual.getEstado()));
+        // Data de emissão da fatura: sempre que existir valor na entidade Fatura é exibido em PT-PT
+        dataEmissaoLabel.setText(formatarDataEmissao(faturaAtual.getDataEmissao()));
+    }
+
+    /**
+     * Formata a data de emissão para apresentação em PT-PT (dd/MM/yyyy).
+     * Caso a data seja nula, devolve um valor por defeito informativo.
+     */
+    private String formatarDataEmissao(LocalDate dataEmissao) {
+        if (dataEmissao == null) {
+            return MSG_DATA_INDISPONIVEL;
+        }
+        try {
+            return dataEmissao.format(DATA_FORMATTER);
+        } catch (RuntimeException ex) {
+            return MSG_DATA_INDISPONIVEL;
+        }
     }
 
     private void preencherProcedimentos() {
@@ -526,7 +552,96 @@ public class PaymentController {
     }
 
     private void atualizarTotais() {
-        valorPagarLabel.setText(formatarMoeda(obterValorAPagar()));
+        // Determinar valores a partir da fatura (se existir) ou calcular em tempo real
+        BigDecimal valorBase;
+        BigDecimal taxaIva;
+        BigDecimal valorIva;
+        BigDecimal valorFinal;
+
+        if (faturaAtual != null && faturaAtual.getValorBase() != null) {
+            valorBase  = faturaAtual.getValorBase() != null ? faturaAtual.getValorBase() : BigDecimal.ZERO;
+            taxaIva    = faturaAtual.getTaxaIva()   != null ? faturaAtual.getTaxaIva()   : BigDecimal.ZERO;
+            valorIva   = faturaAtual.getValorIva()  != null ? faturaAtual.getValorIva()  : BigDecimal.ZERO;
+            valorFinal = faturaAtual.getValorFinal() != null ? faturaAtual.getValorFinal() : valorBase.add(valorIva);
+        } else {
+            // Fatura ainda não emitida — calcular a partir dos procedimentos
+            valorBase  = calcularValorBase();
+            taxaIva    = calcularTaxaIvaMedia();
+            valorIva   = valorBase.multiply(taxaIva.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP))
+                                  .setScale(2, RoundingMode.HALF_UP);
+            valorFinal = valorBase.add(valorIva).setScale(2, RoundingMode.HALF_UP);
+        }
+
+        // Garante que os valores ficam normalizados com 2 casas decimais
+        valorBase  = valorBase.setScale(2, RoundingMode.HALF_UP);
+        taxaIva    = taxaIva.setScale(2, RoundingMode.HALF_UP);
+        valorIva   = valorIva.setScale(2, RoundingMode.HALF_UP);
+        valorFinal = valorFinal.setScale(2, RoundingMode.HALF_UP);
+
+        // Preencher labels de decomposição IVA (Valor base, Taxa de IVA, Valor de IVA, Valor Final)
+        if (valorBaseLabel != null) {
+            valorBaseLabel.setText(formatarMoeda(valorBase));
+        }
+
+        if (taxaIvaDescLabel != null) {
+            // Taxa de IVA com 2 casas: ex. "IVA (23,00%)", "IVA (0,00%)"
+            taxaIvaDescLabel.setText(formatarDescricaoTaxaIva(taxaIva));
+        }
+
+        if (valorIvaLabel != null) {
+            // Se IVA for 0%, mostrar "Isento / 0%" em vez de "EUR 0,00"
+            boolean isento = taxaIva == null || taxaIva.compareTo(BigDecimal.ZERO) == 0;
+            valorIvaLabel.setText(isento ? MSG_IVA_ISENTO : formatarMoeda(valorIva));
+        }
+
+        if (valorPagarLabel != null) {
+            valorPagarLabel.setText(formatarMoeda(valorFinal));
+        }
+    }
+
+    /**
+     * Devolve a descrição completa da linha de taxa de IVA, ex.: "IVA (23,00%)".
+     * Caso a taxa seja zero, devolve "IVA (0,00%)" (mantém consistência visual).
+     */
+    private String formatarDescricaoTaxaIva(BigDecimal taxaIva) {
+        if (taxaIva == null) {
+            taxaIva = BigDecimal.ZERO;
+        }
+        NumberFormat formatador = NumberFormat.getNumberInstance(LOCALE_PT);
+        formatador.setMinimumFractionDigits(2);
+        formatador.setMaximumFractionDigits(2);
+        return MSG_IVA_PREFIXO + formatador.format(taxaIva) + MSG_IVA_SUFIXO;
+    }
+
+    /** Valor base sem IVA, calculado a partir dos procedimentos do atendimento. */
+    private BigDecimal calcularValorBase() {
+        if (atendimentoSelecionado == null || atendimentoSelecionado.getProcedimentos() == null)
+            return BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal total = BigDecimal.ZERO;
+        for (AtendimentoProcedimento item : atendimentoSelecionado.getProcedimentos()) {
+            Procedimento proc = item.getProcedimento();
+            if (proc == null || proc.getValor() == null) continue;
+            int qty = item.getQuantidade() != null ? item.getQuantidade() : 1;
+            BigDecimal desc = item.getDesconto() != null ? item.getDesconto() : BigDecimal.ZERO;
+            BigDecimal subtotal = proc.getValor().multiply(BigDecimal.valueOf(qty));
+            BigDecimal base = subtotal.multiply(
+                    BigDecimal.ONE.subtract(desc.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)));
+            total = total.add(base);
+        }
+        return total.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    /** Taxa de IVA (usa a do primeiro procedimento, assumindu que é uniforme). */
+    private BigDecimal calcularTaxaIvaMedia() {
+        if (atendimentoSelecionado == null || atendimentoSelecionado.getProcedimentos() == null)
+            return BigDecimal.ZERO;
+        for (AtendimentoProcedimento item : atendimentoSelecionado.getProcedimentos()) {
+            Procedimento proc = item.getProcedimento();
+            if (proc != null && proc.getTaxaIva() != null)
+                return proc.getTaxaIva();
+        }
+        return BigDecimal.ZERO;
     }
 
     private void atualizarEstadoAcao() {
@@ -577,9 +692,13 @@ public class PaymentController {
         atendimentoSelecionado = null;
         faturaAtual = null;
         procedimentosContainer.getChildren().clear();
-        estadoFaturaLabel.setText("-");
-        dataEmissaoLabel.setText("-");
-        valorPagarLabel.setText(formatarMoeda(BigDecimal.ZERO));
+        estadoFaturaLabel.setText(MSG_SEM_FATURA);
+        dataEmissaoLabel.setText(MSG_DATA_INDISPONIVEL);
+        // Limpar decomposição IVA
+        if (valorBaseLabel   != null) valorBaseLabel.setText(MSG_SEM_FATURA);
+        if (taxaIvaDescLabel != null) taxaIvaDescLabel.setText(MSG_IVA_PREFIXO + MSG_SEM_FATURA + MSG_IVA_SUFIXO);
+        if (valorIvaLabel    != null) valorIvaLabel.setText(MSG_SEM_FATURA);
+        if (valorPagarLabel  != null) valorPagarLabel.setText(formatarMoeda(BigDecimal.ZERO));
         seguroCombo.getItems().clear();
         seguroCombo.getSelectionModel().clearSelection();
         seguroCombo.setDisable(true);

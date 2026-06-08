@@ -367,6 +367,40 @@
     -fx-font-size: 12px;
 }
 
+/* ─── DatePicker: sub-componentes ────────────────────────── */
+.nova-marcacao-date > .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 10 0 0 10;
+    -fx-padding: 0 8 0 12;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 12px;
+    -fx-text-fill: #151515;
+    -fx-prompt-text-fill: #b0b0b0;
+}
+
+.nova-marcacao-date > .arrow-button {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 0 10 10 0;
+    -fx-border-color: transparent;
+    -fx-padding: 0 10;
+    -fx-cursor: hand;
+}
+
+.nova-marcacao-date > .arrow-button:hover {
+    -fx-background-color: #e5e5e5;
+}
+
+.nova-marcacao-date > .arrow-button > .arrow {
+    -fx-background-color: #4c948c;
+}
+
+.nova-marcacao-date:focused,
+.nova-marcacao-date:showing {
+    -fx-border-color: #4c948c;
+    -fx-border-width: 1.5;
+}
+
 .nova-marcacao-combo .list-cell {
     -fx-font-family: "Poppins";
     -fx-font-size: 12px;

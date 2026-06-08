@@ -372,6 +372,11 @@
     -fx-border-color: #4c948c;
 }
 
+/* Espaçamento controlado entre Procedimentos e Seguro (evita gap exagerado) */
+.insurance-section {
+    -fx-padding: 4 0 0 0;
+}
+
 .payment-footer-card {
     -fx-background-color: linear-gradient(to bottom, #f7fbfa 0%, #eff6f4 100%);
     -fx-background-radius: 18;
@@ -396,6 +401,23 @@
     -fx-font-family: "Poppins SemiBold";
     -fx-font-size: 24px;
     -fx-text-fill: #2e7f77;
+}
+
+/* ─── Decomposição IVA ───────────────────────────────────── */
+.iva-row {
+    -fx-padding: 4 12;
+}
+
+.iva-label {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 12px;
+    -fx-text-fill: #728481;
+}
+
+.iva-value {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 12px;
+    -fx-text-fill: #305650;
 }
 
 /* Scrollbar global: visual minimalista e clean */
