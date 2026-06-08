@@ -33,8 +33,24 @@ public class PedidoCompraService {
 
     // ─── Listagem ─────────────────────────────────────────────────────────────
 
+    /**
+     * Lista todos os pedidos com fornecedor, assistente e itens pré-carregados
+     * para evitar LazyInitializationException no FX thread.
+     */
+    @Transactional(readOnly = true)
     public List<PedidoCompra> listarTodos() {
-        return pedidoRepo.findAllOrderByDataDesc();
+        List<PedidoCompra> pedidos = pedidoRepo.findAllOrderByDataDesc();
+        // Forçar inicialização da colecção de itens (e do material de cada item)
+        // dentro da transação activa para evitar LazyInitializationException
+        for (PedidoCompra p : pedidos) {
+            for (ItemPedido item : p.getItens()) {
+                // aceder ao material para inicializar o proxy
+                if (item.getIdMaterial() != null) {
+                    item.getIdMaterial().getNome();
+                }
+            }
+        }
+        return pedidos;
     }
 
     public List<PedidoCompra> listarPorEstado(EstadoPedidoCompra estado) {

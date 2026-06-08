@@ -15,7 +15,11 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
     boolean existsByCodigoInternoIgnoreCase(String codigoInterno);
     boolean existsByCodigoInternoIgnoreCaseAndIdNot(String codigoInterno, Integer id);
 
-    // materiais abaixo do stock mínimo (RF34)
-    @Query("SELECT m FROM Material m WHERE m.quantidadeAtual <= m.quantidadeMinima")
+    // Carrega todos os materiais com o fornecedor num único query (evita LazyInitializationException)
+    @Query("SELECT m FROM Material m LEFT JOIN FETCH m.idFornecedor ORDER BY m.nome ASC NULLS LAST")
+    List<Material> findAllWithFornecedor();
+
+    // materiais abaixo do stock mínimo (RF34) — com fornecedor para os alertas
+    @Query("SELECT m FROM Material m LEFT JOIN FETCH m.idFornecedor WHERE m.quantidadeAtual <= m.quantidadeMinima")
     List<Material> findAbaixoStockMinimo();
 }

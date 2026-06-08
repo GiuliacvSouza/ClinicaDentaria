@@ -15,6 +15,13 @@ public interface PedidoCompraRepository extends JpaRepository<PedidoCompra, Inte
     List<PedidoCompra> findByIdAssistente_Id(Integer idAssistente);
     List<PedidoCompra> findByEstado(EstadoPedidoCompra estado);
 
-    @Query("SELECT p FROM PedidoCompra p ORDER BY p.dataPedido DESC NULLS LAST")
+    // JOIN FETCH do fornecedor e assistente para evitar LazyInitializationException no FX thread.
+    // Os itens NÃO são carregados aqui (evita "multiple bags fetch" do Hibernate).
+    // O PedidoCompra.getItens() é acedido via a colecção já mapeada no JPA context.
+    @Query("SELECT DISTINCT p FROM PedidoCompra p " +
+           "LEFT JOIN FETCH p.idFornecedor " +
+           "LEFT JOIN FETCH p.idAssistente a " +
+           "LEFT JOIN FETCH a.utilizador " +
+           "ORDER BY p.dataPedido DESC NULLS LAST")
     List<PedidoCompra> findAllOrderByDataDesc();
 }

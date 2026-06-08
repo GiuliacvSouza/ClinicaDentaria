@@ -1,6 +1,6 @@
 package controller.assistente;
 
-import bll.MaterialService;
+import dal.MaterialRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class AlertasController extends BaseAssistenteController {
 
     // ─── Estado ───────────────────────────────────────────────────────────────
 
-    @Autowired private MaterialService materialService;
+    @Autowired private MaterialRepository materialRepository;
 
     /** null = todos, "baixo", "critico" */
     private String filtroAtual = null;
@@ -68,16 +69,19 @@ public class AlertasController extends BaseAssistenteController {
 
     private void carregarAlertas() {
         try {
-            todosOsAlertas = materialService.listarTodos().stream()
-                    .filter(m -> m.getQuantidadeAtual() != null
-                            && m.getQuantidadeMinima() != null
-                            && m.getQuantidadeAtual() <= m.getQuantidadeMinima())
-                    .sorted(java.util.Comparator.comparingInt(m ->
+            // Usa o repositório directamente para obter apenas materiais abaixo do mínimo
+            // com JOIN FETCH do fornecedor (evita LazyInitializationException)
+            todosOsAlertas = materialRepository.findAbaixoStockMinimo().stream()
+                    .sorted(Comparator.comparingInt(m ->
                             m.getQuantidadeAtual() != null ? m.getQuantidadeAtual() : 0))
                     .collect(Collectors.toList());
 
-            long baixo   = todosOsAlertas.stream().filter(m -> m.getQuantidadeAtual() != null && m.getQuantidadeAtual() > 0).count();
-            long critico = todosOsAlertas.stream().filter(m -> m.getQuantidadeAtual() != null && m.getQuantidadeAtual() == 0).count();
+            long baixo   = todosOsAlertas.stream()
+                    .filter(m -> m.getQuantidadeAtual() != null && m.getQuantidadeAtual() > 0)
+                    .count();
+            long critico = todosOsAlertas.stream()
+                    .filter(m -> m.getQuantidadeAtual() == null || m.getQuantidadeAtual() == 0)
+                    .count();
 
             if (lblTotalAlertas != null)  lblTotalAlertas.setText(String.valueOf(todosOsAlertas.size()));
             if (lblStockBaixo != null)    lblStockBaixo.setText(String.valueOf(baixo));
@@ -86,14 +90,17 @@ public class AlertasController extends BaseAssistenteController {
             renderizarAlertas();
 
         } catch (Exception e) {
-            containerAlertas.getChildren().clear();
-            Label erro = new Label("Não foi possível carregar os alertas: " + e.getMessage());
-            erro.getStyleClass().add("section-caption");
-            containerAlertas.getChildren().add(erro);
+            if (containerAlertas != null) {
+                containerAlertas.getChildren().clear();
+                Label erro = new Label("Não foi possível carregar os alertas: " + e.getMessage());
+                erro.getStyleClass().add("section-caption");
+                containerAlertas.getChildren().add(erro);
+            }
         }
     }
 
     private void renderizarAlertas() {
+        if (containerAlertas == null) return;
         containerAlertas.getChildren().clear();
 
         if (todosOsAlertas == null) return;
@@ -103,7 +110,7 @@ public class AlertasController extends BaseAssistenteController {
                     .filter(m -> m.getQuantidadeAtual() != null && m.getQuantidadeAtual() > 0)
                     .toList();
             case "critico" -> todosOsAlertas.stream()
-                    .filter(m -> m.getQuantidadeAtual() != null && m.getQuantidadeAtual() == 0)
+                    .filter(m -> m.getQuantidadeAtual() == null || m.getQuantidadeAtual() == 0)
                     .toList();
             default        -> todosOsAlertas;
         };
@@ -123,7 +130,7 @@ public class AlertasController extends BaseAssistenteController {
     // ─── Card builder ─────────────────────────────────────────────────────────
 
     private VBox criarCardAlerta(Material m) {
-        boolean critico = m.getQuantidadeAtual() != null && m.getQuantidadeAtual() == 0;
+        boolean critico = m.getQuantidadeAtual() == null || m.getQuantidadeAtual() == 0;
 
         VBox card = new VBox(6);
         card.getStyleClass().add(critico ? "alerta-card-critico" : "alerta-card");
@@ -143,19 +150,21 @@ public class AlertasController extends BaseAssistenteController {
         descricao.getStyleClass().add("alerta-descricao");
         descricao.setWrapText(true);
 
-        // Linha de ação sugerida
         Label acao = new Label(critico
                 ? "Ação sugerida: criar pedido de compra urgente."
                 : "Ação sugerida: verificar stock e ponderar novo pedido.");
         acao.getStyleClass().add("info-meta");
         acao.setWrapText(true);
 
-        // Linha com nome do fornecedor (se disponível)
-        if (m.getIdFornecedor() != null && m.getIdFornecedor().getNome() != null) {
-            Label fornecedor = new Label("Fornecedor: " + m.getIdFornecedor().getNome());
-            fornecedor.getStyleClass().add("info-meta");
-            card.getChildren().addAll(nome, descricao, acao, fornecedor);
-        } else {
+        try {
+            if (m.getIdFornecedor() != null && m.getIdFornecedor().getNome() != null) {
+                Label fornecedor = new Label("Fornecedor: " + m.getIdFornecedor().getNome());
+                fornecedor.getStyleClass().add("info-meta");
+                card.getChildren().addAll(nome, descricao, acao, fornecedor);
+            } else {
+                card.getChildren().addAll(nome, descricao, acao);
+            }
+        } catch (Exception e) {
             card.getChildren().addAll(nome, descricao, acao);
         }
 

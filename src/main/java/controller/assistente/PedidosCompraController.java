@@ -1,7 +1,6 @@
 package controller.assistente;
 
 import app.SceneManager;
-import bll.ItemPedidoService;
 import bll.PedidoCompraService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -59,7 +58,6 @@ public class PedidosCompraController extends BaseAssistenteController {
     // ─── Dependências ─────────────────────────────────────────────────────────
 
     @Autowired private PedidoCompraService pedidoCompraService;
-    @Autowired private ItemPedidoService   itemPedidoService;
 
     // ─── Estado ───────────────────────────────────────────────────────────────
 
@@ -126,28 +124,21 @@ public class PedidosCompraController extends BaseAssistenteController {
             }
         });
 
-        // Total de itens
+        // Total de itens — usa a coleção já carregada via JOIN FETCH
         colTotalItens.setCellValueFactory(c -> {
             try {
-                if (c.getValue().getId() == null) return new SimpleStringProperty("0");
-                int n = itemPedidoService.listarTodos().stream()
-                        .filter(i -> i.getIdPedido() != null
-                                && c.getValue().getId().equals(i.getIdPedido().getId()))
-                        .mapToInt(i -> 1).sum();
+                int n = c.getValue().getItens() != null ? c.getValue().getItens().size() : 0;
                 return new SimpleStringProperty(String.valueOf(n));
             } catch (Exception e) {
                 return new SimpleStringProperty("-");
             }
         });
 
-        // Valor total
+        // Valor total — usa a coleção já carregada via JOIN FETCH
         colValorTotal.setCellValueFactory(c -> {
             try {
-                if (c.getValue().getId() == null) return new SimpleStringProperty("-");
-                List<ItemPedido> itens = itemPedidoService.listarTodos().stream()
-                        .filter(i -> i.getIdPedido() != null
-                                && c.getValue().getId().equals(i.getIdPedido().getId()))
-                        .toList();
+                List<ItemPedido> itens = c.getValue().getItens();
+                if (itens == null) return new SimpleStringProperty("0,00 €");
                 BigDecimal total = pedidoCompraService.calcularTotal(itens);
                 return new SimpleStringProperty(String.format("%.2f €", total));
             } catch (Exception e) {

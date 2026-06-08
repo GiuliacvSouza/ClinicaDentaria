@@ -29,7 +29,7 @@ public class MaterialService {
     }
 
     public List<Material> listarTodos() {
-        return repository.findAll();
+        return repository.findAllWithFornecedor();
     }
 
     public Material buscarPorId(Integer id) {
