@@ -353,27 +353,61 @@
     -fx-border-color: transparent transparent #dce7e4 transparent;
 }
 
-.dashboard-table .label {
+/* Cabeçalho alinhado à esquerda por defeito, igual às células */
+.dashboard-table .column-header .label {
     -fx-font-family: "Poppins Medium";
     -fx-font-size: 11px;
     -fx-text-fill: #58706b;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 0 8;
+}
+
+/* Cabeçalho centrado para colunas numéricas/estado */
+.dashboard-table .col-center .label {
+    -fx-alignment: CENTER;
+}
+
+/* Cabeçalho alinhado à direita para colunas monetárias */
+.dashboard-table .col-right .label {
+    -fx-alignment: CENTER-RIGHT;
 }
 
 .dashboard-table .table-row-cell {
     -fx-background-color: #ffffff;
     -fx-border-color: transparent transparent #edf2f1 transparent;
+    -fx-pref-height: 48;
+}
+
+.dashboard-table .table-row-cell:odd {
+    -fx-background-color: #fafcfb;
 }
 
 .dashboard-table .table-row-cell:selected {
     -fx-background-color: #e5f2ef;
 }
 
+.dashboard-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: #17312e;
+}
+
+/* Célula base: textos à esquerda com padding consistente */
 .dashboard-table .table-cell {
     -fx-font-family: "Poppins";
     -fx-font-size: 12px;
     -fx-text-fill: #17312e;
     -fx-border-color: transparent;
     -fx-alignment: CENTER-LEFT;
+    -fx-padding: 0 8;
+}
+
+/* Coluna centrada (numérica, estado, badge) */
+.dashboard-table .table-cell.col-center {
+    -fx-alignment: CENTER;
+}
+
+/* Coluna alinhada à direita (valores monetários) */
+.dashboard-table .table-cell.col-right {
+    -fx-alignment: CENTER-RIGHT;
 }
 
 /* ─── Itens de lista (consultas do dia) ──────────────────── */

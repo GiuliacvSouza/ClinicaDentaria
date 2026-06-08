@@ -94,16 +94,24 @@
 
             <TableView fx:id="tblMateriais" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="colNome"        prefWidth="220.0" text="Nome" />
-                    <TableColumn fx:id="colCategoria"   prefWidth="160.0" text="Categoria" />
-                    <TableColumn fx:id="colQuantidade"  prefWidth="120.0" text="Quantidade" />
-                    <TableColumn fx:id="colMinimo"      prefWidth="120.0" text="Stock Minimo" />
-                    <TableColumn fx:id="colUnidade"     prefWidth="100.0" text="Unidade" />
-                    <TableColumn fx:id="colEstado"      prefWidth="120.0" text="Estado" />
-                    <TableColumn fx:id="colAcoes"       prefWidth="160.0" text="Acoes" />
+                    <TableColumn fx:id="colNome"       prefWidth="260.0" text="Nome" />
+                    <TableColumn fx:id="colCategoria"  prefWidth="200.0" text="Descrição" />
+                    <TableColumn fx:id="colQuantidade" prefWidth="110.0" text="Qtd. Atual"
+                                 styleClass="col-center" />
+                    <TableColumn fx:id="colMinimo"     prefWidth="110.0" text="Qtd. Mínima"
+                                 styleClass="col-center" />
+                    <TableColumn fx:id="colUnidade"    prefWidth="100.0" text="Unidade"
+                                 styleClass="col-center" />
+                    <TableColumn fx:id="colEstado"     prefWidth="110.0" text="Estado"
+                                 styleClass="col-center" />
+                    <TableColumn fx:id="colAcoes"      prefWidth="160.0" text="Ação"
+                                 styleClass="col-center" />
                 </columns>
                 <placeholder>
-                    <Label text="Nenhum material encontrado." />
+                    <VBox alignment="CENTER" spacing="8.0" style="-fx-padding: 48 0;">
+                        <Label text="Nenhum material encontrado." styleClass="empty-table-title" />
+                        <Label text="Adicione materiais ao catálogo para os ver aqui." styleClass="empty-table-subtitle" />
+                    </VBox>
                 </placeholder>
             </TableView>
         </VBox>

@@ -96,17 +96,25 @@
 
             <TableView fx:id="tblPedidos" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="colNumero"       prefWidth="80.0"  text="Nº" />
-                    <TableColumn fx:id="colFornecedor"   prefWidth="200.0" text="Fornecedor" />
-                    <TableColumn fx:id="colDataPedido"   prefWidth="120.0" text="Data" />
-                    <TableColumn fx:id="colAssistente"   prefWidth="160.0" text="Responsável" />
-                    <TableColumn fx:id="colEstado"       prefWidth="120.0" text="Estado" />
-                    <TableColumn fx:id="colTotalItens"   prefWidth="80.0"  text="Itens" />
-                    <TableColumn fx:id="colValorTotal"   prefWidth="110.0" text="Total" />
-                    <TableColumn fx:id="colAcoes"        prefWidth="220.0" text="Ações" />
+                    <TableColumn fx:id="colNumero"     prefWidth="70.0"  text="Nº"
+                                 styleClass="col-center" />
+                    <TableColumn fx:id="colFornecedor" prefWidth="210.0" text="Fornecedor" />
+                    <TableColumn fx:id="colDataPedido" prefWidth="110.0" text="Data"
+                                 styleClass="col-center" />
+                    <TableColumn fx:id="colAssistente" prefWidth="160.0" text="Responsável" />
+                    <TableColumn fx:id="colEstado"     prefWidth="120.0" text="Estado"
+                                 styleClass="col-center" />
+                    <TableColumn fx:id="colTotalItens" prefWidth="70.0"  text="Itens"
+                                 styleClass="col-center" />
+                    <TableColumn fx:id="colValorTotal" prefWidth="110.0" text="Total"
+                                 styleClass="col-right" />
+                    <TableColumn fx:id="colAcoes"      prefWidth="230.0" text="Ações" />
                 </columns>
                 <placeholder>
-                    <Label styleClass="section-caption" text="Nenhum pedido encontrado." />
+                    <VBox alignment="CENTER" spacing="8.0" style="-fx-padding: 48 0;">
+                        <Label text="Nenhum pedido encontrado." styleClass="empty-table-title" />
+                        <Label text="Crie um novo pedido de compra para começar." styleClass="empty-table-subtitle" />
+                    </VBox>
                 </placeholder>
             </TableView>
         </VBox>

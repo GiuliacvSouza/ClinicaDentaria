@@ -101,12 +101,15 @@
 
             <TableView fx:id="tblMovimentacoes" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="colData"        prefWidth="110.0" text="Data" />
-                    <TableColumn fx:id="colMaterial"    prefWidth="200.0" text="Material" />
-                    <TableColumn fx:id="colTipo"        prefWidth="100.0" text="Tipo" />
-                    <TableColumn fx:id="colQuantidade"  prefWidth="100.0" text="Quantidade" />
+                    <TableColumn fx:id="colData"        prefWidth="110.0" text="Data"
+                                 styleClass="col-center" />
+                    <TableColumn fx:id="colMaterial"    prefWidth="210.0" text="Material" />
+                    <TableColumn fx:id="colTipo"        prefWidth="110.0" text="Tipo"
+                                 styleClass="col-center" />
+                    <TableColumn fx:id="colQuantidade"  prefWidth="100.0" text="Quantidade"
+                                 styleClass="col-center" />
                     <TableColumn fx:id="colMotivo"      prefWidth="220.0" text="Motivo" />
-                    <TableColumn fx:id="colResponsavel" prefWidth="160.0" text="Responsável" />
+                    <TableColumn fx:id="colResponsavel" prefWidth="170.0" text="Responsável" />
                     <TableColumn fx:id="colObservacoes" prefWidth="220.0" text="Observação" />
                 </columns>
                 <placeholder>

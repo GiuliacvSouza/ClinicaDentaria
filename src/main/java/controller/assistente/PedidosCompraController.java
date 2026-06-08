@@ -80,6 +80,13 @@ public class PedidosCompraController extends BaseAssistenteController {
     // ─── Tabela ───────────────────────────────────────────────────────────────
 
     private void configurarTabela() {
+        // Alinhamento centrado/direito nas colunas adequadas
+        colNumero.setStyle("-fx-alignment: CENTER;");
+        colDataPedido.setStyle("-fx-alignment: CENTER;");
+        colEstado.setStyle("-fx-alignment: CENTER;");
+        colTotalItens.setStyle("-fx-alignment: CENTER;");
+        colValorTotal.setStyle("-fx-alignment: CENTER-RIGHT;");
+
         colNumero.setCellValueFactory(c ->
                 new SimpleStringProperty(c.getValue().getId() != null ? "#" + c.getValue().getId() : "-"));
 
@@ -120,6 +127,7 @@ public class PedidosCompraController extends BaseAssistenteController {
                 Label badge = new Label(textoEstado(estado));
                 badge.getStyleClass().add(classeEstado(estado));
                 setGraphic(badge);
+                setAlignment(javafx.geometry.Pos.CENTER);
                 setText(null);
             }
         });

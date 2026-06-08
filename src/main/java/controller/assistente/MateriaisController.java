@@ -71,6 +71,13 @@ public class MateriaisController extends BaseAssistenteController {
     }
 
     private void configurarTabela() {
+        // Alinhamento das colunas: cabeçalho + célula via setStyle na coluna
+        // (o style inline numa TableColumn aplica-se ao column-header no FXML;
+        //  aqui garantimos também o alinhamento da célula via CellFactory base)
+        alinharColunaCentro(colQuantidade);
+        alinharColunaCentro(colMinimo);
+        alinharColunaCentro(colUnidade);
+
         colNome.setCellValueFactory(c -> new SimpleStringProperty(
                 c.getValue().getNome() != null ? c.getValue().getNome() : "-"));
 
@@ -78,10 +85,12 @@ public class MateriaisController extends BaseAssistenteController {
                 c.getValue().getDescricao() != null ? c.getValue().getDescricao() : "-"));
 
         colQuantidade.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getQuantidadeAtual() != null ? String.valueOf(c.getValue().getQuantidadeAtual()) : "0"));
+                c.getValue().getQuantidadeAtual() != null
+                        ? String.valueOf(c.getValue().getQuantidadeAtual()) : "0"));
 
         colMinimo.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getQuantidadeMinima() != null ? String.valueOf(c.getValue().getQuantidadeMinima()) : "0"));
+                c.getValue().getQuantidadeMinima() != null
+                        ? String.valueOf(c.getValue().getQuantidadeMinima()) : "0"));
 
         colUnidade.setCellValueFactory(c -> new SimpleStringProperty(
                 c.getValue().getUnidadeMedida() != null ? c.getValue().getUnidadeMedida() : "-"));
@@ -92,7 +101,7 @@ public class MateriaisController extends BaseAssistenteController {
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null); return;
+                    setGraphic(null); setText(null); return;
                 }
                 Material m = getTableRow().getItem();
                 boolean critico = m.getQuantidadeAtual() != null && m.getQuantidadeAtual() == 0;
@@ -100,9 +109,10 @@ public class MateriaisController extends BaseAssistenteController {
                         && m.getQuantidadeMinima() != null
                         && m.getQuantidadeAtual() <= m.getQuantidadeMinima();
 
-                Label badge = new Label(critico ? "Critico" : baixo ? "Baixo" : "OK");
+                Label badge = new Label(critico ? "Crítico" : baixo ? "Baixo" : "OK");
                 badge.getStyleClass().add(critico ? "badge-critico" : baixo ? "badge-baixo" : "badge-ok");
                 setGraphic(badge);
+                setAlignment(javafx.geometry.Pos.CENTER);
                 setText(null);
             }
         });
@@ -120,9 +130,15 @@ public class MateriaisController extends BaseAssistenteController {
                     try { abrirMovimentacoes(); } catch (Exception ex) { ex.printStackTrace(); }
                 });
                 setGraphic(btnMovimentacao);
+                setAlignment(javafx.geometry.Pos.CENTER);
                 setText(null);
             }
         });
+    }
+
+    /** Garante alinhamento centrado no cabeçalho e nas células de uma coluna. */
+    private <T> void alinharColunaCentro(TableColumn<Material, T> col) {
+        col.setStyle("-fx-alignment: CENTER;");
     }
 
     // ─── Filtros ──────────────────────────────────────────────────────────────

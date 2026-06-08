@@ -100,6 +100,11 @@ public class MovimentacoesStockController extends BaseAssistenteController {
     // ─── Tabela ───────────────────────────────────────────────────────────────
 
     private void configurarTabela() {
+        // Alinhamento centrado nas colunas adequadas (cabeçalho + célula)
+        colData.setStyle("-fx-alignment: CENTER;");
+        colTipo.setStyle("-fx-alignment: CENTER;");
+        colQuantidade.setStyle("-fx-alignment: CENTER;");
+
         colData.setCellValueFactory(c -> new SimpleStringProperty(
                 c.getValue().getData() != null ? c.getValue().getData().format(DATA_FMT) : "-"));
 
@@ -125,6 +130,7 @@ public class MovimentacoesStockController extends BaseAssistenteController {
                 Label badge = new Label(MovimentacaoEstoqueService.textoTipo(tipo));
                 badge.getStyleClass().add(MovimentacaoEstoqueService.classeTipoBadge(tipo));
                 setGraphic(badge);
+                setAlignment(javafx.geometry.Pos.CENTER);
                 setText(null);
             }
         });

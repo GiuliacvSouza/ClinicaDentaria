@@ -86,15 +86,16 @@
 
             <TableView fx:id="tblFornecedores" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="colNome"     prefWidth="240.0" text="Nome" />
-                    <TableColumn fx:id="colNif"      prefWidth="120.0" text="NIF" />
-                    <TableColumn fx:id="colEmail"    prefWidth="200.0" text="Email" />
-                    <TableColumn fx:id="colTelefone" prefWidth="140.0" text="Telefone" />
-                    <TableColumn fx:id="colCategoria" prefWidth="160.0" text="Categoria" />
-                    <TableColumn fx:id="colAcoes"    prefWidth="160.0" text="Acoes" />
+                    <TableColumn fx:id="colNome"     prefWidth="340.0" text="Nome" />
+                    <TableColumn fx:id="colEmail"    prefWidth="300.0" text="Email" />
+                    <TableColumn fx:id="colTelefone" prefWidth="200.0" text="Telefone"
+                                 styleClass="col-center" />
                 </columns>
                 <placeholder>
-                    <Label text="Nenhum fornecedor encontrado." />
+                    <VBox alignment="CENTER" spacing="8.0" style="-fx-padding: 48 0;">
+                        <Label text="Nenhum fornecedor encontrado." styleClass="empty-table-title" />
+                        <Label text="Os fornecedores registados aparecerão aqui." styleClass="empty-table-subtitle" />
+                    </VBox>
                 </placeholder>
             </TableView>
         </VBox>

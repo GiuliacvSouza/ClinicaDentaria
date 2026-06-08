@@ -6,9 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -26,13 +24,11 @@ public class FornecedoresController extends BaseAssistenteController {
 
     @FXML private TextField  txtPesquisa;
     @FXML private Label      lblTotalFornecedores;
-    @FXML private TableView<Fornecedor>          tblFornecedores;
+
+    @FXML private TableView<Fornecedor>           tblFornecedores;
     @FXML private TableColumn<Fornecedor, String> colNome;
-    @FXML private TableColumn<Fornecedor, String> colNif;
     @FXML private TableColumn<Fornecedor, String> colEmail;
     @FXML private TableColumn<Fornecedor, String> colTelefone;
-    @FXML private TableColumn<Fornecedor, String> colCategoria;
-    @FXML private TableColumn<Fornecedor, String> colAcoes;
 
     // ─── Estado ───────────────────────────────────────────────────────────────
 
@@ -48,10 +44,11 @@ public class FornecedoresController extends BaseAssistenteController {
         configurarTabela();
         carregarFornecedores();
 
-        if (txtPesquisa != null) {
+        if (txtPesquisa != null)
             txtPesquisa.textProperty().addListener((obs, o, n) -> aplicarFiltros());
-        }
     }
+
+    // ─── Tabela ───────────────────────────────────────────────────────────────
 
     private void configurarTabela() {
         colNome.setCellValueFactory(c -> {
@@ -62,32 +59,13 @@ public class FornecedoresController extends BaseAssistenteController {
             return new SimpleStringProperty(nome.isBlank() ? "-" : nome.trim());
         });
 
-        // Fornecedor ainda não tem campo NIF no modelo
-        colNif.setCellValueFactory(c -> new SimpleStringProperty("-"));
-
         colEmail.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getEmail() != null ? c.getValue().getEmail() : "-"));
+                c.getValue().getEmail() != null && !c.getValue().getEmail().isBlank()
+                        ? c.getValue().getEmail() : "-"));
 
         colTelefone.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getTelefone() != null ? c.getValue().getTelefone() : "-"));
-
-        // Fornecedor não tem categoria no modelo atual
-        colCategoria.setCellValueFactory(c -> new SimpleStringProperty("-"));
-
-        colAcoes.setCellValueFactory(c -> new SimpleStringProperty(""));
-        colAcoes.setCellFactory(col -> new TableCell<>() {
-            private final Button btnVer = new Button("Ver pormenores");
-            { btnVer.getStyleClass().add("table-action-button"); }
-
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) { setGraphic(null); return; }
-                btnVer.setOnAction(e -> mostrarDetalhes(getIndex()));
-                setGraphic(btnVer);
-                setText(null);
-            }
-        });
+                c.getValue().getTelefone() != null && !c.getValue().getTelefone().isBlank()
+                        ? c.getValue().getTelefone() : "-"));
     }
 
     // ─── Carregamento ─────────────────────────────────────────────────────────
@@ -102,6 +80,8 @@ public class FornecedoresController extends BaseAssistenteController {
             tblFornecedores.setPlaceholder(new Label("Não foi possível carregar os fornecedores."));
         }
     }
+
+    // ─── Filtros ──────────────────────────────────────────────────────────────
 
     private void aplicarFiltros() {
         if (fornecedoresFiltrados == null) return;
@@ -119,20 +99,12 @@ public class FornecedoresController extends BaseAssistenteController {
         atualizarContador();
     }
 
+    // ─── Utilitários ──────────────────────────────────────────────────────────
+
     private void atualizarContador() {
         int total = fornecedoresFiltrados != null ? fornecedoresFiltrados.size()
                 : (todosFornecedores != null ? todosFornecedores.size() : 0);
-        if (lblTotalFornecedores != null) lblTotalFornecedores.setText(total + " fornecedores");
-    }
-
-    private void mostrarDetalhes(int index) {
-        if (index < 0 || index >= tblFornecedores.getItems().size()) return;
-        Fornecedor f = tblFornecedores.getItems().get(index);
-        javafx.scene.control.Alert info = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        info.setTitle("Fornecedor");
-        info.setHeaderText(f.getNome() != null ? f.getNome() : "-");
-        info.setContentText("Email: " + (f.getEmail() != null ? f.getEmail() : "-")
-                + "\nTelefone: " + (f.getTelefone() != null ? f.getTelefone() : "-"));
-        info.showAndWait();
+        if (lblTotalFornecedores != null)
+            lblTotalFornecedores.setText(total + (total == 1 ? " fornecedor" : " fornecedores"));
     }
 }
