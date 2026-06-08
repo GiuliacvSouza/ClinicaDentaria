@@ -1,25 +1,31 @@
 package controller.administrador;
 
 import bll.AuditoriaService;
+import bll.ConsultaService;
+import bll.DentistaIndisponibilidadeService;
 import bll.DentistaService;
 import bll.UtilizadorService;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import model.Dentista;
+import model.DentistaIndisponibilidade;
 import model.Utilizador;
+import model.enums.TipoIndisponibilidade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,7 +33,6 @@ import java.util.stream.Collectors;
 public class AgendaClinicaController extends BaseAdministradorController {
 
     private static final String[] DIAS = {"Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"};
-    private static final String[] DIAS_FULL = {"Segunda", "Terca", "Quarta", "Quinta", "Sexta", "Sabado", "Domingo"};
 
     @FXML private TextField txtPesquisaDentista;
     @FXML private VBox containerDentistas;
@@ -37,16 +42,17 @@ public class AgendaClinicaController extends BaseAdministradorController {
     @FXML private HBox containerDias;
     @FXML private TextField txtEntrada;
     @FXML private TextField txtSaida;
-    @FXML private VBox containerFerias;
+    @FXML private VBox containerIndisponibilidades;
 
     @Autowired private DentistaService dentistaService;
     @Autowired private UtilizadorService utilizadorService;
     @Autowired private AuditoriaService auditoriaService;
+    @Autowired private DentistaIndisponibilidadeService indisponibilidadeService;
+    @Autowired private ConsultaService consultaService;
 
     private List<Dentista> dentistas;
     private Dentista dentistaSelecionado;
     private final boolean[] diasSelecionados = new boolean[7];
-    private final boolean[] feriasAdicionadas = new boolean[7];
 
     @Override
     protected void inicializarEcra() {
@@ -162,12 +168,11 @@ public class AgendaClinicaController extends BaseAdministradorController {
             txtSaida.setText(dentistaSelecionado.getHorarioSaida().toString().substring(0, 5));
         }
 
-        // Marcar dias (padrao: Seg-Sex)
         for (int i = 0; i < 7; i++) {
             diasSelecionados[i] = i < 5;
         }
         reconstruirDias();
-        renderizarFerias();
+        renderizarIndisponibilidades();
     }
 
     private void reconstruirDias() {
@@ -191,34 +196,195 @@ public class AgendaClinicaController extends BaseAdministradorController {
         }
     }
 
-    private void renderizarFerias() {
-        containerFerias.getChildren().clear();
-        boolean temFerias = false;
-        for (int i = 0; i < DIAS_FULL.length; i++) {
-            if (feriasAdicionadas[i]) {
-                temFerias = true;
-                HBox linha = new HBox(10);
-                linha.setAlignment(Pos.CENTER_LEFT);
-                linha.getStyleClass().add("info-item");
+    private void renderizarIndisponibilidades() {
+        containerIndisponibilidades.getChildren().clear();
+        if (dentistaSelecionado == null) return;
 
-                Label lbl = new Label("Férias: " + DIAS_FULL[i]);
-                lbl.getStyleClass().add("info-title");
+        try {
+            List<DentistaIndisponibilidade> lista = indisponibilidadeService
+                    .listarPorDentista(dentistaSelecionado.getId());
 
-                linha.getChildren().add(lbl);
-                containerFerias.getChildren().add(linha);
+            if (lista.isEmpty()) {
+                Label vazio = new Label("Sem indisponibilidades registadas.");
+                vazio.getStyleClass().add("section-caption");
+                containerIndisponibilidades.getChildren().add(vazio);
+                return;
             }
+
+            for (DentistaIndisponibilidade ind : lista) {
+                VBox card = new VBox(4);
+                card.getStyleClass().add("info-item");
+                card.setPadding(new Insets(8));
+
+                Label tipoLabel = new Label(tipoDescricao(ind.getTipo()));
+                tipoLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #c62828;");
+
+                String descricao;
+                switch (ind.getTipo()) {
+                    case DIA_COMPLETO:
+                        descricao = ind.getDataInicio().toString();
+                        break;
+                    case INTERVALO_HORAS:
+                        descricao = ind.getDataInicio() + " das " + ind.getHoraInicio() + " às " + ind.getHoraFim();
+                        break;
+                    case PERIODO:
+                        descricao = ind.getDataInicio() + " a " + ind.getDataFim();
+                        break;
+                    default:
+                        descricao = "";
+                }
+
+                Label detalhe = new Label(descricao);
+                detalhe.getStyleClass().add("info-title");
+
+                String motivoStr = ind.getMotivo() != null ? " - " + ind.getMotivo() : "";
+                Label motivo = new Label(motivoStr);
+                motivo.setStyle("-fx-text-fill: #666; -fx-font-size: 11;");
+
+                Button btnRemover = new Button("Remover");
+                btnRemover.setStyle("-fx-text-fill: #c62828; -fx-cursor: hand; -fx-background-color: transparent; -fx-border-color: #c62828; -fx-border-radius: 4;");
+                btnRemover.setOnAction(e -> {
+                    try {
+                        indisponibilidadeService.cancelar(ind.getId());
+                        auditoriaService.registar(utilizadorLogado(), "REMOVER_INDISPONIBILIDADE",
+                                "Dentista: " + obterNomeDentista() + " - " + descricao);
+                        renderizarIndisponibilidades();
+                        mostrarInfo("Indisponibilidade removida.");
+                    } catch (Exception ex) {
+                        mostrarErro("Erro: " + ex.getMessage());
+                    }
+                });
+
+                card.getChildren().addAll(tipoLabel, detalhe, motivo, btnRemover);
+                containerIndisponibilidades.getChildren().add(card);
+            }
+        } catch (Exception e) {
+            Label erro = new Label("Erro ao carregar indisponibilidades.");
+            erro.getStyleClass().add("section-caption");
+            containerIndisponibilidades.getChildren().add(erro);
         }
-        if (!temFerias) {
-            Label vazio = new Label("Sem ferias ou indisponibilidades registadas.");
-            vazio.getStyleClass().add("section-caption");
-            containerFerias.getChildren().add(vazio);
+    }
+
+    @FXML
+    private void adicionarIndisponibilidade() {
+        if (dentistaSelecionado == null) {
+            mostrarInfo("Selecione um dentista primeiro.");
+            return;
         }
+
+        Dialog<DentistaIndisponibilidade> dialog = new Dialog<>();
+        dialog.setTitle("Nova Indisponibilidade");
+        dialog.setHeaderText("Adicionar indisponibilidade para " + obterNomeDentista());
+
+        javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPrefWidth(450);
+        grid.setPadding(new Insets(10));
+
+        javafx.scene.layout.ColumnConstraints colLabel = new javafx.scene.layout.ColumnConstraints();
+        colLabel.setPercentWidth(35);
+        javafx.scene.layout.ColumnConstraints colField = new javafx.scene.layout.ColumnConstraints();
+        colField.setPercentWidth(65);
+        colField.setFillWidth(true);
+        colField.setHgrow(javafx.scene.layout.Priority.ALWAYS);
+        grid.getColumnConstraints().addAll(colLabel, colField);
+
+        ComboBox<String> cmbTipo = new ComboBox<>();
+        cmbTipo.getItems().addAll("Dia Completo", "Intervalo de Horas", "Período");
+        cmbTipo.setValue("Dia Completo");
+        cmbTipo.setPrefWidth(Double.MAX_VALUE);
+
+        DatePicker dpInicio = new DatePicker(LocalDate.now());
+        dpInicio.setPrefWidth(250);
+
+        DatePicker dpFim = new DatePicker(LocalDate.now().plusDays(1));
+        dpFim.setPrefWidth(250);
+        dpFim.setDisable(true);
+
+        TextField txtHoraInicio = new TextField("14:00");
+        txtHoraInicio.setPrefWidth(120);
+        txtHoraInicio.setDisable(true);
+
+        TextField txtHoraFim = new TextField("17:00");
+        txtHoraFim.setPrefWidth(120);
+        txtHoraFim.setDisable(true);
+
+        TextField txtMotivo = new TextField();
+        txtMotivo.setPromptText("Ex: Férias, Consulta médica, etc.");
+        txtMotivo.setPrefWidth(250);
+
+        cmbTipo.setOnAction(e -> {
+            String tipo = cmbTipo.getValue();
+            boolean isIntervalo = "Intervalo de Horas".equals(tipo);
+            boolean isPeriodo = "Período".equals(tipo);
+            txtHoraInicio.setDisable(!isIntervalo);
+            txtHoraFim.setDisable(!isIntervalo);
+            dpFim.setDisable(!isPeriodo);
+        });
+
+        grid.add(new Label("Tipo:"), 0, 0);
+        grid.add(cmbTipo, 1, 0);
+        grid.add(new Label("Data Início:"), 0, 1);
+        grid.add(dpInicio, 1, 1);
+        grid.add(new Label("Data Fim:"), 0, 2);
+        grid.add(dpFim, 1, 2);
+        grid.add(new Label("Hora Início:"), 0, 3);
+        grid.add(txtHoraInicio, 1, 3);
+        grid.add(new Label("Hora Fim:"), 0, 4);
+        grid.add(txtHoraFim, 1, 4);
+        grid.add(new Label("Motivo:"), 0, 5);
+        grid.add(txtMotivo, 1, 5);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setPrefWidth(520);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.setResultConverter(btn -> {
+            if (btn == ButtonType.OK) {
+                try {
+                    DentistaIndisponibilidade item = new DentistaIndisponibilidade();
+                    item.setDentista(dentistaSelecionado);
+                    item.setDataInicio(dpInicio.getValue());
+                    item.setMotivo(txtMotivo.getText().trim());
+
+                    String tipo = cmbTipo.getValue();
+                    if ("Dia Completo".equals(tipo)) {
+                        item.setTipo(TipoIndisponibilidade.DIA_COMPLETO);
+                    } else if ("Intervalo de Horas".equals(tipo)) {
+                        item.setTipo(TipoIndisponibilidade.INTERVALO_HORAS);
+                        item.setHoraInicio(LocalTime.parse(txtHoraInicio.getText().trim() + ":00"));
+                        item.setHoraFim(LocalTime.parse(txtHoraFim.getText().trim() + ":00"));
+                    } else {
+                        item.setTipo(TipoIndisponibilidade.PERIODO);
+                        item.setDataFim(dpFim.getValue());
+                    }
+                    return item;
+                } catch (Exception ex) {
+                    mostrarErro("Erro nos dados: " + ex.getMessage());
+                    return null;
+                }
+            }
+            return null;
+        });
+
+        Optional<DentistaIndisponibilidade> res = dialog.showAndWait();
+        res.ifPresent(item -> {
+            try {
+                indisponibilidadeService.criar(item);
+                auditoriaService.registar(utilizadorLogado(), "CRIAR_INDISPONIBILIDADE",
+                        "Dentista: " + obterNomeDentista() + " - " + item.getTipo() + " em " + item.getDataInicio());
+                renderizarIndisponibilidades();
+                mostrarInfo("Indisponibilidade adicionada.");
+            } catch (Exception e) {
+                mostrarErro("Erro ao guardar: " + e.getMessage());
+            }
+        });
     }
 
     @FXML
     private void guardarHorarioClinica() {
         try {
-            // Armazenado apenas como info no estado; não persistido por simplicidade
             String abertura = txtAbertura.getText();
             String encerramento = txtEncerramento.getText();
             auditoriaService.registar(utilizadorLogado(), "CONFIG_HORARIO_CLINICA",
@@ -257,21 +423,18 @@ public class AgendaClinicaController extends BaseAdministradorController {
         }
     }
 
-    @FXML
-    private void adicionarFerias() {
-        // Adiciona ferias em todos os dias selecionados (UI simplificada)
-        for (int i = 0; i < feriasAdicionadas.length; i++) {
-            if (diasSelecionados[i]) {
-                feriasAdicionadas[i] = true;
-            }
-        }
-        renderizarFerias();
-    }
-
     private String obterNomeDentista() {
         if (dentistaSelecionado == null) return "";
         Utilizador u = dentistaSelecionado.getUtilizador();
         if (u == null) return "Dentista";
         return ((nvl(u.getPrimeiroNome()) + " " + nvl(u.getUltimoNome())).trim());
+    }
+
+    private String tipoDescricao(TipoIndisponibilidade tipo) {
+        return switch (tipo) {
+            case DIA_COMPLETO -> "🔴 Dia Completo";
+            case INTERVALO_HORAS -> "🟡 Intervalo de Horas";
+            case PERIODO -> "🔵 Período";
+        };
     }
 }

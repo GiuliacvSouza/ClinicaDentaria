@@ -127,13 +127,13 @@
                 <padding><Insets top="16.0" right="16.0" bottom="16.0" left="16.0" /></padding>
                 
                 <HBox alignment="CENTER_LEFT" spacing="12.0">
-                    <Label styleClass="panel-section-title" text="Férias e Indisponibilidades" HBox.hgrow="ALWAYS" />
+                    <Label styleClass="panel-section-title" text="Indisponibilidades" HBox.hgrow="ALWAYS" />
                     <Region HBox.hgrow="ALWAYS" />
-                    <Button onAction="#adicionarFerias" styleClass="secondary-button" text="+ Adicionar Férias" />
+                    <Button onAction="#adicionarIndisponibilidade" styleClass="secondary-button" text="+ Adicionar Indisponibilidade" />
                 </HBox>
                 
                 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
-                    <VBox fx:id="containerFerias" spacing="6.0" />
+                    <VBox fx:id="containerIndisponibilidades" spacing="6.0" />
                 </ScrollPane>
             </VBox>
         </VBox>

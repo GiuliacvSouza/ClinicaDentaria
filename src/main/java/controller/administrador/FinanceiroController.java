@@ -6,6 +6,8 @@ import bll.PedidoCompraService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -14,16 +16,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.Fatura;
 import model.Pagamento;
 import model.PedidoCompra;
+import model.enums.EstadoFatura;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.XYChart;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -99,7 +103,7 @@ public class FinanceiroController extends BaseAdministradorController {
 
     @FXML
     private void resetFiltro() {
-        dpInicio.setValue(LocalDate.now());
+        dpInicio.setValue(LocalDate.now().withDayOfMonth(1));
         dpFim.setValue(LocalDate.now());
         carregar();
     }
@@ -130,45 +134,42 @@ public class FinanceiroController extends BaseAdministradorController {
                             && !p.getDataPedido().isAfter(fim))
                     .toList());
 
-            // Calcular indicadores
+            // Calcular indicadores usando PAGAMENTOS como receita real
             LocalDate hoje = LocalDate.now();
             LocalDate inicioMes = hoje.withDayOfMonth(1);
             LocalDate inicioAno = hoje.withDayOfYear(1);
 
-            BigDecimal receitaDiaria = faturas.stream()
-                    .filter(f -> f.getDataEmissao() != null && f.getDataEmissao().equals(hoje))
-                    .map(f -> f.getValorFinal() != null ? f.getValorFinal() : BigDecimal.ZERO)
+            // RECEITA: usar pagamentos (dinheiro recebido)
+            BigDecimal receitaDiaria = listaPagamentos.stream()
+                    .filter(p -> p.getDataPagamento() != null && p.getDataPagamento().equals(hoje))
+                    .map(p -> p.getValorPago() != null ? p.getValorPago() : BigDecimal.ZERO)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal receitaMensal = faturas.stream()
-                    .filter(f -> f.getDataEmissao() != null
-                            && !f.getDataEmissao().isBefore(inicioMes))
-                    .map(f -> f.getValorFinal() != null ? f.getValorFinal() : BigDecimal.ZERO)
+            BigDecimal receitaMensal = listaPagamentos.stream()
+                    .filter(p -> p.getDataPagamento() != null
+                            && !p.getDataPagamento().isBefore(inicioMes)
+                            && !p.getDataPagamento().isAfter(hoje))
+                    .map(p -> p.getValorPago() != null ? p.getValorPago() : BigDecimal.ZERO)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal receitaAnual = faturas.stream()
-                    .filter(f -> f.getDataEmissao() != null
-                            && !f.getDataEmissao().isBefore(inicioAno))
-                    .map(f -> f.getValorFinal() != null ? f.getValorFinal() : BigDecimal.ZERO)
+            BigDecimal receitaAnual = listaPagamentos.stream()
+                    .filter(p -> p.getDataPagamento() != null
+                            && !p.getDataPagamento().isBefore(inicioAno)
+                            && !p.getDataPagamento().isAfter(hoje))
+                    .map(p -> p.getValorPago() != null ? p.getValorPago() : BigDecimal.ZERO)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            BigDecimal despesaDiaria = pedidos.stream()
+            // DESPESA: usar pedidos de compra RECEBIDOS
+            BigDecimal despesaDiaria = listaPedidos.stream()
                     .filter(p -> p.getDataPedido() != null && p.getDataPedido().equals(hoje))
                     .map(p -> {
-                        try {
-                            return pedidoCompraService.calcularTotal(pedidoCompraService.listarItensDoPedido(p.getId()));
-                        } catch (Exception e) {
-                            return BigDecimal.ZERO;
-                        }
+                        try { return pedidoCompraService.calcularTotal(pedidoCompraService.listarItensDoPedido(p.getId())); }
+                        catch (Exception e) { return BigDecimal.ZERO; }
                     })
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal despesaMensal = pedidos.stream()
-                    .filter(p -> p.getDataPedido() != null
-                            && !p.getDataPedido().isBefore(inicioMes))
+            BigDecimal despesaMensal = listaPedidos.stream()
+                    .filter(p -> p.getDataPedido() != null && !p.getDataPedido().isBefore(inicioMes) && !p.getDataPedido().isAfter(hoje))
                     .map(p -> {
-                        try {
-                            return pedidoCompraService.calcularTotal(pedidoCompraService.listarItensDoPedido(p.getId()));
-                        } catch (Exception e) {
-                            return BigDecimal.ZERO;
-                        }
+                        try { return pedidoCompraService.calcularTotal(pedidoCompraService.listarItensDoPedido(p.getId())); }
+                        catch (Exception e) { return BigDecimal.ZERO; }
                     })
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -181,22 +182,43 @@ public class FinanceiroController extends BaseAdministradorController {
             lblDespesaMensal.setText("€ " + formatar(despesaMensal));
             lblLucroLiquido.setText("€ " + formatar(lucroLiquido));
 
+            // Gráfico: últimos 6 meses
             if (graficoFinanceiro != null) {
                 graficoFinanceiro.getData().clear();
-                
+
                 XYChart.Series<String, Number> seriesReceitas = new XYChart.Series<>();
                 seriesReceitas.setName("Receitas");
-                seriesReceitas.getData().add(new XYChart.Data<>("Mensal", receitaMensal));
-                
+
                 XYChart.Series<String, Number> seriesDespesas = new XYChart.Series<>();
                 seriesDespesas.setName("Despesas");
-                seriesDespesas.getData().add(new XYChart.Data<>("Mensal", despesaMensal));
-                
-                XYChart.Series<String, Number> seriesLucro = new XYChart.Series<>();
-                seriesLucro.setName("Lucro");
-                seriesLucro.getData().add(new XYChart.Data<>("Mensal", lucroLiquido));
-                
-                graficoFinanceiro.getData().addAll(seriesReceitas, seriesDespesas, seriesLucro);
+
+                for (int i = 5; i >= 0; i--) {
+                    LocalDate mes = hoje.minusMonths(i).withDayOfMonth(1);
+                    LocalDate fimMes = mes.plusMonths(1).minusDays(1);
+                    String label = mes.getMonthValue() + "/" + mes.getYear();
+
+                    BigDecimal rec = listaPagamentos.stream()
+                            .filter(p -> p.getDataPagamento() != null
+                                    && !p.getDataPagamento().isBefore(mes)
+                                    && !p.getDataPagamento().isAfter(fimMes))
+                            .map(p -> p.getValorPago() != null ? p.getValorPago() : BigDecimal.ZERO)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                    BigDecimal desp = listaPedidos.stream()
+                            .filter(p -> p.getDataPedido() != null
+                                    && !p.getDataPedido().isBefore(mes)
+                                    && !p.getDataPedido().isAfter(fimMes))
+                            .map(p -> {
+                                try { return pedidoCompraService.calcularTotal(pedidoCompraService.listarItensDoPedido(p.getId())); }
+                                catch (Exception e) { return BigDecimal.ZERO; }
+                            })
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                    seriesReceitas.getData().add(new XYChart.Data<>(label, rec));
+                    seriesDespesas.getData().add(new XYChart.Data<>(label, desp));
+                }
+
+                graficoFinanceiro.getData().addAll(seriesReceitas, seriesDespesas);
             }
 
         } catch (Exception e) {

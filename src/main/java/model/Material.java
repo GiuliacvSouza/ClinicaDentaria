@@ -35,6 +35,9 @@ public class Material {
     @Column(name = "quantidadeMinima")
     private Integer quantidadeMinima;
 
+    @Column(name = "quantidadeMaxima")
+    private Integer quantidadeMaxima;
+
     @Column(name = "valorUnitario", precision = 10, scale = 2)
     private BigDecimal valorUnitario;
 
@@ -103,6 +106,14 @@ public class Material {
 
     public void setQuantidadeMinima(Integer quantidadeMinima) {
         this.quantidadeMinima = quantidadeMinima;
+    }
+
+    public Integer getQuantidadeMaxima() {
+        return quantidadeMaxima;
+    }
+
+    public void setQuantidadeMaxima(Integer quantidadeMaxima) {
+        this.quantidadeMaxima = quantidadeMaxima;
     }
 
     public BigDecimal getValorUnitario() {

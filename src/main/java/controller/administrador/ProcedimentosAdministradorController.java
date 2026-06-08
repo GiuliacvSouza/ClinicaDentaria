@@ -5,6 +5,7 @@ import bll.ProcedimentoService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -14,7 +15,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import model.Procedimento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -132,24 +135,38 @@ public class ProcedimentosAdministradorController extends BaseAdministradorContr
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPrefWidth(420);
+        grid.setPrefWidth(520);
+        grid.setPadding(new Insets(10));
+
+        // Column constraints: label ~30%, field ~70%
+        ColumnConstraints colLabel = new ColumnConstraints();
+        colLabel.setPercentWidth(30);
+        ColumnConstraints colField = new ColumnConstraints();
+        colField.setPercentWidth(70);
+        colField.setFillWidth(true);
+        colField.setHgrow(Priority.ALWAYS);
+        grid.getColumnConstraints().addAll(colLabel, colField);
 
         TextField txtNome = new TextField();
-        txtNome.setPromptText("Nome");
+        txtNome.setPromptText("Ex: Consulta Geral");
+        txtNome.setPrefWidth(300);
         TextField txtDescricao = new TextField();
-        txtDescricao.setPromptText("Descricao");
+        txtDescricao.setPromptText("Descrição do procedimento");
+        txtDescricao.setPrefWidth(300);
         ComboBox<String> cmbCategoria = new ComboBox<>();
         cmbCategoria.getItems().addAll("terapeutico", "protese", "estetico");
         cmbCategoria.setValue("terapeutico");
         cmbCategoria.setPrefWidth(Double.MAX_VALUE);
         TextField txtDuracao = new TextField();
-        txtDuracao.setPromptText("Minutos");
+        txtDuracao.setPromptText("Ex: 30");
+        txtDuracao.setPrefWidth(150);
         TextField txtValor = new TextField();
-        txtValor.setPromptText("0.00");
+        txtValor.setPromptText("Ex: 50.00");
+        txtValor.setPrefWidth(150);
         ComboBox<String> cmbIva = new ComboBox<>();
         cmbIva.getItems().addAll("0", "6", "23");
-        cmbIva.setValue("0");
-        cmbIva.setPrefWidth(Double.MAX_VALUE);
+        cmbIva.setValue("23");
+        cmbIva.setPrefWidth(120);
 
         if (existente != null) {
             txtNome.setText(existente.getNome());
@@ -163,11 +180,11 @@ public class ProcedimentosAdministradorController extends BaseAdministradorContr
 
         grid.add(new Label("Nome:"), 0, 0);
         grid.add(txtNome, 1, 0);
-        grid.add(new Label("Descricao:"), 0, 1);
+        grid.add(new Label("Descrição:"), 0, 1);
         grid.add(txtDescricao, 1, 1);
         grid.add(new Label("Categoria:"), 0, 2);
         grid.add(cmbCategoria, 1, 2);
-        grid.add(new Label("Duracao (min):"), 0, 3);
+        grid.add(new Label("Duração (min):"), 0, 3);
         grid.add(txtDuracao, 1, 3);
         grid.add(new Label("Valor (€):"), 0, 4);
         grid.add(txtValor, 1, 4);
@@ -175,6 +192,7 @@ public class ProcedimentosAdministradorController extends BaseAdministradorContr
         grid.add(cmbIva, 1, 5);
 
         dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setPrefWidth(560);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         dialog.setResultConverter(btn -> {
