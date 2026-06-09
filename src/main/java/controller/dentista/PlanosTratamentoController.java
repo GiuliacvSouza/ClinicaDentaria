@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
@@ -74,6 +75,8 @@ public class PlanosTratamentoController extends BaseDentistaController {
     }
 
     private void configurarTabela() {
+        tblPlanos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+
         colDataInicio.setCellValueFactory(cell -> new SimpleStringProperty(
                 cell.getValue().getDataPrevistaInicio() != null
                         ? cell.getValue().getDataPrevistaInicio().format(DATE_FMT) : "-"));
@@ -102,7 +105,12 @@ public class PlanosTratamentoController extends BaseDentistaController {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : btn);
+                if (empty || getIndex() < 0 || getIndex() >= getTableView().getItems().size()) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btn);
+                    setAlignment(Pos.CENTER);
+                }
             }
         });
     }
