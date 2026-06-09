@@ -3,17 +3,15 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -67,58 +65,88 @@
     </HBox>
 
     <!-- Conteúdo Principal -->
-    <SplitPane dividerPositions="0.3" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 10;">
-        <items>
-            <!-- Lado Esquerdo: Pesquisa e Lista de Pacientes -->
-            <VBox spacing="14.0" styleClass="section-card">
-                <padding><Insets top="14.0" right="14.0" bottom="14.0" left="14.0" /></padding>
-                <Label styleClass="section-title" text="Pacientes" />
-                <TextField fx:id="txtPesquisa" promptText="Pesquisar por nome, NIF ou telefone..." styleClass="search-field" />
-                <HBox spacing="8.0" fx:id="filterBox">
-                    <Button fx:id="btnTodos" onAction="#filtrarTodos" styleClass="filter-chip" text="Todos" mnemonicParsing="false" />
-                    <Button fx:id="btnComHistorico" onAction="#filtrarComHistorico" styleClass="filter-chip" text="Com Histórico" mnemonicParsing="false" />
-                    <Button fx:id="btnComPlano" onAction="#filtrarComPlano" styleClass="filter-chip" text="Com Plano" mnemonicParsing="false" />
-                    <Button fx:id="btnComPrescricao" onAction="#filtrarComPrescricao" styleClass="filter-chip" text="Com Prescrições" mnemonicParsing="false" />
-                </HBox>
-                <TableView fx:id="tblPacientes" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn fx:id="colNomePaciente" prefWidth="150.0" text="Nome" />
-                        <TableColumn fx:id="colIdadePaciente" prefWidth="60.0" text="Idade" />
-                        <TableColumn fx:id="colTelefonePaciente" prefWidth="100.0" text="Telefone" />
-                        <TableColumn fx:id="colUltimaConsulta" prefWidth="100.0" text="Última Consulta" />
-                    </columns>
-                    <placeholder>
-                        <Label text="Nenhum paciente encontrado." />
-                    </placeholder>
-                </TableView>
-            </VBox>
+    <HBox spacing="10.0" VBox.vgrow="ALWAYS" style="-fx-padding: 10;">
 
-            <!-- Lado Direito: Prontuário do Paciente -->
-            <StackPane styleClass="section-card">
-                <padding><Insets top="14.0" right="14.0" bottom="14.0" left="14.0" /></padding>
+        <!-- ═══ Painel Esquerdo: Lista de Pacientes ═══ -->
+        <VBox spacing="14.0" prefWidth="330.0" minWidth="280.0" maxWidth="360.0"
+              styleClass="section-card">
+            <padding><Insets top="14.0" right="14.0" bottom="14.0" left="14.0" /></padding>
 
-                <!-- Placeholder se nenhum paciente selecionado -->
-                <VBox fx:id="panePlaceholder" alignment="CENTER" spacing="10.0">
+            <Label styleClass="section-title" text="Pacientes" />
+            <TextField fx:id="txtPesquisa"
+                       promptText="Pesquisar por nome, NIF ou telefone..."
+                       styleClass="search-field" />
+            <HBox spacing="8.0" fx:id="filterBox">
+                <Button fx:id="btnTodos" onAction="#filtrarTodos"
+                        styleClass="filter-chip" text="Todos" mnemonicParsing="false" />
+                <Button fx:id="btnComHistorico" onAction="#filtrarComHistorico"
+                        styleClass="filter-chip" text="Com Histórico" mnemonicParsing="false" />
+                <Button fx:id="btnComPlano" onAction="#filtrarComPlano"
+                        styleClass="filter-chip" text="Com Plano" mnemonicParsing="false" />
+                <Button fx:id="btnComPrescricao" onAction="#filtrarComPrescricao"
+                        styleClass="filter-chip" text="Com Prescrições" mnemonicParsing="false" />
+            </HBox>
+
+            <!-- Tabela ocupa todo o espaço vertical restante do painel esquerdo -->
+            <TableView fx:id="tblPacientes" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colNomePaciente"    prefWidth="140.0" text="Nome" />
+                    <TableColumn fx:id="colIdadePaciente"   prefWidth="50.0"  text="Idade" />
+                    <TableColumn fx:id="colTelefonePaciente" prefWidth="95.0" text="Telefone" />
+                    <TableColumn fx:id="colUltimaConsulta"  prefWidth="95.0"  text="Última Consulta" />
+                </columns>
+                <placeholder>
+                    <Label text="Nenhum paciente encontrado." />
+                </placeholder>
+            </TableView>
+        </VBox>
+
+        <!-- ═══ Painel Direito: ScrollPane com prontuário ═══ -->
+        <ScrollPane fx:id="scrollProntuario"
+                    fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    HBox.hgrow="ALWAYS"
+                    style="-fx-background-color: #ffffff; -fx-background: #ffffff; -fx-border-color: #dce7e4; -fx-border-radius: 18; -fx-background-radius: 18;">
+
+            <!-- StackPane permite sobrepor placeholder e prontuário -->
+            <StackPane>
+                <padding><Insets top="14.0" right="14.0" bottom="20.0" left="14.0" /></padding>
+
+                <!-- Placeholder: nenhum paciente selecionado -->
+                <VBox fx:id="panePlaceholder" alignment="CENTER" spacing="10.0" minHeight="400.0">
                     <Label text="Selecione um paciente para visualizar o prontuário."
-                           styleClass="section-caption" style="-fx-font-size: 14px;" />
+                           styleClass="section-caption"
+                           style="-fx-font-size: 14px;"
+                           wrapText="true" />
                 </VBox>
 
                 <!-- Conteúdo do Prontuário -->
-                <VBox fx:id="paneProntuario" spacing="14.0" visible="false">
+                <VBox fx:id="paneProntuario" spacing="16.0" visible="false">
+
                     <!-- Cabeçalho do Paciente -->
                     <HBox alignment="CENTER_LEFT" spacing="12.0">
-                        <StackPane styleClass="avatar-shell" prefWidth="48.0" prefHeight="48.0" style="-fx-background-color: #0066cc; -fx-background-radius: 24;">
-                            <Label fx:id="lblIniciais" text="PA" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+                        <StackPane prefWidth="48.0" prefHeight="48.0"
+                                   style="-fx-background-color: #0066cc; -fx-background-radius: 24;">
+                            <Label fx:id="lblIniciais" text="PA"
+                                   style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
                         </StackPane>
                         <VBox spacing="2.0">
-                            <Label fx:id="lblNomePaciente" text="Paciente" styleClass="section-title" style="-fx-font-size: 18px;" />
-                            <Label fx:id="lblMetaPaciente" text="NIF: 000000000 | Telemóvel: -" styleClass="section-caption" />
+                            <Label fx:id="lblNomePaciente" text="Paciente"
+                                   styleClass="section-title"
+                                   style="-fx-font-size: 18px;" />
+                            <Label fx:id="lblMetaPaciente"
+                                   text="NIF: 000000000 | Telemóvel: -"
+                                   styleClass="section-caption" />
                         </VBox>
                     </HBox>
 
                     <!-- SECÇÃO 1: Dados do Paciente -->
-                    <VBox spacing="10.0" styleClass="patient-info-card" style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
-                        <Label text="Dados do Paciente" styleClass="section-title" style="-fx-font-size: 14px;" />
+                    <VBox spacing="10.0" styleClass="patient-info-card"
+                          style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
+                        <Label text="Dados do Paciente"
+                               styleClass="section-title"
+                               style="-fx-font-size: 14px;" />
                         <GridPane hgap="12.0" vgap="6.0">
                             <columnConstraints>
                                 <ColumnConstraints minWidth="120.0" prefWidth="120.0" />
@@ -143,14 +171,20 @@
                                 <Label fx:id="lblDadosEmail" text="-" GridPane.rowIndex="2" GridPane.columnIndex="3" styleClass="info-title" />
 
                                 <Label text="Morada:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="patient-history-label" />
-                                <Label fx:id="lblDadosMorada" text="-" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="3" styleClass="info-title" />
+                                <Label fx:id="lblDadosMorada" text="-"
+                                       GridPane.rowIndex="3" GridPane.columnIndex="1"
+                                       GridPane.columnSpan="3"
+                                       styleClass="info-title" wrapText="true" />
                             </children>
                         </GridPane>
                     </VBox>
 
                     <!-- SECÇÃO 2: Informações Médicas -->
-                    <VBox spacing="10.0" styleClass="patient-info-card" style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
-                        <Label text="Informações Médicas" styleClass="section-title" style="-fx-font-size: 14px;" />
+                    <VBox spacing="10.0" styleClass="patient-info-card"
+                          style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
+                        <Label text="Informações Médicas"
+                               styleClass="section-title"
+                               style="-fx-font-size: 14px;" />
                         <GridPane hgap="12.0" vgap="6.0">
                             <columnConstraints>
                                 <ColumnConstraints minWidth="120.0" prefWidth="120.0" />
@@ -175,36 +209,48 @@
                         </GridPane>
                     </VBox>
 
-                    <!-- SECÇÃO 3: Histórico Odontológico (Consultas) -->
-                    <VBox spacing="10.0" styleClass="patient-info-card" style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
+                    <!-- SECÇÃO 3: Histórico Odontológico -->
+                    <VBox spacing="10.0" styleClass="patient-info-card"
+                          style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
                         <HBox alignment="CENTER_LEFT">
-                            <Label text="Histórico Odontológico" styleClass="section-title" style="-fx-font-size: 14px;" />
+                            <Label text="Histórico Odontológico"
+                                   styleClass="section-title"
+                                   style="-fx-font-size: 14px;" />
                             <Region HBox.hgrow="ALWAYS" />
-                            <Button onAction="#verHistoricoCompleto" text="Ver Histórico Completo" styleClass="secondary-button" />
+                            <Button onAction="#verHistoricoCompleto"
+                                    text="Ver Histórico Completo"
+                                    styleClass="secondary-button" />
                         </HBox>
-                        <TableView fx:id="tblHistoricoConsultas" styleClass="dashboard-table" prefHeight="150.0">
+                        <TableView fx:id="tblHistoricoConsultas"
+                                   styleClass="dashboard-table"
+                                   prefHeight="160.0" maxHeight="240.0">
                             <columns>
-                                <TableColumn fx:id="colHistData" prefWidth="110.0" text="Data" />
-                                <TableColumn fx:id="colHistTipo" prefWidth="80.0" text="Tipo" />
-                                <TableColumn fx:id="colHistDentista" prefWidth="120.0" text="Dentista" />
-                                <TableColumn fx:id="colHistEstado" prefWidth="80.0" text="Estado" />
+                                <TableColumn fx:id="colHistData"       prefWidth="110.0" text="Data" />
+                                <TableColumn fx:id="colHistTipo"       prefWidth="80.0"  text="Tipo" />
+                                <TableColumn fx:id="colHistDentista"   prefWidth="130.0" text="Dentista" />
+                                <TableColumn fx:id="colHistEstado"     prefWidth="90.0"  text="Estado" />
                                 <TableColumn fx:id="colHistDiagnostico" prefWidth="200.0" text="Diagnóstico / Procedimentos" />
                             </columns>
                             <placeholder>
-                                <Label text="Nenhuma consulta anterior registrada." />
+                                <Label text="Nenhuma consulta anterior registada." />
                             </placeholder>
                         </TableView>
                     </VBox>
 
                     <!-- SECÇÃO 4: Prescrições -->
-                    <VBox spacing="10.0" styleClass="patient-info-card" style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
-                        <Label text="Prescrições" styleClass="section-title" style="-fx-font-size: 14px;" />
-                        <TableView fx:id="tblPrescricoes" styleClass="dashboard-table" prefHeight="120.0">
+                    <VBox spacing="10.0" styleClass="patient-info-card"
+                          style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
+                        <Label text="Prescrições"
+                               styleClass="section-title"
+                               style="-fx-font-size: 14px;" />
+                        <TableView fx:id="tblPrescricoes"
+                                   styleClass="dashboard-table"
+                                   prefHeight="130.0" maxHeight="200.0">
                             <columns>
-                                <TableColumn fx:id="colPrescData" prefWidth="90.0" text="Data" />
-                                <TableColumn fx:id="colPrescMedicamento" prefWidth="180.0" text="Medicamento" />
-                                <TableColumn fx:id="colPrescPosologia" prefWidth="180.0" text="Posologia" />
-                                <TableColumn fx:id="colPrescDuracao" prefWidth="100.0" text="Duração" />
+                                <TableColumn fx:id="colPrescData"        prefWidth="90.0"  text="Data" />
+                                <TableColumn fx:id="colPrescMedicamento" prefWidth="190.0" text="Medicamento" />
+                                <TableColumn fx:id="colPrescPosologia"   prefWidth="190.0" text="Posologia" />
+                                <TableColumn fx:id="colPrescDuracao"     prefWidth="100.0" text="Duração" />
                             </columns>
                             <placeholder>
                                 <Label text="Nenhuma prescrição encontrada." />
@@ -213,15 +259,20 @@
                     </VBox>
 
                     <!-- SECÇÃO 5: Planos de Tratamento -->
-                    <VBox spacing="10.0" styleClass="patient-info-card" style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
-                        <Label text="Planos de Tratamento" styleClass="section-title" style="-fx-font-size: 14px;" />
-                        <TableView fx:id="tblPlanos" styleClass="dashboard-table" prefHeight="120.0">
+                    <VBox spacing="10.0" styleClass="patient-info-card"
+                          style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
+                        <Label text="Planos de Tratamento"
+                               styleClass="section-title"
+                               style="-fx-font-size: 14px;" />
+                        <TableView fx:id="tblPlanos"
+                                   styleClass="dashboard-table"
+                                   prefHeight="130.0" maxHeight="200.0">
                             <columns>
-                                <TableColumn fx:id="colPlanoDataInicio" prefWidth="90.0" text="Data Início" />
-                                <TableColumn fx:id="colPlanoDataFim" prefWidth="90.0" text="Data Fim" />
-                                <TableColumn fx:id="colPlanoObjetivo" prefWidth="180.0" text="Objetivo" />
-                                <TableColumn fx:id="colPlanoEstado" prefWidth="90.0" text="Estado" />
-                                <TableColumn fx:id="colPlanoProgresso" prefWidth="120.0" text="Progresso" />
+                                <TableColumn fx:id="colPlanoDataInicio" prefWidth="90.0"  text="Data Início" />
+                                <TableColumn fx:id="colPlanoDataFim"    prefWidth="90.0"  text="Data Fim" />
+                                <TableColumn fx:id="colPlanoObjetivo"   prefWidth="190.0" text="Objetivo" />
+                                <TableColumn fx:id="colPlanoEstado"     prefWidth="90.0"  text="Estado" />
+                                <TableColumn fx:id="colPlanoProgresso"  prefWidth="120.0" text="Progresso" />
                             </columns>
                             <placeholder>
                                 <Label text="Nenhum plano de tratamento encontrado." />
@@ -230,21 +281,27 @@
                     </VBox>
 
                     <!-- SECÇÃO 6: Anamneses -->
-                    <VBox spacing="10.0" styleClass="patient-info-card" style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
-                        <Label text="Anamneses" styleClass="section-title" style="-fx-font-size: 14px;" />
-                        <TableView fx:id="tblAnamneses" styleClass="dashboard-table" prefHeight="120.0">
+                    <VBox spacing="10.0" styleClass="patient-info-card"
+                          style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
+                        <Label text="Anamneses"
+                               styleClass="section-title"
+                               style="-fx-font-size: 14px;" />
+                        <TableView fx:id="tblAnamneses"
+                                   styleClass="dashboard-table"
+                                   prefHeight="130.0" maxHeight="200.0">
                             <columns>
-                                <TableColumn fx:id="colAnamneseData" prefWidth="100.0" text="Data" />
-                                <TableColumn fx:id="colAnamneseResumo" prefWidth="400.0" text="Resumo" />
+                                <TableColumn fx:id="colAnamneseData"   prefWidth="110.0" text="Data" />
+                                <TableColumn fx:id="colAnamneseResumo" prefWidth="420.0" text="Resumo" />
                             </columns>
                             <placeholder>
-                                <Label text="Nenhuma anamnese registrada." />
+                                <Label text="Nenhuma anamnese registada." />
                             </placeholder>
                         </TableView>
                     </VBox>
 
                 </VBox>
             </StackPane>
-        </items>
-    </SplitPane>
+        </ScrollPane>
+
+    </HBox>
 </VBox>
