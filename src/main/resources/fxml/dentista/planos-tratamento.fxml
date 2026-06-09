@@ -66,12 +66,12 @@
                 <TextField fx:id="txtPesquisa" promptText="Pesquisar por objetivo, progresso ou paciente..." styleClass="search-field" />
                 <TableView fx:id="tblPlanos" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colDataInicio" prefWidth="90.0" text="Data Início" />
-                        <TableColumn fx:id="colDataFim" prefWidth="90.0" text="Data Fim" />
-                        <TableColumn fx:id="colObjetivo" prefWidth="180.0" text="Objetivo" />
-                        <TableColumn fx:id="colEstado" prefWidth="100.0" text="Estado" />
-                        <TableColumn fx:id="colProgresso" prefWidth="130.0" text="Progresso" />
-                        <TableColumn fx:id="colAcoes" prefWidth="70.0" text="Ações" />
+                        <TableColumn fx:id="colDataInicio" prefWidth="95.0" minWidth="85.0" text="Data Início" />
+                        <TableColumn fx:id="colDataFim" prefWidth="95.0" minWidth="85.0" text="Data Fim" />
+                        <TableColumn fx:id="colObjetivo" prefWidth="190.0" minWidth="120.0" text="Objetivo" />
+                        <TableColumn fx:id="colEstado" prefWidth="110.0" minWidth="90.0" text="Estado" />
+                        <TableColumn fx:id="colProgresso" prefWidth="130.0" minWidth="100.0" text="Progresso" />
+                        <TableColumn fx:id="colAcoes" prefWidth="130.0" minWidth="130.0" maxWidth="150.0" text="Ações" style="-fx-alignment: CENTER;" />
                     </columns>
                     <placeholder>
                         <Label text="Nenhum plano encontrado." />

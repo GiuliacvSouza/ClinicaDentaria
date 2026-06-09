@@ -456,16 +456,6 @@ public class ProntuariosDentistaController extends BaseDentistaController {
         }
     }
 
-    @FXML
-    private void imprimirProntuario() {
-        mostrarInfo("Funcionalidade de impressão será implementada em breve.");
-    }
-
-    @FXML
-    private void exportarPdf() {
-        mostrarInfo("Funcionalidade de exportação PDF será implementada em breve.");
-    }
-
     private String textoEstado(EstadoConsulta estado) {
         if (estado == null) return "-";
         return switch (estado) {
