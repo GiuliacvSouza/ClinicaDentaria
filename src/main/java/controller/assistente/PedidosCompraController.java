@@ -16,8 +16,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import model.ItemPedido;
 import model.PedidoCompra;
 import model.enums.EstadoPedidoCompra;
@@ -158,7 +156,7 @@ public class PedidosCompraController extends BaseAssistenteController {
             }
         });
 
-        // Ações — largura fixa com alinhamento consistente entre linhas
+        // Ações — botões alinhados, coluna controla a largura
         colAcoes.setCellValueFactory(c -> null);
         colAcoes.setStyle("-fx-alignment: CENTER-LEFT;");
         colAcoes.setCellFactory(col -> new TableCell<>() {
@@ -166,30 +164,14 @@ public class PedidosCompraController extends BaseAssistenteController {
             private final Button btnCancelar = new Button("Cancelar");
             private final Button btnReceber  = new Button("Recebido");
             private final HBox   box         = new HBox(8);
-            private final Region spacer      = new Region();
 
             {
                 btnVer.getStyleClass().add("table-action-button");
-                btnVer.setMinWidth(80);
-                btnVer.setPrefWidth(80);
-
-                btnCancelar.getStyleClass().add("table-link-button");
-                btnCancelar.setMinWidth(70);
-                btnCancelar.setPrefWidth(70);
-
                 btnReceber.getStyleClass().add("table-action-button");
-                btnReceber.setMinWidth(90);
-                btnReceber.setPrefWidth(90);
+                btnCancelar.getStyleClass().add("table-link-button");
 
-                // HBox com largura fixa para alinhamento uniforme entre todas as linhas
                 box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-                box.setMinWidth(270);
-                box.setPrefWidth(270);
-                box.setMaxWidth(270);
-
-                // Spacer ocupa o espaço restante para manter os botões alinhados à esquerda
-                HBox.setHgrow(spacer, Priority.ALWAYS);
-                box.getChildren().addAll(btnVer, btnReceber, btnCancelar, spacer);
+                box.getChildren().addAll(btnVer, btnReceber, btnCancelar);
             }
 
             @Override
@@ -207,7 +189,7 @@ public class PedidosCompraController extends BaseAssistenteController {
                 btnCancelar.setOnAction(e -> confirmarCancelar(p));
                 btnReceber.setOnAction(e -> confirmarRecepcao(p));
 
-                // Mostrar botões extra apenas para PENDENTE ou ENVIADO
+                // Recebido e Cancelar apenas para PENDENTE ou ENVIADO
                 boolean acoesVisiveis = (estado == EstadoPedidoCompra.PENDENTE
                                       || estado == EstadoPedidoCompra.ENVIADO);
                 btnReceber.setManaged(acoesVisiveis);

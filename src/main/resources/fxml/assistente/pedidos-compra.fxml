@@ -108,7 +108,7 @@
                                  styleClass="col-center" />
                     <TableColumn fx:id="colValorTotal" prefWidth="105.0" text="Total"
                                  styleClass="col-right" />
-                    <TableColumn fx:id="colAcoes"      prefWidth="280.0" text="Ações"
+                    <TableColumn fx:id="colAcoes"      prefWidth="340.0" minWidth="340.0" text="Ações"
                                  styleClass="col-center" />
                 </columns>
                 <placeholder>

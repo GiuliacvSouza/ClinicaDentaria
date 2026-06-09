@@ -932,7 +932,9 @@
     -fx-text-fill: #c0392b;
     -fx-font-family: "Poppins SemiBold";
     -fx-font-size: 11px;
-    -fx-padding: 0;
+    -fx-padding: 7 10;
+    -fx-min-width: 85;
+    -fx-pref-width: 85;
     -fx-cursor: hand;
 }
 
