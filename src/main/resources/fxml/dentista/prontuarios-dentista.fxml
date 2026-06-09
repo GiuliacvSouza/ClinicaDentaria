@@ -114,9 +114,6 @@
                             <Label fx:id="lblNomePaciente" text="Paciente" styleClass="section-title" style="-fx-font-size: 18px;" />
                             <Label fx:id="lblMetaPaciente" text="NIF: 000000000 | Telemóvel: -" styleClass="section-caption" />
                         </VBox>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Button onAction="#imprimirProntuario" text="Imprimir" styleClass="secondary-button" />
-                        <Button onAction="#exportarPdf" text="Exportar PDF" styleClass="primary-button" />
                     </HBox>
 
                     <!-- SECÇÃO 1: Dados do Paciente -->
