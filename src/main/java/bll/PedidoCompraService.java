@@ -62,6 +62,16 @@ public class PedidoCompraService {
                 .orElseThrow(() -> new RuntimeException("Pedido de compra não encontrado."));
     }
 
+    /**
+     * Carrega um pedido completo com fornecedor, assistente, itens e material
+     * dentro de uma transação para evitar LazyInitializationException.
+     */
+    @Transactional(readOnly = true)
+    public PedidoCompra buscarCompletoParaDetalhes(Integer id) {
+        return pedidoRepo.buscarCompletoParaDetalhes(id)
+                .orElseThrow(() -> new RuntimeException("Pedido de compra não encontrado."));
+    }
+
     public List<ItemPedido> listarItensDoPedido(Integer idPedido) {
         return itemRepo.findByIdPedido_Id(idPedido);
     }

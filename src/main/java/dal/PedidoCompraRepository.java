@@ -4,6 +4,7 @@ import model.PedidoCompra;
 import model.enums.EstadoPedidoCompra;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,4 +25,17 @@ public interface PedidoCompraRepository extends JpaRepository<PedidoCompra, Inte
            "LEFT JOIN FETCH a.utilizador " +
            "ORDER BY p.dataPedido DESC NULLS LAST")
     List<PedidoCompra> findAllOrderByDataDesc();
+
+    /**
+     * Carrega um pedido completo com todas as associações para exibição de detalhes,
+     * evitando LazyInitializationException no FX thread.
+     */
+    @Query("SELECT DISTINCT p FROM PedidoCompra p " +
+           "LEFT JOIN FETCH p.idFornecedor " +
+           "LEFT JOIN FETCH p.idAssistente a " +
+           "LEFT JOIN FETCH a.utilizador " +
+           "LEFT JOIN FETCH p.itens i " +
+           "LEFT JOIN FETCH i.idMaterial m " +
+           "WHERE p.id = :id")
+    java.util.Optional<PedidoCompra> buscarCompletoParaDetalhes(@Param("id") Integer id);
 }

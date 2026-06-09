@@ -16,6 +16,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import model.ItemPedido;
 import model.PedidoCompra;
 import model.enums.EstadoPedidoCompra;
@@ -121,7 +123,9 @@ public class PedidosCompraController extends BaseAssistenteController {
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null); setText(null); return;
+                    setGraphic(null);
+                    setText(null);
+                    return;
                 }
                 EstadoPedidoCompra estado = ((PedidoCompra) getTableRow().getItem()).getEstado();
                 Label badge = new Label(textoEstado(estado));
@@ -154,26 +158,47 @@ public class PedidosCompraController extends BaseAssistenteController {
             }
         });
 
-        // Ações
-        colAcoes.setCellValueFactory(c -> new SimpleStringProperty(""));
+        // Ações — largura fixa com alinhamento consistente entre linhas
+        colAcoes.setCellValueFactory(c -> null);
+        colAcoes.setStyle("-fx-alignment: CENTER-LEFT;");
         colAcoes.setCellFactory(col -> new TableCell<>() {
             private final Button btnVer      = new Button("Ver");
             private final Button btnCancelar = new Button("Cancelar");
             private final Button btnReceber  = new Button("Recebido");
-            private final HBox   box         = new HBox(6, btnVer, btnCancelar, btnReceber);
+            private final HBox   box         = new HBox(8);
+            private final Region spacer      = new Region();
 
             {
                 btnVer.getStyleClass().add("table-action-button");
+                btnVer.setMinWidth(80);
+                btnVer.setPrefWidth(80);
+
                 btnCancelar.getStyleClass().add("table-link-button");
+                btnCancelar.setMinWidth(70);
+                btnCancelar.setPrefWidth(70);
+
                 btnReceber.getStyleClass().add("table-action-button");
+                btnReceber.setMinWidth(90);
+                btnReceber.setPrefWidth(90);
+
+                // HBox com largura fixa para alinhamento uniforme entre todas as linhas
                 box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                box.setMinWidth(270);
+                box.setPrefWidth(270);
+                box.setMaxWidth(270);
+
+                // Spacer ocupa o espaço restante para manter os botões alinhados à esquerda
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+                box.getChildren().addAll(btnVer, btnReceber, btnCancelar, spacer);
             }
 
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null); return;
+                    setGraphic(null);
+                    setText(null);
+                    return;
                 }
                 PedidoCompra p = (PedidoCompra) getTableRow().getItem();
                 EstadoPedidoCompra estado = p.getEstado();
@@ -182,14 +207,13 @@ public class PedidosCompraController extends BaseAssistenteController {
                 btnCancelar.setOnAction(e -> confirmarCancelar(p));
                 btnReceber.setOnAction(e -> confirmarRecepcao(p));
 
-                // Mostrar/ocultar acções conforme o estado
-                btnCancelar.setVisible(estado == EstadoPedidoCompra.PENDENTE
-                        || estado == EstadoPedidoCompra.ENVIADO);
-                btnCancelar.setManaged(btnCancelar.isVisible());
-
-                btnReceber.setVisible(estado == EstadoPedidoCompra.PENDENTE
-                        || estado == EstadoPedidoCompra.ENVIADO);
-                btnReceber.setManaged(btnReceber.isVisible());
+                // Mostrar botões extra apenas para PENDENTE ou ENVIADO
+                boolean acoesVisiveis = (estado == EstadoPedidoCompra.PENDENTE
+                                      || estado == EstadoPedidoCompra.ENVIADO);
+                btnReceber.setManaged(acoesVisiveis);
+                btnReceber.setVisible(acoesVisiveis);
+                btnCancelar.setManaged(acoesVisiveis);
+                btnCancelar.setVisible(acoesVisiveis);
 
                 setGraphic(box);
                 setText(null);
@@ -260,29 +284,33 @@ public class PedidosCompraController extends BaseAssistenteController {
 
     private void abrirDetalhesPedido(PedidoCompra p) {
         try {
-            List<ItemPedido> itens = pedidoCompraService.listarItensDoPedido(p.getId());
+            PedidoCompra completo = pedidoCompraService.buscarCompletoParaDetalhes(p.getId());
+            List<ItemPedido> itens = completo.getItens();
             StringBuilder sb = new StringBuilder();
-            sb.append("Pedido #").append(p.getId()).append("\n");
-            sb.append("Fornecedor: ").append(p.getIdFornecedor() != null ? p.getIdFornecedor().getNome() : "-").append("\n");
-            sb.append("Data: ").append(p.getDataPedido() != null ? p.getDataPedido().format(DATA_FMT) : "-").append("\n");
-            sb.append("Estado: ").append(textoEstado(p.getEstado())).append("\n\n");
+            sb.append("Pedido #").append(completo.getId()).append("\n");
+            sb.append("Fornecedor: ").append(completo.getIdFornecedor() != null && completo.getIdFornecedor().getNome() != null
+                    ? completo.getIdFornecedor().getNome() : "-").append("\n");
+            sb.append("Data: ").append(completo.getDataPedido() != null ? completo.getDataPedido().format(DATA_FMT) : "-").append("\n");
+            sb.append("Estado: ").append(textoEstado(completo.getEstado())).append("\n\n");
             sb.append("Itens:\n");
-            for (ItemPedido item : itens) {
-                String mat = item.getIdMaterial() != null && item.getIdMaterial().getNome() != null
-                        ? item.getIdMaterial().getNome() : "-";
-                sb.append("  • ").append(mat)
-                  .append(" — ").append(item.getQuantidade()).append(" un.")
-                  .append(" × ").append(String.format("%.2f €", item.getValor()))
-                  .append("\n");
+            if (itens != null) {
+                for (ItemPedido item : itens) {
+                    String mat = item.getIdMaterial() != null && item.getIdMaterial().getNome() != null
+                            ? item.getIdMaterial().getNome() : "-";
+                    sb.append("  • ").append(mat)
+                      .append(" — ").append(item.getQuantidade()).append(" un.")
+                      .append(" × ").append(String.format("%.2f €", item.getValor()))
+                      .append("\n");
+                }
+                BigDecimal total = pedidoCompraService.calcularTotal(itens);
+                sb.append("\nTotal: ").append(String.format("%.2f €", total));
             }
-            BigDecimal total = pedidoCompraService.calcularTotal(itens);
-            sb.append("\nTotal: ").append(String.format("%.2f €", total));
 
-            if (p.getObservacoes() != null && !p.getObservacoes().isBlank())
-                sb.append("\n\nObservações: ").append(p.getObservacoes());
+            if (completo.getObservacoes() != null && !completo.getObservacoes().isBlank())
+                sb.append("\n\nObservações: ").append(completo.getObservacoes());
 
             Alert a = new Alert(Alert.AlertType.INFORMATION);
-            a.setTitle("Pedido #" + p.getId());
+            a.setTitle("Pedido #" + completo.getId());
             a.setHeaderText("Detalhes do Pedido de Compra");
             a.setContentText(sb.toString());
             a.getDialogPane().setMinWidth(480);
