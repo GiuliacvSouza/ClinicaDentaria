@@ -5,8 +5,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.geometry.Pos;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import model.*;
 import model.enums.EstadoConsulta;
@@ -34,10 +38,7 @@ public class ProntuariosDentistaController extends BaseDentistaController {
 
     // Pesquisa e filtros
     @FXML private TextField txtPesquisa;
-    @FXML private TableView<Paciente> tblPacientes;
-    @FXML private TableColumn<Paciente, String> colNomePaciente;
-    @FXML private TableColumn<Paciente, String> colIdadePaciente;
-    @FXML private TableColumn<Paciente, String> colUltimaConsulta;
+    @FXML private ListView<Paciente> lstPacientes;
     @FXML private ComboBox<String> cmbFiltro;
 
     // Placeholder / Prontuário
@@ -113,7 +114,7 @@ public class ProntuariosDentistaController extends BaseDentistaController {
 
         txtPesquisa.textProperty().addListener((obs, oldVal, newVal) -> aplicarFiltros());
 
-        tblPacientes.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        lstPacientes.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 carregarPacienteSelecionado(newSelection);
             } else {
@@ -142,32 +143,83 @@ public class ProntuariosDentistaController extends BaseDentistaController {
     }
 
     private void configurarListaPacientes() {
-        colNomePaciente.setCellValueFactory(cell -> {
-            Utilizador u = cell.getValue().getUtilizador();
-            return new SimpleStringProperty(u != null ? (nvl(u.getPrimeiroNome()) + " " + nvl(u.getUltimoNome())).trim() : "-");
-        });
-
-        colIdadePaciente.setCellValueFactory(cell -> {
-            Utilizador u = cell.getValue().getUtilizador();
-            if (u != null && u.getDataNascimento() != null) {
-                int idade = LocalDate.now().getYear() - u.getDataNascimento().getYear();
-                return new SimpleStringProperty(String.valueOf(idade));
-            }
-            return new SimpleStringProperty("-");
-        });
-
-        colUltimaConsulta.setCellValueFactory(cell -> {
-            try {
-                List<Consulta> consultas = consultaService.listarPorPaciente(cell.getValue().getId());
-                if (!consultas.isEmpty()) {
-                    Consulta c = consultas.get(0);
-                    if (c.getDataHoraInicio() != null) {
-                        return new SimpleStringProperty(LocalDateTime.ofInstant(c.getDataHoraInicio(), ZoneId.systemDefault()).format(DATE_FMT));
-                    }
+        lstPacientes.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Paciente paciente, boolean empty) {
+                super.updateItem(paciente, empty);
+                if (empty || paciente == null) {
+                    setGraphic(null);
+                    setText(null);
+                    return;
                 }
-            } catch (Exception ignored) {}
-            return new SimpleStringProperty("-");
+
+                VBox textos = new VBox(2);
+                textos.setStyle("-fx-background-color: transparent;");
+                Label nome = new Label(nomeCompletoPaciente(paciente));
+                Label meta = new Label(idadeFormatada(paciente) + " • Última consulta: " + ultimaConsultaFormatada(paciente));
+
+                nome.getStyleClass().add("patient-name");
+                meta.getStyleClass().add("patient-meta");
+
+                Label iniciais = new Label(gerarIniciais(paciente));
+                iniciais.getStyleClass().add("patient-avatar");
+
+                Label seta = new Label("\u203A");
+                seta.getStyleClass().add("patient-arrow");
+
+                HBox linha = new HBox(12);
+                linha.setAlignment(Pos.CENTER_LEFT);
+                linha.getStyleClass().add("patient-card");
+
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                textos.getChildren().addAll(nome, meta);
+                linha.getChildren().addAll(iniciais, textos, spacer, seta);
+
+                setGraphic(linha);
+                setText(null);
+            }
         });
+    }
+
+    private String nomeCompletoPaciente(Paciente p) {
+        Utilizador u = p.getUtilizador();
+        return u != null ? (nvl(u.getPrimeiroNome()) + " " + nvl(u.getUltimoNome())).trim() : "Paciente";
+    }
+
+    private String idadeFormatada(Paciente p) {
+        Utilizador u = p.getUtilizador();
+        if (u != null && u.getDataNascimento() != null) {
+            int idade = LocalDate.now().getYear() - u.getDataNascimento().getYear();
+            return idade + " anos";
+        }
+        return "\u2014";
+    }
+
+    private String ultimaConsultaFormatada(Paciente p) {
+        try {
+            List<Consulta> consultas = consultaService.listarPorPaciente(p.getId());
+            if (!consultas.isEmpty()) {
+                Consulta c = consultas.get(0);
+                if (c.getDataHoraInicio() != null) {
+                    return LocalDateTime.ofInstant(c.getDataHoraInicio(), ZoneId.systemDefault()).format(DATE_FMT);
+                }
+            }
+        } catch (Exception ignored) {}
+        return "\u2014";
+    }
+
+    private String gerarIniciais(Paciente p) {
+        Utilizador u = p.getUtilizador();
+        String initials = "";
+        if (u != null) {
+            String pNome = nvl(u.getPrimeiroNome());
+            String uNome = nvl(u.getUltimoNome());
+            if (!pNome.isEmpty()) initials += pNome.substring(0, 1).toUpperCase();
+            if (!uNome.isEmpty()) initials += uNome.substring(0, 1).toUpperCase();
+        }
+        return initials.isEmpty() ? "P" : initials;
     }
 
     private void configurarTabelas() {
@@ -220,7 +272,7 @@ public class ProntuariosDentistaController extends BaseDentistaController {
         try {
             masterPacientes.setAll(pacienteService.listarTodos());
             filteredPacientes = new FilteredList<>(masterPacientes, p -> true);
-            tblPacientes.setItems(filteredPacientes);
+            lstPacientes.setItems(filteredPacientes);
         } catch (Exception e) {
             mostrarErro("Erro ao carregar pacientes: " + e.getMessage());
         }

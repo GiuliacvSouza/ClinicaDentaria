@@ -1583,3 +1583,64 @@
     -fx-background-color: #edf4f2;
     -fx-text-fill: #17312e;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Prontuários — Lista de Pacientes (cards)
+   ═══════════════════════════════════════════════════════════ */
+.patients-list {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.patients-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 6 0;
+}
+
+.patients-list .list-cell:selected .patient-card,
+.patients-list .list-cell:selected {
+    -fx-background-color: #E4F7F3;
+    -fx-border-color: #2E8478;
+}
+
+.patient-card {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #DCEBE8;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-padding: 12 14;
+}
+
+.patient-card:hover {
+    -fx-background-color: #F3FAF8;
+}
+
+.patient-avatar {
+    -fx-background-color: #DDF3EF;
+    -fx-background-radius: 999;
+    -fx-min-width: 42;
+    -fx-min-height: 42;
+    -fx-max-width: 42;
+    -fx-max-height: 42;
+    -fx-alignment: center;
+    -fx-text-fill: #0E6F64;
+    -fx-font-weight: 700;
+    -fx-font-size: 14px;
+}
+
+.patient-name {
+    -fx-text-fill: #0B2F2C;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.patient-meta {
+    -fx-text-fill: #657B78;
+    -fx-font-size: 12px;
+}
+
+.patient-arrow {
+    -fx-text-fill: #315C57;
+    -fx-font-size: 24px;
+}
