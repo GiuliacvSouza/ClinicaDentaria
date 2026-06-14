@@ -12,6 +12,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -38,7 +39,8 @@ import java.time.Instant;
 public class LoginController {
 
     @FXML private TextField txtEmail;
-    @FXML private TextField txtPassword;
+    @FXML private PasswordField txtPasswordField;
+    @FXML private TextField txtPasswordVisible;
     @FXML private Button btnEntrar;
     @FXML private Button btnTogglePassword;
     @FXML private Label lblErro;
@@ -49,8 +51,6 @@ public class LoginController {
     @FXML private ImageView imgClinica;
 
     private boolean senhaVisivel = false;
-    private String senhaReal = "";
-    private boolean atualizandoSenha = false;
     private static final String INPUT_ERROR_CLASS = "login-input-error";
     private static final String PASSWORD_FOCUSED_CLASS = "focused";
     private static final String BUTTON_SUCCESS_CLASS = "primary-button-success";
@@ -78,6 +78,20 @@ public class LoginController {
         setupEventHandlers();
         setupPlaceholders();
         setupPasswordToggle();
+        setupBidirectionalBinding();
+        setInitialVisibility();
+    }
+
+    private void setupBidirectionalBinding() {
+        txtPasswordVisible.textProperty().bindBidirectional(txtPasswordField.textProperty());
+    }
+
+    private void setInitialVisibility() {
+        txtPasswordField.setVisible(true);
+        txtPasswordField.setManaged(true);
+        txtPasswordVisible.setVisible(false);
+        txtPasswordVisible.setManaged(false);
+        senhaVisivel = false;
     }
 
     private void setupResponsiveLayout() {
@@ -104,8 +118,13 @@ public class LoginController {
             atualizarViewportImagem();
         }
 
-        if (passwordWrapper != null && txtPassword != null) {
-            txtPassword.focusedProperty().addListener((obs, antigo, focado) -> alternarClasse(
+        if (passwordWrapper != null && txtPasswordField != null) {
+            txtPasswordField.focusedProperty().addListener((obs, antigo, focado) -> alternarClasse(
+                    passwordWrapper, PASSWORD_FOCUSED_CLASS, focado));
+        }
+
+        if (passwordWrapper != null && txtPasswordVisible != null) {
+            txtPasswordVisible.focusedProperty().addListener((obs, antigo, focado) -> alternarClasse(
                     passwordWrapper, PASSWORD_FOCUSED_CLASS, focado));
         }
 
@@ -160,11 +179,21 @@ public class LoginController {
 
         txtEmail.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                txtPassword.requestFocus();
+                if (senhaVisivel) {
+                    txtPasswordVisible.requestFocus();
+                } else {
+                    txtPasswordField.requestFocus();
+                }
             }
         });
 
-        txtPassword.setOnKeyPressed(event -> {
+        txtPasswordField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleLogin();
+            }
+        });
+
+        txtPasswordVisible.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 handleLogin();
             }
@@ -175,49 +204,54 @@ public class LoginController {
             removerClasse(txtEmail, INPUT_ERROR_CLASS);
         });
 
-        txtPassword.textProperty().addListener((obs, old, newVal) -> {
+        txtPasswordField.textProperty().addListener((obs, old, newVal) -> {
             lblErro.setVisible(false);
             removerClasse(passwordWrapper, INPUT_ERROR_CLASS);
-            if (!atualizandoSenha) {
-                if (!senhaVisivel) {
-                    senhaReal = newVal;
-                    atualizandoSenha = true;
-                    int posCursor = txtPassword.getCaretPosition();
-                    txtPassword.setText(new String(new char[newVal.length()]).replace('\0', '•'));
-                    txtPassword.positionCaret(Math.min(posCursor, txtPassword.getText().length()));
-                    atualizandoSenha = false;
-                } else {
-                    senhaReal = newVal;
-                }
-            }
+        });
+
+        txtPasswordVisible.textProperty().addListener((obs, old, newVal) -> {
+            lblErro.setVisible(false);
+            removerClasse(passwordWrapper, INPUT_ERROR_CLASS);
         });
     }
 
     private void setupPlaceholders() {
         txtEmail.setPromptText("seu@email.com");
-        txtPassword.setPromptText("••••••••");
+        txtPasswordField.setPromptText("••••••••");
+        txtPasswordVisible.setPromptText("••••••••");
     }
 
     @FXML
     private void togglePasswordVisibility() {
         senhaVisivel = !senhaVisivel;
-        atualizandoSenha = true;
+
         if (senhaVisivel) {
-            txtPassword.setText(senhaReal);
+            txtPasswordField.setVisible(false);
+            txtPasswordField.setManaged(false);
+            txtPasswordVisible.setVisible(true);
+            txtPasswordVisible.setManaged(true);
+            txtPasswordVisible.requestFocus();
+            txtPasswordVisible.positionCaret(txtPasswordVisible.getText().length());
         } else {
-            senhaReal = txtPassword.getText();
-            if (!senhaReal.isEmpty()) {
-                txtPassword.setText(new String(new char[senhaReal.length()]).replace('\0', '•'));
-            }
+            txtPasswordVisible.setVisible(false);
+            txtPasswordVisible.setManaged(false);
+            txtPasswordField.setVisible(true);
+            txtPasswordField.setManaged(true);
+            txtPasswordField.requestFocus();
+            txtPasswordField.positionCaret(txtPasswordField.getText().length());
         }
-        atualizandoSenha = false;
+
         setupPasswordToggle();
+    }
+
+    private String obterSenhaDigitada() {
+        return txtPasswordField.getText();
     }
 
     @FXML
     private void handleLogin() {
         String email = txtEmail.getText().trim();
-        String senha = senhaVisivel ? txtPassword.getText() : senhaReal;
+        String senha = obterSenhaDigitada();
 
         if (email.isEmpty()) {
             showError("Por favor, insira o email");
@@ -228,7 +262,11 @@ public class LoginController {
 
         if (senha.isEmpty()) {
             showError("Por favor, insira a palavra-passe");
-            txtPassword.requestFocus();
+            if (senhaVisivel) {
+                txtPasswordVisible.requestFocus();
+            } else {
+                txtPasswordField.requestFocus();
+            }
             highlightError(passwordWrapper);
             return;
         }
@@ -298,8 +336,12 @@ public class LoginController {
                         showSuccessAndNavigate();
                     } else {
                         showError("Email ou palavra-passe inválidos, ou conta inativa");
-                        txtPassword.clear();
-                        txtPassword.requestFocus();
+                        txtPasswordField.clear();
+                        if (senhaVisivel) {
+                            txtPasswordVisible.requestFocus();
+                        } else {
+                            txtPasswordField.requestFocus();
+                        }
                         highlightError(txtEmail);
                         highlightError(passwordWrapper);
                         btnEntrar.setDisable(false);
