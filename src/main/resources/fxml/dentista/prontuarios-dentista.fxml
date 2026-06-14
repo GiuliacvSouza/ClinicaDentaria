@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -74,31 +75,28 @@
 
             <Label styleClass="section-title" text="Pacientes" />
             <TextField fx:id="txtPesquisa"
-                       promptText="Pesquisar por nome, NIF ou telefone..."
+                       promptText="Pesquisar por nome, NIF ou contacto..."
                        styleClass="search-field" />
-            <HBox spacing="8.0" fx:id="filterBox">
-                <Button fx:id="btnTodos" onAction="#filtrarTodos"
-                        styleClass="filter-chip" text="Todos" mnemonicParsing="false" />
-                <Button fx:id="btnComHistorico" onAction="#filtrarComHistorico"
-                        styleClass="filter-chip" text="Com Histórico" mnemonicParsing="false" />
-                <Button fx:id="btnComPlano" onAction="#filtrarComPlano"
-                        styleClass="filter-chip" text="Com Plano" mnemonicParsing="false" />
-                <Button fx:id="btnComPrescricao" onAction="#filtrarComPrescricao"
-                        styleClass="filter-chip" text="Com Prescrições" mnemonicParsing="false" />
+            <HBox alignment="CENTER_LEFT" spacing="8.0">
+                <Label text="Filtrar por:" styleClass="section-caption" style="-fx-font-size: 12px;" />
+                <ComboBox fx:id="cmbFiltro"
+                          prefWidth="180.0"
+                          styleClass="form-combo" />
             </HBox>
 
             <!-- Tabela ocupa todo o espaço vertical restante do painel esquerdo -->
-            <TableView fx:id="tblPacientes" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="colNomePaciente"    prefWidth="140.0" text="Nome" />
-                    <TableColumn fx:id="colIdadePaciente"   prefWidth="50.0"  text="Idade" />
-                    <TableColumn fx:id="colTelefonePaciente" prefWidth="95.0" text="Telefone" />
-                    <TableColumn fx:id="colUltimaConsulta"  prefWidth="95.0"  text="Última Consulta" />
-                </columns>
-                <placeholder>
-                    <Label text="Nenhum paciente encontrado." />
-                </placeholder>
-            </TableView>
+            <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                <TableView fx:id="tblPacientes" styleClass="dashboard-table">
+                    <columns>
+                        <TableColumn fx:id="colNomePaciente"    prefWidth="140.0" text="Nome" />
+                        <TableColumn fx:id="colIdadePaciente"   prefWidth="50.0"  text="Idade" />
+                        <TableColumn fx:id="colUltimaConsulta"  prefWidth="140.0" text="Última Consulta" />
+                    </columns>
+                    <placeholder>
+                        <Label text="Nenhum paciente encontrado." styleClass="empty-table-subtitle" />
+                    </placeholder>
+                </TableView>
+            </ScrollPane>
         </VBox>
 
         <!-- ═══ Painel Direito: ScrollPane com prontuário ═══ -->
@@ -212,29 +210,25 @@
                     <!-- SECÇÃO 3: Histórico Odontológico -->
                     <VBox spacing="10.0" styleClass="patient-info-card"
                           style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 14;">
-                        <HBox alignment="CENTER_LEFT">
-                            <Label text="Histórico Odontológico"
-                                   styleClass="section-title"
-                                   style="-fx-font-size: 14px;" />
-                            <Region HBox.hgrow="ALWAYS" />
-                            <Button onAction="#verHistoricoCompleto"
-                                    text="Ver Histórico Completo"
-                                    styleClass="secondary-button" />
-                        </HBox>
-                        <TableView fx:id="tblHistoricoConsultas"
-                                   styleClass="dashboard-table"
-                                   prefHeight="160.0" maxHeight="240.0">
-                            <columns>
-                                <TableColumn fx:id="colHistData"       prefWidth="110.0" text="Data" />
-                                <TableColumn fx:id="colHistTipo"       prefWidth="80.0"  text="Tipo" />
-                                <TableColumn fx:id="colHistDentista"   prefWidth="130.0" text="Dentista" />
-                                <TableColumn fx:id="colHistEstado"     prefWidth="90.0"  text="Estado" />
-                                <TableColumn fx:id="colHistDiagnostico" prefWidth="200.0" text="Diagnóstico / Procedimentos" />
-                            </columns>
-                            <placeholder>
-                                <Label text="Nenhuma consulta anterior registada." />
-                            </placeholder>
-                        </TableView>
+                        <Label text="Histórico Odontológico"
+                               styleClass="section-title"
+                               style="-fx-font-size: 14px;" />
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                                    prefHeight="160.0" maxHeight="240.0">
+                            <TableView fx:id="tblHistoricoConsultas"
+                                       styleClass="dashboard-table">
+                                <columns>
+                                    <TableColumn fx:id="colHistData"       prefWidth="110.0" text="Data" />
+                                    <TableColumn fx:id="colHistTipo"       prefWidth="80.0"  text="Tipo" />
+                                    <TableColumn fx:id="colHistDentista"   prefWidth="130.0" text="Dentista" />
+                                    <TableColumn fx:id="colHistEstado"     prefWidth="90.0"  text="Estado" />
+                                    <TableColumn fx:id="colHistDiagnostico" prefWidth="200.0" text="Diagnóstico / Procedimentos" />
+                                </columns>
+                                <placeholder>
+                                    <Label text="Nenhuma consulta anterior registada." styleClass="empty-table-subtitle" />
+                                </placeholder>
+                            </TableView>
+                        </ScrollPane>
                     </VBox>
 
                     <!-- SECÇÃO 4: Prescrições -->
@@ -243,19 +237,21 @@
                         <Label text="Prescrições"
                                styleClass="section-title"
                                style="-fx-font-size: 14px;" />
-                        <TableView fx:id="tblPrescricoes"
-                                   styleClass="dashboard-table"
-                                   prefHeight="130.0" maxHeight="200.0">
-                            <columns>
-                                <TableColumn fx:id="colPrescData"        prefWidth="90.0"  text="Data" />
-                                <TableColumn fx:id="colPrescMedicamento" prefWidth="190.0" text="Medicamento" />
-                                <TableColumn fx:id="colPrescPosologia"   prefWidth="190.0" text="Posologia" />
-                                <TableColumn fx:id="colPrescDuracao"     prefWidth="100.0" text="Duração" />
-                            </columns>
-                            <placeholder>
-                                <Label text="Nenhuma prescrição encontrada." />
-                            </placeholder>
-                        </TableView>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                                    prefHeight="130.0" maxHeight="200.0">
+                            <TableView fx:id="tblPrescricoes"
+                                       styleClass="dashboard-table">
+                                <columns>
+                                    <TableColumn fx:id="colPrescData"        prefWidth="90.0"  text="Data" />
+                                    <TableColumn fx:id="colPrescMedicamento" prefWidth="190.0" text="Medicamento" />
+                                    <TableColumn fx:id="colPrescPosologia"   prefWidth="190.0" text="Posologia" />
+                                    <TableColumn fx:id="colPrescDuracao"     prefWidth="100.0" text="Duração" />
+                                </columns>
+                                <placeholder>
+                                    <Label text="Nenhuma prescrição encontrada." styleClass="empty-table-subtitle" />
+                                </placeholder>
+                            </TableView>
+                        </ScrollPane>
                     </VBox>
 
                     <!-- SECÇÃO 5: Planos de Tratamento -->
@@ -264,20 +260,22 @@
                         <Label text="Planos de Tratamento"
                                styleClass="section-title"
                                style="-fx-font-size: 14px;" />
-                        <TableView fx:id="tblPlanos"
-                                   styleClass="dashboard-table"
-                                   prefHeight="130.0" maxHeight="200.0">
-                            <columns>
-                                <TableColumn fx:id="colPlanoDataInicio" prefWidth="90.0"  text="Data Início" />
-                                <TableColumn fx:id="colPlanoDataFim"    prefWidth="90.0"  text="Data Fim" />
-                                <TableColumn fx:id="colPlanoObjetivo"   prefWidth="190.0" text="Objetivo" />
-                                <TableColumn fx:id="colPlanoEstado"     prefWidth="90.0"  text="Estado" />
-                                <TableColumn fx:id="colPlanoProgresso"  prefWidth="120.0" text="Progresso" />
-                            </columns>
-                            <placeholder>
-                                <Label text="Nenhum plano de tratamento encontrado." />
-                            </placeholder>
-                        </TableView>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                                    prefHeight="130.0" maxHeight="200.0">
+                            <TableView fx:id="tblPlanos"
+                                       styleClass="dashboard-table">
+                                <columns>
+                                    <TableColumn fx:id="colPlanoDataInicio" prefWidth="90.0"  text="Data Início" />
+                                    <TableColumn fx:id="colPlanoDataFim"    prefWidth="90.0"  text="Data Fim" />
+                                    <TableColumn fx:id="colPlanoObjetivo"   prefWidth="190.0" text="Objetivo" />
+                                    <TableColumn fx:id="colPlanoEstado"     prefWidth="90.0"  text="Estado" />
+                                    <TableColumn fx:id="colPlanoProgresso"  prefWidth="120.0" text="Progresso" />
+                                </columns>
+                                <placeholder>
+                                    <Label text="Nenhum plano de tratamento registado." styleClass="empty-table-subtitle" />
+                                </placeholder>
+                            </TableView>
+                        </ScrollPane>
                     </VBox>
 
                     <!-- SECÇÃO 6: Anamneses -->
@@ -286,17 +284,19 @@
                         <Label text="Anamneses"
                                styleClass="section-title"
                                style="-fx-font-size: 14px;" />
-                        <TableView fx:id="tblAnamneses"
-                                   styleClass="dashboard-table"
-                                   prefHeight="130.0" maxHeight="200.0">
-                            <columns>
-                                <TableColumn fx:id="colAnamneseData"   prefWidth="110.0" text="Data" />
-                                <TableColumn fx:id="colAnamneseResumo" prefWidth="420.0" text="Resumo" />
-                            </columns>
-                            <placeholder>
-                                <Label text="Nenhuma anamnese registada." />
-                            </placeholder>
-                        </TableView>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                                    prefHeight="130.0" maxHeight="200.0">
+                            <TableView fx:id="tblAnamneses"
+                                       styleClass="dashboard-table">
+                                <columns>
+                                    <TableColumn fx:id="colAnamneseData"   prefWidth="110.0" text="Data" />
+                                    <TableColumn fx:id="colAnamneseResumo" prefWidth="420.0" text="Resumo" />
+                                </columns>
+                                <placeholder>
+                                    <Label text="Nenhuma anamnese registada." styleClass="empty-table-subtitle" />
+                                </placeholder>
+                            </TableView>
+                        </ScrollPane>
                     </VBox>
 
                 </VBox>

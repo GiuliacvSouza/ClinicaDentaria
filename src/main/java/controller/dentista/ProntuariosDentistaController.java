@@ -22,7 +22,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Predicate;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -38,12 +37,8 @@ public class ProntuariosDentistaController extends BaseDentistaController {
     @FXML private TableView<Paciente> tblPacientes;
     @FXML private TableColumn<Paciente, String> colNomePaciente;
     @FXML private TableColumn<Paciente, String> colIdadePaciente;
-    @FXML private TableColumn<Paciente, String> colTelefonePaciente;
     @FXML private TableColumn<Paciente, String> colUltimaConsulta;
-    @FXML private Button btnTodos;
-    @FXML private Button btnComHistorico;
-    @FXML private Button btnComPlano;
-    @FXML private Button btnComPrescricao;
+    @FXML private ComboBox<String> cmbFiltro;
 
     // Placeholder / Prontuário
     @FXML private VBox panePlaceholder;
@@ -114,6 +109,7 @@ public class ProntuariosDentistaController extends BaseDentistaController {
     protected void inicializarEcra() {
         configurarListaPacientes();
         configurarTabelas();
+        configurarFiltroCombo();
 
         txtPesquisa.textProperty().addListener((obs, oldVal, newVal) -> aplicarFiltros());
 
@@ -126,7 +122,23 @@ public class ProntuariosDentistaController extends BaseDentistaController {
         });
 
         carregarPacientes();
-        atualizarEstiloChips(btnTodos);
+    }
+
+    private void configurarFiltroCombo() {
+        cmbFiltro.getItems().addAll("Todos", "Com histórico", "Com prescrições", "Com planos de tratamento");
+        cmbFiltro.setValue("Todos");
+        cmbFiltro.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                switch (newVal) {
+                    case "Todos" -> filtroAtivo = 0;
+                    case "Com histórico" -> filtroAtivo = 1;
+                    case "Com prescrições" -> filtroAtivo = 3;
+                    case "Com planos de tratamento" -> filtroAtivo = 2;
+                    default -> filtroAtivo = 0;
+                }
+                aplicarFiltros();
+            }
+        });
     }
 
     private void configurarListaPacientes() {
@@ -142,11 +154,6 @@ public class ProntuariosDentistaController extends BaseDentistaController {
                 return new SimpleStringProperty(String.valueOf(idade));
             }
             return new SimpleStringProperty("-");
-        });
-
-        colTelefonePaciente.setCellValueFactory(cell -> {
-            Utilizador u = cell.getValue().getUtilizador();
-            return new SimpleStringProperty(u != null ? nvl(u.getTelemovel()) : "-");
         });
 
         colUltimaConsulta.setCellValueFactory(cell -> {
@@ -418,42 +425,6 @@ public class ProntuariosDentistaController extends BaseDentistaController {
         pacienteAtual = null;
         panePlaceholder.setVisible(true);
         paneProntuario.setVisible(false);
-    }
-
-    // Filtros
-    @FXML private void filtrarTodos() { filtroAtivo = 0; atualizarEstiloChips(btnTodos); aplicarFiltros(); }
-    @FXML private void filtrarComHistorico() { filtroAtivo = 1; atualizarEstiloChips(btnComHistorico); aplicarFiltros(); }
-    @FXML private void filtrarComPlano() { filtroAtivo = 2; atualizarEstiloChips(btnComPlano); aplicarFiltros(); }
-    @FXML private void filtrarComPrescricao() { filtroAtivo = 3; atualizarEstiloChips(btnComPrescricao); aplicarFiltros(); }
-
-    private void atualizarEstiloChips(Button ativo) {
-        List<Button> chips = List.of(btnTodos, btnComHistorico, btnComPlano, btnComPrescricao);
-        for (Button btn : chips) {
-            if (btn == null) continue;
-            if (btn == ativo) {
-                btn.getStyleClass().removeAll("filter-chip");
-                if (!btn.getStyleClass().contains("nav-button-active")) {
-                    btn.getStyleClass().add("nav-button-active");
-                }
-                btn.setStyle("-fx-background-color: #e8f4ff; -fx-text-fill: #0066cc;");
-            } else {
-                btn.getStyleClass().removeAll("nav-button-active");
-                if (!btn.getStyleClass().contains("filter-chip")) {
-                    btn.getStyleClass().add("filter-chip");
-                }
-                btn.setStyle(null);
-            }
-        }
-    }
-
-    // Ações
-    @FXML
-    private void verHistoricoCompleto() {
-        if (pacienteAtual != null) {
-            // Redirecionar para agenda com o paciente selecionado
-            // Por enquanto apenas mostra info
-            mostrarInfo("Histórico completo do paciente disponível na seção acima.");
-        }
     }
 
     private String textoEstado(EstadoConsulta estado) {
