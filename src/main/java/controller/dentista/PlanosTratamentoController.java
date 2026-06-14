@@ -92,10 +92,13 @@ public class PlanosTratamentoController extends BaseDentistaController {
                 cell.getValue().getProgresso() != null ? cell.getValue().getProgresso() : "-"));
 
         colAcoes.setCellFactory(col -> new TableCell<>() {
-            private final Button btn = new Button("Editar");
+            private final Button btn = new Button("Abrir");
 
             {
                 btn.getStyleClass().add("table-action-button");
+                btn.setMinWidth(110);
+                btn.setPrefWidth(120);
+                btn.setPrefHeight(38);
                 btn.setOnAction(e -> {
                     PlanoTratamento p = getTableView().getItems().get(getIndex());
                     carregarPlanoParaEdicao(p);

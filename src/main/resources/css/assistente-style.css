@@ -70,6 +70,23 @@
     -fx-alignment: center;
 }
 
+.nav-button:focused {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5c706d;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.nav-button:hover:focused {
+    -fx-background-color: #edf4f2;
+    -fx-text-fill: #244641;
+}
+
+.nav-button-active:focused {
+    -fx-background-color: #2e7d72;
+    -fx-text-fill: white;
+}
+
 .icon-button {
     -fx-background-color: transparent;
     -fx-padding: 0;
@@ -915,9 +932,10 @@
     -fx-background-color: #2e7d72;
     -fx-text-fill: white;
     -fx-font-family: "Poppins Medium";
-    -fx-font-size: 11px;
+    -fx-font-size: 12px;
     -fx-background-radius: 8;
-    -fx-padding: 7 0;
+    -fx-padding: 7 16;
+    -fx-min-width: 100;
     -fx-cursor: hand;
 }
 
