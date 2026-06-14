@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.assistente.ConfirmarRececaoController"
+      stylesheets="@../../css/assistente-style.css"
+      styleClass="modal-root"
+      prefWidth="480.0"
+      prefHeight="-1">
+
+    <VBox styleClass="modal-card" spacing="0" prefWidth="480.0">
+
+        <!-- Cabeçalho -->
+        <VBox spacing="2.0" styleClass="modal-header-section">
+            <padding><Insets top="22.0" right="24.0" bottom="0.0" left="24.0"/></padding>
+            <Label text="Confirmar Receção" styleClass="modal-title"/>
+        </VBox>
+
+        <!-- Conteúdo -->
+        <VBox spacing="16.0" styleClass="modal-body-section">
+            <padding><Insets top="18.0" right="24.0" bottom="0.0" left="24.0"/></padding>
+
+            <HBox spacing="12.0" alignment="TOP_LEFT">
+                <VBox styleClass="confirm-icon-shell" minWidth="40.0" minHeight="40.0"
+                      prefWidth="40.0" prefHeight="40.0" alignment="CENTER">
+                    <SVGPath content="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                             styleClass="confirm-icon"/>
+                </VBox>
+                <VBox spacing="6.0">
+                    <Label fx:id="lblTituloConfirmacao" text="Confirmar receção do pedido?"
+                           styleClass="confirm-title" wrapText="true"/>
+                    <Label text="Ao confirmar, o pedido será marcado como Recebido, o stock dos materiais será atualizado e será registada uma movimentação de entrada por cada material."
+                           styleClass="confirm-message" wrapText="true"/>
+                </VBox>
+            </HBox>
+
+        </VBox>
+
+        <!-- Botões fixos no rodapé -->
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="modal-footer">
+            <padding><Insets top="18.0" right="24.0" bottom="20.0" left="24.0"/></padding>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button onAction="#cancelar" styleClass="secondary-button"
+                    text="Cancelar" mnemonicParsing="false"/>
+            <Button onAction="#confirmarRececao" styleClass="primary-button"
+                    text="Confirmar receção" mnemonicParsing="false"/>
+        </HBox>
+    </VBox>
+</VBox>

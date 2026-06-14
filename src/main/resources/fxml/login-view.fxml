@@ -86,22 +86,23 @@
                         <Label text="Palavra-passe" styleClass="label-login"/>
                         <Label text="*" styleClass="label-mandatory"/>
                     </HBox>
-                    <StackPane fx:id="passwordWrapper"
-                               maxWidth="Infinity"
-                               styleClass="login-input-wrapper">
-                        <PasswordField fx:id="txtPasswordField"
-                                       promptText="••••••••"
-                                       maxWidth="Infinity"
-                                       styleClass="login-password-inner"/>
-                        <TextField fx:id="txtPasswordVisible"
-                                   promptText="••••••••"
-                                   maxWidth="Infinity"
-                                   styleClass="login-password-inner"
-                                   visible="false"
-                                   managed="false"/>
+                    <HBox fx:id="passwordWrapper"
+                          maxWidth="Infinity"
+                          styleClass="password-input-wrapper">
+                        <StackPane HBox.hgrow="ALWAYS">
+                            <PasswordField fx:id="txtPasswordField"
+                                            promptText="••••••••"
+                                            maxWidth="Infinity"
+                                            styleClass="password-inner-field"/>
+                            <TextField fx:id="txtPasswordVisible"
+                                        promptText="••••••••"
+                                        maxWidth="Infinity"
+                                        styleClass="password-inner-field"
+                                        visible="false"
+                                        managed="false"/>
+                        </StackPane>
                         <Button fx:id="btnTogglePassword"
                                 onAction="#togglePasswordVisibility"
-                                StackPane.alignment="CENTER_RIGHT"
                                 styleClass="password-eye-button">
                             <graphic>
                                 <StackPane prefWidth="18.0" prefHeight="18.0">
@@ -110,7 +111,7 @@
                                 </StackPane>
                             </graphic>
                         </Button>
-                    </StackPane>
+                    </HBox>
                 </VBox>
 
                 <Label fx:id="lblErro"

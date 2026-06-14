@@ -104,11 +104,11 @@
                     <TableColumn fx:id="colAssistente" prefWidth="155.0" text="Responsável" />
                     <TableColumn fx:id="colEstado"     prefWidth="110.0" text="Estado"
                                  styleClass="col-center" />
-                    <TableColumn fx:id="colTotalItens" prefWidth="60.0"  text="Itens"
+                    <TableColumn fx:id="colTotalItens" prefWidth="72.0"  text="N.º itens"
                                  styleClass="col-center" />
                     <TableColumn fx:id="colValorTotal" prefWidth="105.0" text="Total"
                                  styleClass="col-right" />
-                    <TableColumn fx:id="colAcoes"      prefWidth="340.0" minWidth="340.0" text="Ações"
+                    <TableColumn fx:id="colAcoes"      prefWidth="360.0" minWidth="360.0" text="Ações"
                                  styleClass="col-center" />
                 </columns>
                 <placeholder>

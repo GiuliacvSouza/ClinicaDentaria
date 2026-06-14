@@ -47,7 +47,7 @@ public class LoginController {
     @FXML private HBox loginRoot;
     @FXML private StackPane imagePanel;
     @FXML private VBox loginContent;
-    @FXML private StackPane passwordWrapper;
+    @FXML private HBox passwordWrapper;
     @FXML private ImageView imgClinica;
 
     private boolean senhaVisivel = false;

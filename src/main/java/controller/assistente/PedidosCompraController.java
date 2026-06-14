@@ -1,5 +1,6 @@
 package controller.assistente;
 
+import app.MainFX;
 import app.SceneManager;
 import bll.PedidoCompraService;
 import javafx.beans.property.SimpleStringProperty;
@@ -7,6 +8,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -16,6 +20,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import model.ItemPedido;
 import model.PedidoCompra;
 import model.enums.EstadoPedidoCompra;
@@ -80,7 +86,6 @@ public class PedidosCompraController extends BaseAssistenteController {
     // ─── Tabela ───────────────────────────────────────────────────────────────
 
     private void configurarTabela() {
-        // Alinhamento centrado/direito nas colunas adequadas
         colNumero.setStyle("-fx-alignment: CENTER;");
         colDataPedido.setStyle("-fx-alignment: CENTER;");
         colEstado.setStyle("-fx-alignment: CENTER;");
@@ -134,7 +139,7 @@ public class PedidosCompraController extends BaseAssistenteController {
             }
         });
 
-        // Total de itens — usa a coleção já carregada via JOIN FETCH
+        // N.º itens — número de materiais diferentes no pedido
         colTotalItens.setCellValueFactory(c -> {
             try {
                 int n = c.getValue().getItens() != null ? c.getValue().getItens().size() : 0;
@@ -144,7 +149,7 @@ public class PedidosCompraController extends BaseAssistenteController {
             }
         });
 
-        // Valor total — usa a coleção já carregada via JOIN FETCH
+        // Valor total
         colValorTotal.setCellValueFactory(c -> {
             try {
                 List<ItemPedido> itens = c.getValue().getItens();
@@ -156,7 +161,7 @@ public class PedidosCompraController extends BaseAssistenteController {
             }
         });
 
-        // Ações — botões alinhados, coluna controla a largura
+        // Ações — botões alinhados com slots de largura fixa
         colAcoes.setCellValueFactory(c -> null);
         colAcoes.setStyle("-fx-alignment: CENTER-LEFT;");
         colAcoes.setCellFactory(col -> new TableCell<>() {
@@ -169,6 +174,13 @@ public class PedidosCompraController extends BaseAssistenteController {
                 btnVer.getStyleClass().add("table-action-button");
                 btnReceber.getStyleClass().add("table-action-button");
                 btnCancelar.getStyleClass().add("table-link-button");
+
+                btnVer.setPrefWidth(110);
+                btnVer.setMinWidth(110);
+                btnReceber.setPrefWidth(120);
+                btnReceber.setMinWidth(120);
+                btnCancelar.setPrefWidth(90);
+                btnCancelar.setMinWidth(90);
 
                 box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
                 box.getChildren().addAll(btnVer, btnReceber, btnCancelar);
@@ -189,13 +201,11 @@ public class PedidosCompraController extends BaseAssistenteController {
                 btnCancelar.setOnAction(e -> confirmarCancelar(p));
                 btnReceber.setOnAction(e -> confirmarRecepcao(p));
 
-                // Recebido e Cancelar apenas para PENDENTE ou ENVIADO
-                boolean acoesVisiveis = (estado == EstadoPedidoCompra.PENDENTE
-                                      || estado == EstadoPedidoCompra.ENVIADO);
-                btnReceber.setManaged(acoesVisiveis);
-                btnReceber.setVisible(acoesVisiveis);
-                btnCancelar.setManaged(acoesVisiveis);
-                btnCancelar.setVisible(acoesVisiveis);
+                boolean mostrarAcoesExtras = (estado == EstadoPedidoCompra.PENDENTE
+                                           || estado == EstadoPedidoCompra.ENVIADO);
+                // visible=false mantém managed=true → o slot preserva a largura
+                btnReceber.setVisible(mostrarAcoesExtras);
+                btnCancelar.setVisible(mostrarAcoesExtras);
 
                 setGraphic(box);
                 setText(null);
@@ -267,36 +277,29 @@ public class PedidosCompraController extends BaseAssistenteController {
     private void abrirDetalhesPedido(PedidoCompra p) {
         try {
             PedidoCompra completo = pedidoCompraService.buscarCompletoParaDetalhes(p.getId());
-            List<ItemPedido> itens = completo.getItens();
-            StringBuilder sb = new StringBuilder();
-            sb.append("Pedido #").append(completo.getId()).append("\n");
-            sb.append("Fornecedor: ").append(completo.getIdFornecedor() != null && completo.getIdFornecedor().getNome() != null
-                    ? completo.getIdFornecedor().getNome() : "-").append("\n");
-            sb.append("Data: ").append(completo.getDataPedido() != null ? completo.getDataPedido().format(DATA_FMT) : "-").append("\n");
-            sb.append("Estado: ").append(textoEstado(completo.getEstado())).append("\n\n");
-            sb.append("Itens:\n");
-            if (itens != null) {
-                for (ItemPedido item : itens) {
-                    String mat = item.getIdMaterial() != null && item.getIdMaterial().getNome() != null
-                            ? item.getIdMaterial().getNome() : "-";
-                    sb.append("  • ").append(mat)
-                      .append(" — ").append(item.getQuantidade()).append(" un.")
-                      .append(" × ").append(String.format("%.2f €", item.getValor()))
-                      .append("\n");
-                }
-                BigDecimal total = pedidoCompraService.calcularTotal(itens);
-                sb.append("\nTotal: ").append(String.format("%.2f €", total));
-            }
 
-            if (completo.getObservacoes() != null && !completo.getObservacoes().isBlank())
-                sb.append("\n\nObservações: ").append(completo.getObservacoes());
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/assistente/detalhes-pedido-modal.fxml"));
+            if (MainFX.getSpringContext() != null)
+                loader.setControllerFactory(MainFX.getSpringContext()::getBean);
 
-            Alert a = new Alert(Alert.AlertType.INFORMATION);
-            a.setTitle("Pedido #" + completo.getId());
-            a.setHeaderText("Detalhes do Pedido de Compra");
-            a.setContentText(sb.toString());
-            a.getDialogPane().setMinWidth(480);
-            a.showAndWait();
+            Parent root = loader.load();
+            DetalhesPedidoController ctrl = loader.getController();
+
+            Stage modal = new Stage();
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.initOwner(tblPedidos.getScene().getWindow());
+            modal.setResizable(false);
+            modal.setTitle("Pedido #" + completo.getId());
+
+            Scene scene = new Scene(root);
+            var css = getClass().getResource("/css/assistente-style.css");
+            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+
+            ctrl.setStage(modal);
+            ctrl.setPedido(completo);
+            modal.setScene(scene);
+            modal.showAndWait();
 
         } catch (Exception e) {
             mostrarErro("Não foi possível carregar os detalhes: " + e.getMessage());
@@ -304,7 +307,7 @@ public class PedidosCompraController extends BaseAssistenteController {
     }
 
     private void confirmarCancelar(PedidoCompra p) {
-        Optional<ButtonType> res = confirmar(
+        Optional<ButtonType> res = mostrarConfirmacao(
                 "Cancelar Pedido #" + p.getId(),
                 "Tem a certeza que pretende cancelar este pedido?\nEsta ação não pode ser desfeita.");
         if (res.isEmpty() || res.get() != ButtonType.OK) return;
@@ -318,20 +321,42 @@ public class PedidosCompraController extends BaseAssistenteController {
     }
 
     private void confirmarRecepcao(PedidoCompra p) {
-        Optional<ButtonType> res = confirmar(
-                "Confirmar Receção — Pedido #" + p.getId(),
-                "Ao confirmar a receção:\n"
-                + "• O estado passará para Recebido.\n"
-                + "• O stock dos materiais será atualizado.\n"
-                + "• Será registada uma movimentação de entrada por cada material.\n\n"
-                + "Confirmar?");
-        if (res.isEmpty() || res.get() != ButtonType.OK) return;
         try {
-            pedidoCompraService.marcarComoRecebido(p.getId());
-            carregarPedidos();
-            mostrarSucesso("Receção confirmada. O stock foi atualizado.");
-        } catch (RuntimeException ex) {
-            mostrarErro(ex.getMessage());
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/assistente/confirmar-rececao-modal.fxml"));
+            if (MainFX.getSpringContext() != null)
+                loader.setControllerFactory(MainFX.getSpringContext()::getBean);
+
+            Parent root = loader.load();
+            ConfirmarRececaoController ctrl = loader.getController();
+
+            Stage modal = new Stage();
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.initOwner(tblPedidos.getScene().getWindow());
+            modal.setResizable(false);
+            modal.setTitle("Confirmar Receção — Pedido #" + p.getId());
+
+            Scene scene = new Scene(root);
+            var css = getClass().getResource("/css/assistente-style.css");
+            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+
+            ctrl.setStage(modal);
+            ctrl.setPedido(p);
+            modal.setScene(scene);
+            modal.showAndWait();
+
+            if (ctrl.isConfirmed()) {
+                try {
+                    pedidoCompraService.marcarComoRecebido(p.getId());
+                    carregarPedidos();
+                    mostrarSucesso("Receção confirmada. O stock foi atualizado.");
+                } catch (RuntimeException ex) {
+                    mostrarErro(ex.getMessage());
+                }
+            }
+
+        } catch (Exception ex) {
+            mostrarErro("Não foi possível abrir a confirmação: " + ex.getMessage());
         }
     }
 
@@ -357,12 +382,20 @@ public class PedidosCompraController extends BaseAssistenteController {
         };
     }
 
-    private Optional<ButtonType> confirmar(String titulo, String mensagem) {
+    private Optional<ButtonType> mostrarConfirmacao(String titulo, String mensagem) {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
         a.setTitle(titulo);
         a.setHeaderText(null);
         a.setContentText(mensagem);
-        return a.showAndWait();
+        aplicarCssAoAlert(a);
+        ButtonType sim = new ButtonType("Sim");
+        ButtonType nao = new ButtonType("Não");
+        a.getButtonTypes().setAll(sim, nao);
+        Optional<ButtonType> res = a.showAndWait();
+        if (res.isPresent() && res.get() == sim) {
+            return Optional.of(ButtonType.OK);
+        }
+        return Optional.empty();
     }
 
     private void mostrarSucesso(String msg) {
@@ -370,6 +403,7 @@ public class PedidosCompraController extends BaseAssistenteController {
         a.setTitle("Sucesso");
         a.setHeaderText(null);
         a.setContentText(msg);
+        aplicarCssAoAlert(a);
         a.showAndWait();
     }
 
@@ -378,6 +412,15 @@ public class PedidosCompraController extends BaseAssistenteController {
         a.setTitle("Erro");
         a.setHeaderText(null);
         a.setContentText(msg != null ? msg : "Ocorreu um erro inesperado.");
+        aplicarCssAoAlert(a);
         a.showAndWait();
+    }
+
+    private void aplicarCssAoAlert(Alert alert) {
+        var css = getClass().getResource("/css/assistente-style.css");
+        if (css != null) {
+            alert.getDialogPane().getStylesheets().add(css.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("custom-alert");
+        }
     }
 }
