@@ -470,6 +470,13 @@
     -fx-padding: 4 0 0 0;
 }
 
+.date-picker-popup .calendar-grid .day-name-cell {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #70827f;
+    -fx-padding: 4 8;
+}
+
 .date-picker-popup .calendar-grid .day-cell {
     -fx-background-color: transparent;
     -fx-background-radius: 10;

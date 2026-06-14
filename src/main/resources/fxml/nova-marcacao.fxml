@@ -20,7 +20,8 @@
       fx:controller="controller.NovaMarcacaoController"
       spacing="14.0"
       prefWidth="540.0"
-      styleClass="nova-marcacao-root">
+      styleClass="nova-marcacao-root"
+      stylesheets="@../css/dashboard-style.css">
 
     <padding>
         <Insets top="24.0" right="28.0" bottom="24.0" left="28.0" />
@@ -28,7 +29,7 @@
 
     <HBox alignment="CENTER_LEFT">
         <VBox spacing="2.0">
-            <Label text="Nova Marcacao" styleClass="nova-marcacao-title" />
+            <Label text="Nova Marcação" styleClass="nova-marcacao-title" />
             <Label text="Pesquise um paciente existente ou registe um novo antes de marcar." styleClass="nova-marcacao-subtitle" />
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
@@ -77,7 +78,7 @@
 
         <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
             <Label text="Data *" styleClass="nova-marcacao-label" />
-            <DatePicker fx:id="dpData" styleClass="nova-marcacao-date" />
+            <DatePicker fx:id="dpData" styleClass="nova-marcacao-date" maxWidth="Infinity" />
         </VBox>
         <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <Label text="Hora *" styleClass="nova-marcacao-label" />

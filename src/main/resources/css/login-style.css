@@ -147,41 +147,57 @@
     -fx-border-width: 1.6;
 }
 
-.login-password-inner {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-border-color: transparent;
-    -fx-border-width: 0;
-    -fx-padding: 0 42 0 0;
-    -fx-font-family: "Poppins";
-    -fx-font-size: 15px;
-    -fx-text-fill: #12302D;
-    -fx-prompt-text-fill: #8A9996;
+.password-input-wrapper {
+    -fx-background-color: #F8FCFA;
+    -fx-border-color: #D5E3DF;
+    -fx-border-width: 1.2;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-padding: 0 0 0 18;
     -fx-pref-height: 56;
     -fx-min-height: 56;
     -fx-max-height: 56;
+    -fx-alignment: center-left;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
 
-.login-password-inner:focused {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-border-color: transparent;
-    -fx-border-width: 0;
+.password-input-wrapper:focused-within,
+.password-input-wrapper.focused {
+    -fx-border-color: #2D7D73;
+    -fx-border-width: 1.6;
 }
 
-.login-password-inner .scroll-pane,
-.login-password-inner .scroll-pane .viewport {
+.password-inner-field {
     -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 0;
+    -fx-font-size: 13px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #12302D;
+    -fx-prompt-text-fill: #8A9996;
+    -fx-pref-height: 56;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-highlight-fill: transparent;
+    -fx-highlight-text-fill: null;
+}
+
+.password-inner-field:focused {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-effect: null;
 }
 
 .password-eye-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-padding: 0;
+    -fx-padding: 0 12 0 8;
     -fx-cursor: hand;
-    -fx-text-fill: #667875;
     -fx-min-width: 40;
     -fx-pref-width: 40;
     -fx-max-width: 40;
@@ -191,8 +207,6 @@
     -fx-alignment: center;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
-    -fx-background-radius: 14;
-    -fx-background-insets: 2;
 }
 
 .password-eye-button:hover {
@@ -205,10 +219,6 @@
 .password-eye-button:pressed {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-}
-
-.password-eye-button:focused {
-    -fx-background-insets: 0;
 }
 
 .password-eye-icon {

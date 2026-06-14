@@ -281,7 +281,7 @@
 }
 
 .sidebar-body {
-    -fx-padding: 22 22 24 22;
+    -fx-padding: 18 20 20 20;
     -fx-background-color: #ffffff;
     -fx-background-radius: 0 0 18 18;
 }
@@ -457,6 +457,12 @@
     -fx-padding: 0;
 }
 
+.payment-details-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
 .payment-btn {
     -fx-background-color: #f8fbfa;
     -fx-border-color: #d9e6e2;
@@ -560,4 +566,16 @@
 
 .skeleton-button {
     -fx-background-radius: 16;
+}
+
+/* ─── SplitPane: divider invisivel ──────────────────────────── */
+.split-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
 }

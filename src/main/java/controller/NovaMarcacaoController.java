@@ -45,6 +45,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
+import javafx.util.StringConverter;
+import java.time.format.DateTimeParseException;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -157,7 +159,7 @@ public class NovaMarcacaoController {
         cbHora.setButtonCell(criarCellTexto("Selecione a hora"));
         cbHora.setCellFactory(listView -> criarCellTexto("Selecione a hora"));
 
-        dpData.setPromptText("dd/mm/aaaa");
+        configurarDatePickerPT(dpData);
         dpData.setDayCellFactory(datePicker -> new DateCell() {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
@@ -183,6 +185,51 @@ public class NovaMarcacaoController {
                 setText(nome + "  |  NIF " + nif);
             }
         });
+    }
+
+    private void configurarDatePickerPT(DatePicker datePicker) {
+        if (datePicker == null) {
+            return;
+        }
+        String pattern = "dd/MM/yyyy";
+        datePicker.setPromptText(pattern);
+        if (datePicker.getEditor() != null) {
+            datePicker.getEditor().setPromptText(pattern);
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        StringConverter<LocalDate> converter = new StringConverter<>() {
+            @Override
+            public String toString(LocalDate date) {
+                return date == null ? "" : date.format(formatter);
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string == null || string.isBlank()) {
+                    return null;
+                }
+                try {
+                    return LocalDate.parse(string.trim(), formatter);
+                } catch (DateTimeParseException ex) {
+                    return null;
+                }
+            }
+        };
+        datePicker.setConverter(converter);
+        if (datePicker.getEditor() != null) {
+            datePicker.getEditor().setTextFormatter(
+                new TextFormatter<>(converter, null, change -> {
+                    String novo = change.getControlNewText();
+                    if (novo.length() > 10) {
+                        return null;
+                    }
+                    if (!novo.matches("[0-9/]*")) {
+                        return null;
+                    }
+                    return change;
+                })
+            );
+        }
     }
 
     private void configurarBuscaPacientes() {

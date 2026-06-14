@@ -152,9 +152,9 @@
                         <Region prefHeight="54.0" styleClass="skeleton-block skeleton-button" />
                     </VBox>
 
-                    <ScrollPane fitToWidth="true" fitToHeight="false" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="payment-details-scroll" maxHeight="Infinity" StackPane.alignment="TOP_LEFT">
+                    <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="payment-details-scroll" maxHeight="Infinity">
                         <content>
-                            <VBox fx:id="paymentDetailsContent" spacing="14.0" styleClass="sidebar-body">
+                            <VBox fx:id="paymentDetailsContent" spacing="24.0" styleClass="sidebar-body">
                                 <VBox spacing="5.0">
                                     <Label styleClass="sub-section-title" text="Dados do Paciente" />
                                     <VBox spacing="3.0">
@@ -191,7 +191,7 @@
                                     <ComboBox fx:id="seguroCombo" maxWidth="Infinity" promptText="Selecionar seguro" styleClass="insurance-combo" />
                                 </VBox>
 
-                                <VBox spacing="14.0" styleClass="payment-footer-card">
+                                <VBox spacing="14.0" styleClass="payment-footer-card" VBox.vgrow="ALWAYS">
                                     <!-- Decomposição financeira -->
                                     <VBox fx:id="ivaDecomposicaoBox" spacing="6.0">
                                         <HBox alignment="CENTER_LEFT" styleClass="iva-row">

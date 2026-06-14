@@ -917,9 +917,7 @@
     -fx-font-family: "Poppins Medium";
     -fx-font-size: 11px;
     -fx-background-radius: 8;
-    -fx-padding: 7 14;
-    -fx-min-width: 112;
-    -fx-pref-width: 112;
+    -fx-padding: 7 0;
     -fx-cursor: hand;
 }
 
@@ -932,9 +930,7 @@
     -fx-text-fill: #c0392b;
     -fx-font-family: "Poppins SemiBold";
     -fx-font-size: 11px;
-    -fx-padding: 7 10;
-    -fx-min-width: 85;
-    -fx-pref-width: 85;
+    -fx-padding: 7 0;
     -fx-cursor: hand;
 }
 
@@ -1582,6 +1578,252 @@
 .modal-close-btn:hover {
     -fx-background-color: #edf4f2;
     -fx-text-fill: #17312e;
+}
+
+/* ─── Modal ScrollPane ──────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   Dialog / Modal — classes base para janelas modais
+   ═══════════════════════════════════════════════════════════ */
+
+.dialog-root {
+    -fx-background-color: transparent;
+    -fx-font-family: "Poppins";
+}
+
+.dialog-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18;
+    -fx-border-color: #dce7e4;
+    -fx-border-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(20,54,49,0.16), 24, 0, 0, 10);
+}
+
+.dialog-header {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #edf2f1 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.dialog-title {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 18px;
+    -fx-text-fill: #17312e;
+}
+
+.dialog-subtitle {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+    -fx-text-fill: #6f837f;
+    -fx-padding: 0 0 20 0;
+}
+
+.dialog-content {
+    -fx-background-color: #ffffff;
+}
+
+.dialog-footer {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #edf2f1 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ─── ScrollPane dentro de dialog ──────────────────────── */
+.dialog-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.dialog-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.dialog-scroll-content {
+    -fx-background-color: transparent;
+}
+
+/* ─── Card de informação nos detalhes ───────────────────── */
+.dialog-card-info {
+    -fx-background-color: #f7fbfa;
+    -fx-background-radius: 14;
+    -fx-border-color: #dce7e4;
+    -fx-border-radius: 14;
+    -fx-padding: 18 20;
+}
+
+.dialog-separator {
+    -fx-background-color: #dce7e4;
+    -fx-pref-height: 1;
+    -fx-max-height: 1;
+}
+
+/* ─── Tabela limpa (para modais de detalhes) ────────────── */
+.clean-table {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-border-color: #dce7e4;
+    -fx-border-radius: 12;
+    -fx-padding: 2;
+}
+
+.clean-table .column-header-background {
+    -fx-background-color: #f4f8f7;
+    -fx-background-radius: 10 10 0 0;
+}
+
+.clean-table .column-header,
+.clean-table .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #dce7e4 transparent;
+}
+
+.clean-table .column-header .label {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 11px;
+    -fx-text-fill: #58706b;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 0 8;
+}
+
+.clean-table .table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #edf2f1 transparent;
+    -fx-pref-height: 36;
+}
+
+.clean-table .table-row-cell:odd {
+    -fx-background-color: #fafcfb;
+}
+
+.clean-table .table-cell {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 12px;
+    -fx-text-fill: #17312e;
+    -fx-border-color: transparent;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 0 8;
+}
+
+/* ─── Detalhes do Pedido ───────────────────────────────── */
+.detail-section-label {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 13px;
+    -fx-text-fill: #17312e;
+}
+
+.detail-total-label {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 14px;
+    -fx-text-fill: #17312e;
+}
+
+.detail-total-value {
+    -fx-font-family: "Poppins Bold";
+    -fx-font-size: 16px;
+    -fx-text-fill: #2e7d72;
+}
+
+/* ─── Alias de compatibilidade ─────────────────────────── */
+.modal-scroll-pane { -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0; }
+.modal-scroll-pane > .viewport { -fx-background-color: transparent; }
+.modal-scroll-content { -fx-background-color: transparent; }
+.modal-header-section { -fx-background-color: #ffffff; -fx-border-color: transparent transparent #edf2f1 transparent; -fx-border-width: 0 0 1 0; }
+.modal-body-section { -fx-background-color: #ffffff; }
+.modal-footer { -fx-background-color: #ffffff; -fx-border-color: #edf2f1 transparent transparent transparent; -fx-border-width: 1 0 0 0; }
+.detail-info-card { -fx-background-color: #f7fbfa; -fx-background-radius: 14; -fx-border-color: #dce7e4; -fx-border-radius: 14; -fx-padding: 16 18; }
+.detail-table { -fx-background-color: #ffffff; -fx-background-radius: 12; -fx-border-color: #dce7e4; -fx-border-radius: 12; -fx-padding: 2; }
+.detail-table .column-header-background { -fx-background-color: #f4f8f7; -fx-background-radius: 10 10 0 0; }
+.detail-table .column-header, .detail-table .filler { -fx-background-color: transparent; -fx-border-color: transparent transparent #dce7e4 transparent; }
+.detail-table .column-header .label { -fx-font-family: "Poppins Medium"; -fx-font-size: 11px; -fx-text-fill: #58706b; -fx-alignment: CENTER-LEFT; -fx-padding: 0 8; }
+.detail-table .table-row-cell { -fx-background-color: #ffffff; -fx-border-color: transparent transparent #edf2f1 transparent; -fx-pref-height: 40; }
+.detail-table .table-row-cell:odd { -fx-background-color: #fafcfb; }
+.detail-table .table-cell { -fx-font-family: "Poppins"; -fx-font-size: 12px; -fx-text-fill: #17312e; -fx-border-color: transparent; -fx-alignment: CENTER-LEFT; -fx-padding: 0 8; }
+.detail-separator { -fx-background-color: #dce7e4; -fx-pref-height: 1; -fx-max-height: 1; }
+
+/* ─── Confirmação de Receção ───────────────────────────── */
+.confirm-icon-shell {
+    -fx-background-color: #e5f5f2;
+    -fx-background-radius: 20;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-pref-width: 40;
+    -fx-pref-height: 40;
+    -fx-alignment: CENTER;
+}
+
+.confirm-icon {
+    -fx-fill: #2e7d72;
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
+
+.confirm-title {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 15px;
+    -fx-text-fill: #17312e;
+}
+
+.confirm-message {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+    -fx-text-fill: #5e7672;
+    -fx-line-spacing: 4px;
+}
+
+/* ─── Custom Alert (estilizado com CSS do projeto) ─────── */
+.custom-alert {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18;
+    -fx-border-color: #dce7e4;
+    -fx-border-radius: 18;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(20,54,49,0.16), 24, 0, 0, 10);
+}
+
+.custom-alert > .header-panel {
+    -fx-background-color: transparent;
+    -fx-padding: 12 0 0 0;
+}
+
+.custom-alert > .header-panel > .label {
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 16px;
+    -fx-text-fill: #17312e;
+}
+
+.custom-alert > .content {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 13px;
+    -fx-text-fill: #17312e;
+    -fx-padding: 16 0;
+}
+
+.custom-alert .button-bar {
+    -fx-background-color: transparent;
+    -fx-padding: 8 0 0 0;
+}
+
+.custom-alert .button-bar .button {
+    -fx-background-color: #2e7d72;
+    -fx-text-fill: white;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 13px;
+    -fx-background-radius: 14;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+}
+
+.custom-alert .button-bar .button:hover {
+    -fx-background-color: #266d63;
+}
+
+.custom-alert .button-bar .cancel-button {
+    -fx-background-color: #edf4f2;
+    -fx-text-fill: #2f5c56;
+}
+
+.custom-alert .button-bar .cancel-button:hover {
+    -fx-background-color: #e3efec;
 }
 
 /* ═══════════════════════════════════════════════════════════
