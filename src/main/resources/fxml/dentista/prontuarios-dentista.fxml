@@ -70,7 +70,7 @@
     <HBox spacing="10.0" VBox.vgrow="ALWAYS" style="-fx-padding: 10;">
 
         <!-- ═══ Painel Esquerdo: Lista de Pacientes ═══ -->
-        <VBox spacing="14.0" prefWidth="425.0" minWidth="410.0" maxWidth="440.0"
+        <VBox spacing="14.0" prefWidth="450.0" minWidth="435.0" maxWidth="460.0"
               styleClass="section-card">
             <padding><Insets top="14.0" right="14.0" bottom="14.0" left="14.0" /></padding>
 
