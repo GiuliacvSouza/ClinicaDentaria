@@ -70,7 +70,7 @@
     <HBox spacing="10.0" VBox.vgrow="ALWAYS" style="-fx-padding: 10;">
 
         <!-- ═══ Painel Esquerdo: Lista de Pacientes ═══ -->
-        <VBox spacing="14.0" prefWidth="330.0" minWidth="280.0" maxWidth="360.0"
+        <VBox spacing="14.0" prefWidth="425.0" minWidth="410.0" maxWidth="440.0"
               styleClass="section-card">
             <padding><Insets top="14.0" right="14.0" bottom="14.0" left="14.0" /></padding>
 
@@ -88,6 +88,7 @@
             <!-- ListView de pacientes ocupa todo o espaço vertical restante do painel esquerdo -->
             <ListView fx:id="lstPacientes"
                       VBox.vgrow="ALWAYS"
+                      maxWidth="Infinity"
                       styleClass="patients-list">
                 <placeholder>
                     <Label text="Nenhum paciente encontrado." styleClass="empty-table-subtitle" />

@@ -22,6 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Material;
@@ -323,6 +324,11 @@ public class AssistenteDashboardController {
     private void configurarTabela() {
         if (containerConsultasGrid != null) {
             containerConsultasGrid.setFillWidth(true);
+            VBox.setVgrow(containerConsultasGrid, Priority.ALWAYS);
+            Rectangle clip = new Rectangle();
+            clip.widthProperty().bind(containerConsultasGrid.widthProperty());
+            clip.heightProperty().bind(containerConsultasGrid.heightProperty());
+            containerConsultasGrid.setClip(clip);
         }
     }
 
@@ -374,11 +380,11 @@ public class AssistenteDashboardController {
         badge.getStyleClass().addAll("status-pill", classeEstado(dto.getStatus()));
         adicionarCelula(linha, 4, badge, "consulta-body-cell", Pos.CENTER);
 
-        Button btn = new Button("Ver pormenores");
+        Button btn = new Button("Ver");
         btn.getStyleClass().add("table-action-button");
-        btn.setMinWidth(112);
-        btn.setPrefWidth(112);
-        btn.setMaxWidth(112);
+        btn.setMinWidth(60);
+        btn.setPrefWidth(60);
+        btn.setMaxWidth(60);
         btn.setOnAction(e -> abrirModalDetalhes(dto.getIdConsulta()));
         adicionarCelula(linha, 5, btn, "consulta-body-cell", Pos.CENTER);
 

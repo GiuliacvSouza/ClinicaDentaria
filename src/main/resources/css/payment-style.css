@@ -332,29 +332,34 @@
 }
 
 .procedure-row {
-    -fx-background-color: #f7fbfa;
-    -fx-background-radius: 14;
-    -fx-padding: 12 14;
-    -fx-border-color: #e5eeeb;
-    -fx-border-radius: 14;
+    -fx-background-color: #F8FCFB;
+    -fx-background-radius: 18;
+    -fx-border-color: #DDEBE8;
+    -fx-border-width: 1;
+    -fx-border-radius: 18;
+    -fx-padding: 16 20 16 20;
+    -fx-min-height: 68;
+    -fx-pref-height: 72;
+    -fx-max-height: Infinity;
 }
 
 .procedure-cell {
     -fx-font-family: "Poppins";
-    -fx-font-size: 12px;
-    -fx-text-fill: #5c706d;
+    -fx-font-size: 15px;
+    -fx-text-fill: #12302c;
+    -fx-alignment: center-left;
 }
 
 .procedure-cell-primary {
     -fx-font-family: "Poppins Medium";
-    -fx-font-size: 12px;
-    -fx-text-fill: #17312e;
+    -fx-font-size: 15px;
+    -fx-text-fill: #062F2C;
 }
 
 .procedure-cell-value {
     -fx-font-family: "Poppins SemiBold";
-    -fx-font-size: 12px;
-    -fx-text-fill: #234440;
+    -fx-font-size: 15px;
+    -fx-text-fill: #062F2C;
     -fx-alignment: center-right;
     -fx-max-width: Infinity;
 }

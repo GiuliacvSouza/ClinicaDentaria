@@ -604,7 +604,7 @@ public class ClinicaDemoDataGenerator implements CommandLineRunner {
             EstadoConsulta.EM_CONSULTA, EstadoConsulta.CONCLUIDA, EstadoConsulta.CANCELADA, EstadoConsulta.FATURADA
         };
         int consultasCriadas = 0;
-        for (int i = 0; i < 55; i++) {
+        for (int i = 0; i < 90; i++) {
             try {
                 if (pacientes.isEmpty() || dentistas.isEmpty() || procedimentos.isEmpty()) break;
                 Paciente p = pacientes.get(random.nextInt(pacientes.size()));
@@ -656,6 +656,86 @@ public class ClinicaDemoDataGenerator implements CommandLineRunner {
             } catch (Exception ignored) {}
         }
         System.out.println("  Consultas: " + consultasCriadas);
+
+        // ── Consultas específicas para hoje ──
+        int consultasHojeCriadas = 0;
+        LocalDate hoje = LocalDate.now();
+
+        // Gerar horários futuros a partir de agora + 1h arredondado à meia hora
+        LocalTime agora = LocalTime.now();
+        LocalTime inicio = agora.plusHours(1);
+        if (inicio.getMinute() < 30) {
+            inicio = inicio.withMinute(30);
+        } else {
+            inicio = inicio.plusHours(1).withMinute(0);
+        }
+        inicio = inicio.truncatedTo(ChronoUnit.MINUTES);
+
+        List<LocalTime> horariosDisponiveis = new ArrayList<>();
+        LocalTime horario = inicio;
+        LocalTime fimExpediente = LocalTime.of(18, 30);
+        while (!horario.isAfter(fimExpediente) && horariosDisponiveis.size() < 14) {
+            horariosDisponiveis.add(horario);
+            horario = horario.plusMinutes(30);
+        }
+
+        EstadoConsulta[] estadosHoje = {
+            EstadoConsulta.AGENDADA,
+            EstadoConsulta.CONFIRMADA,
+            EstadoConsulta.EM_ESPERA,
+            EstadoConsulta.EM_CONSULTA,
+            EstadoConsulta.CONCLUIDA
+        };
+
+        for (int i = 0; i < horariosDisponiveis.size(); i++) {
+            try {
+                if (pacientes.isEmpty() || dentistas.isEmpty() || procedimentos.isEmpty()) break;
+
+                LocalTime hora = horariosDisponiveis.get(i);
+                LocalDateTime dataHoraLocal = LocalDateTime.of(hoje, hora);
+                Instant dataHoraInicio = dataHoraLocal.atZone(ZONE).toInstant();
+
+                Paciente p = pacientes.get(random.nextInt(pacientes.size()));
+                Dentista d = dentistas.get(random.nextInt(dentistas.size()));
+                Procedimento proc = procedimentos.get(random.nextInt(procedimentos.size()));
+
+                int duracao = proc.getDuracaoEstimada() != null ? proc.getDuracaoEstimada() : 30;
+
+                Consulta c = new Consulta();
+                c.setIdPaciente(p);
+                c.setIdDentista(d);
+                c.setDataHoraInicio(dataHoraInicio);
+                c.setDuracao(duracao);
+                c.setTipo(proc.getTipo() != null ? proc.getTipo() : "terapeutico");
+                c.setStatus(EstadoConsulta.AGENDADA);
+                c.setObservacoes("Procedimento: " + proc.getNome());
+                c.setDataMarcacao(hoje);
+
+                Consulta consultaSalva = consultaService.agendarConsulta(c);
+
+                EstadoConsulta estado = estadosHoje[i % estadosHoje.length];
+
+                if (estado == EstadoConsulta.CONFIRMADA) {
+                    consultaService.confirmarConsulta(consultaSalva.getId());
+                } else if (estado == EstadoConsulta.EM_ESPERA) {
+                    consultaService.confirmarConsulta(consultaSalva.getId());
+                    consultaService.marcarChegada(consultaSalva.getId());
+                } else if (estado == EstadoConsulta.EM_CONSULTA) {
+                    consultaService.confirmarConsulta(consultaSalva.getId());
+                    consultaService.marcarChegada(consultaSalva.getId());
+                    consultaService.iniciarConsulta(consultaSalva.getId());
+                } else if (estado == EstadoConsulta.CONCLUIDA) {
+                    consultaService.confirmarConsulta(consultaSalva.getId());
+                    consultaService.marcarChegada(consultaSalva.getId());
+                    consultaService.iniciarConsulta(consultaSalva.getId());
+                    consultaService.finalizarConsulta(consultaSalva.getId());
+                }
+
+                consultasHojeCriadas++;
+                consultas.add(consultaService.buscarPorId(consultaSalva.getId()));
+            } catch (Exception ignored) {}
+        }
+        System.out.println("  Consultas criadas para hoje: " + consultasHojeCriadas);
 
         // ═══ FASE 7 – ATENDIMENTOS ═══
         System.out.println("\n── FASE 7: Atendimentos ──");

@@ -152,7 +152,7 @@
                         <Region prefHeight="54.0" styleClass="skeleton-block skeleton-button" />
                     </VBox>
 
-                    <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="payment-details-scroll">
+                    <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" maxHeight="Infinity" vbarPolicy="AS_NEEDED" styleClass="payment-details-scroll">
                         <content>
                             <VBox fx:id="paymentDetailsContent" spacing="24.0" styleClass="sidebar-body">
                                 <VBox spacing="5.0">
@@ -165,7 +165,7 @@
 
                                 <Separator />
 
-                                <VBox spacing="10.0">
+                                <VBox spacing="8.0">
                                     <Label styleClass="sub-section-title" text="Procedimentos" />
                                     <GridPane hgap="10.0" styleClass="procedure-table-header">
                                         <columnConstraints>
@@ -182,12 +182,7 @@
                                    <RowConstraints />
                                 </rowConstraints>
                                     </GridPane>
-
-                                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="220.0" styleClass="procedures-scroll" vbarPolicy="AS_NEEDED">
-                                        <content>
-                                            <VBox fx:id="procedimentosContainer" spacing="8.0" />
-                                        </content>
-                                    </ScrollPane>
+                                    <VBox fx:id="procedimentosContainer" spacing="8.0" />
                                 </VBox>
 
                                 <VBox spacing="6.0">

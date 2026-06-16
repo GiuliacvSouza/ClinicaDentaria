@@ -1235,7 +1235,6 @@
 
 .consultas-grid {
     -fx-background-color: #ffffff;
-    -fx-background-radius: 0 0 14 14;
     -fx-border-color: transparent;
     -fx-padding: 0;
 }
@@ -1330,6 +1329,14 @@
 }
 
 /* rodapé da tabela */
+.table-footer {
+    -fx-padding: 12 16 14 16;
+    -fx-background-color: transparent;
+    -fx-border-color: #E1ECE9 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-alignment: center;
+}
+
 .table-footer-label {
     -fx-font-family: "Poppins";
     -fx-font-size: 12px;
@@ -1855,21 +1862,27 @@
 
 .patients-list .list-cell {
     -fx-background-color: transparent;
-    -fx-padding: 6 0;
+    -fx-padding: 6 14 6 0;
 }
 
-.patients-list .list-cell:selected .patient-card,
-.patients-list .list-cell:selected {
-    -fx-background-color: #E4F7F3;
-    -fx-border-color: #2E8478;
+.patients-list .list-cell:filled:selected,
+.patients-list .list-cell:filled:selected:focused {
+    -fx-background-color: transparent;
 }
 
 .patient-card {
     -fx-background-color: #FFFFFF;
-    -fx-border-color: #DCEBE8;
-    -fx-border-radius: 14;
-    -fx-background-radius: 14;
-    -fx-padding: 12 14;
+    -fx-border-color: #D6E8E4;
+    -fx-border-width: 1;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-padding: 14 16 14 16;
+}
+
+.patients-list .list-cell:filled:selected .patient-card {
+    -fx-background-color: #E4F7F3;
+    -fx-border-color: #2E8478;
+    -fx-border-width: 1.5;
 }
 
 .patient-card:hover {
@@ -1877,30 +1890,33 @@
 }
 
 .patient-avatar {
-    -fx-background-color: #DDF3EF;
-    -fx-background-radius: 999;
-    -fx-min-width: 42;
-    -fx-min-height: 42;
-    -fx-max-width: 42;
-    -fx-max-height: 42;
+    -fx-background-color: #D8F3EF;
+    -fx-text-fill: #08766C;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
     -fx-alignment: center;
-    -fx-text-fill: #0E6F64;
-    -fx-font-weight: 700;
-    -fx-font-size: 14px;
+    -fx-background-radius: 999;
+    -fx-min-width: 48;
+    -fx-min-height: 48;
+    -fx-pref-width: 48;
+    -fx-pref-height: 48;
+    -fx-max-width: 48;
+    -fx-max-height: 48;
 }
 
 .patient-name {
-    -fx-text-fill: #0B2F2C;
+    -fx-text-fill: #062F2C;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-font-size: 14px;
 }
 
 .patient-meta {
-    -fx-text-fill: #657B78;
+    -fx-text-fill: #6F8582;
     -fx-font-size: 12px;
 }
 
-.patient-arrow {
-    -fx-text-fill: #315C57;
-    -fx-font-size: 24px;
+.patients-list .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
 }

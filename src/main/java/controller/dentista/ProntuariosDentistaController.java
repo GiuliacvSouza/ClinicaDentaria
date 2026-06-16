@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import model.*;
 import model.enums.EstadoConsulta;
@@ -155,8 +154,15 @@ public class ProntuariosDentistaController extends BaseDentistaController {
 
                 VBox textos = new VBox(2);
                 textos.setStyle("-fx-background-color: transparent;");
+                HBox.setHgrow(textos, Priority.ALWAYS);
+
                 Label nome = new Label(nomeCompletoPaciente(paciente));
-                Label meta = new Label(idadeFormatada(paciente) + " • Última consulta: " + ultimaConsultaFormatada(paciente));
+                nome.setMaxWidth(Double.MAX_VALUE);
+                nome.setTextOverrun(OverrunStyle.ELLIPSIS);
+
+                Label meta = new Label(idadeFormatada(paciente) + " • Última: " + ultimaConsultaFormatada(paciente));
+                meta.setMaxWidth(Double.MAX_VALUE);
+                meta.setTextOverrun(OverrunStyle.ELLIPSIS);
 
                 nome.getStyleClass().add("patient-name");
                 meta.getStyleClass().add("patient-meta");
@@ -164,18 +170,15 @@ public class ProntuariosDentistaController extends BaseDentistaController {
                 Label iniciais = new Label(gerarIniciais(paciente));
                 iniciais.getStyleClass().add("patient-avatar");
 
-                Label seta = new Label("\u203A");
-                seta.getStyleClass().add("patient-arrow");
+                meta.setWrapText(false);
 
                 HBox linha = new HBox(12);
                 linha.setAlignment(Pos.CENTER_LEFT);
                 linha.getStyleClass().add("patient-card");
-
-                Region spacer = new Region();
-                HBox.setHgrow(spacer, Priority.ALWAYS);
+                linha.setMaxWidth(Double.MAX_VALUE);
 
                 textos.getChildren().addAll(nome, meta);
-                linha.getChildren().addAll(iniciais, textos, spacer, seta);
+                linha.getChildren().addAll(iniciais, textos);
 
                 setGraphic(linha);
                 setText(null);

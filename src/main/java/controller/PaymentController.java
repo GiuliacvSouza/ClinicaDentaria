@@ -432,6 +432,10 @@ public class PaymentController {
 
             procedimentosContainer.getChildren().add(linha);
         }
+
+        int linhas = procedimentosContainer.getChildren().size();
+        double altura = Math.min(260, 80 + (linhas * 76));
+        procedimentosContainer.setPrefHeight(altura);
     }
 
     private ColumnConstraints criarColunaProcedimento(double percentWidth) {

@@ -175,13 +175,11 @@
 
                     <!-- Grelha de consultas com colunas alinhadas -->
                     <VBox fx:id="containerConsultasGrid"
-                          minHeight="240.0"
-                          maxHeight="320.0"
+                          VBox.vgrow="ALWAYS"
                           styleClass="consultas-grid" />
 
                     <!-- Rodapé -->
-                    <HBox alignment="CENTER" spacing="4.0">
-                        <padding><Insets top="12.0" right="16.0" bottom="12.0" left="16.0" /></padding>
+                    <HBox styleClass="table-footer" alignment="CENTER" spacing="4.0">
                         <Label styleClass="table-footer-label"     text="Restam " />
                         <Label fx:id="lblRestamConsultas" styleClass="table-footer-highlight" text="8 consultas" />
                         <Label styleClass="table-footer-label"     text=" para concluir o dia." />

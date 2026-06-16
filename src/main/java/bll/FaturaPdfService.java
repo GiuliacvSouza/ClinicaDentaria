@@ -52,8 +52,8 @@ public class FaturaPdfService {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-    private static final String NAO_DISPONIVEL = "N\u00e3o dispon\u00edvel";
-    private static final String CLINICA_NOME = "Cl\u00ednica Dent\u00e1ria";
+    private static final String NAO_DISPONIVEL = "Não disponível";
+    private static final String CLINICA_NOME = "Clínica Dentária";
     private static final String CLINICA_TELEFONE = "Tel: +351 210 000 000";
     private static final String CLINICA_EMAIL = "contacto@clinicadentaria.pt";
 
